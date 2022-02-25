@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -26,9 +27,16 @@ namespace ef_json_query_testing.Data.Models
 
         public string? JsonDetails { get; set; }
 
-        // get each time.
         [NotMapped]
         public JsonDocument JsonDocument => JsonDetails != null ? JsonDocument.Parse(JsonDetails) : JsonDocument.Parse("");
 
+        [NotMapped]
+        public IDictionary<string, object> JsonDict => JsonSerializer.Deserialize<IDictionary<string, object>>(JsonDetails ?? "") ?? new Dictionary<string, object>();
+
+        public object GetJsonValue(string jsonName)
+        {
+            JsonDict.TryGetValue(jsonName, out object? t);
+            return t ?? "";
+        }
     }
 }

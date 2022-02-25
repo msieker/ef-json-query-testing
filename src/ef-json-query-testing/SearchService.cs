@@ -1,6 +1,5 @@
 ﻿using ef_json_query_testing.Data.Models;
 using ef_json_query_testing.Data.Enums;
-using System.Text.Json;
 
 namespace ef_json_query_testing
 {
@@ -13,7 +12,10 @@ namespace ef_json_query_testing
             _context = context;
         }
 
-        public List<Media_Json> MediaJsonSearch1(int DynamicFieldId, string value)
+
+        #region JSON
+
+        public List<Media_Json> MediaJsonSearch_JsonDocument(int DynamicFieldId, string value)
         {
             var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
             if (field == null)
@@ -24,7 +26,7 @@ namespace ef_json_query_testing
             return _context.Media_Json.Where(j => j.JsonDocument.RootElement.GetProperty(field.JsonName).ValueEquals(value)).ToList();
         }
 
-        public List<Media_Json> MediaJsonSearch2(int DynamicFieldId, string value)
+        public List<Media_Json> MediaJsonSearch_JsonDocumentCombo(int DynamicFieldId, string value)
         {
             var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
             if (field == null)
@@ -35,10 +37,23 @@ namespace ef_json_query_testing
             return _context.Media_Json.Where(j => j.JsonDetails != null && j.JsonDetails.Contains(value) && j.JsonDocument.RootElement.GetProperty(field.JsonName).ValueEquals(value)).ToList();
         }
 
-        public void MediaJsonSearch3(int DynamicFieldId, string value)
+        public List<Media_Json> MediaJsonSearch_Dictionary(int DynamicFieldId, string value)
         {
+            var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
+            if (field == null)
+            {
+                return new List<Media_Json>();
+            }
 
+            return _context.Media_Json.Where( j => j.JsonDict.ContainsKey(field.JsonName) && j.GetJsonValue(field.JsonName).Equals(value)).ToList();
         }
+
+       
+
+        #endregion
+
+
+        #region Dynamic Table Store
 
         public List<DynamicMediaInformation> DynamicMediaSearch1(int DynamicFieldId, string value)
         {
@@ -67,10 +82,6 @@ namespace ef_json_query_testing
             }
         }
 
-        
-        // json search
-        // tbl search
-        // combo?
-        // other methods...
+        #endregion
     }
 }

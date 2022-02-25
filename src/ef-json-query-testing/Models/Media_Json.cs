@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ef_json_query_testing.Data.Models
@@ -23,5 +25,10 @@ namespace ef_json_query_testing.Data.Models
 
 
         public string? JsonDetails { get; set; }
+
+        // get each time.
+        [NotMapped]
+        public JsonDocument JsonDocument => JsonDetails != null ? JsonDocument.Parse(JsonDetails) : JsonDocument.Parse("");
+
     }
 }

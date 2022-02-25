@@ -13,6 +13,7 @@ namespace ef_json_query_testing.Data.Models
 
         // Model Properties
         public string DisplayName { get; set; } = "";
+        public string JsonName { get; set; } = "";
         public bool IsQueryable { get; set; }
         public bool IsRequired { get; set; }
         public string Description { get; set; } = "";
@@ -23,7 +24,7 @@ namespace ef_json_query_testing.Data.Models
 
 
         // Relationships
-        public int DynamicListTypeId { get; set; }
+        public int? DynamicListTypeId { get; set; }
         public DynamicListItem? DynamicListType { get; set; }
     }
 }

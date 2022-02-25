@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ef_json_query_testing.Data;
 
 #nullable disable
 
@@ -57,7 +56,7 @@ namespace ef_json_query_testing.Data.Migrations
 
                     b.HasIndex("DynamicListTypeId");
 
-                    b.ToTable("DynamicFields");
+                    b.ToTable("DynamicFields", (string)null);
                 });
 
             modelBuilder.Entity("ef_json_query_testing.Data.Models.DynamicListItem", b =>
@@ -82,7 +81,7 @@ namespace ef_json_query_testing.Data.Migrations
 
                     b.HasIndex("DynamicListTypeId");
 
-                    b.ToTable("DynamicListItems");
+                    b.ToTable("DynamicListItems", (string)null);
                 });
 
             modelBuilder.Entity("ef_json_query_testing.Data.Models.DynamicListType", b =>
@@ -102,7 +101,7 @@ namespace ef_json_query_testing.Data.Migrations
 
                     b.HasKey("DynamicListTypeId");
 
-                    b.ToTable("DynamicListTypes");
+                    b.ToTable("DynamicListTypes", (string)null);
                 });
 
             modelBuilder.Entity("ef_json_query_testing.Data.Models.DynamicMediaInformation", b =>
@@ -130,7 +129,7 @@ namespace ef_json_query_testing.Data.Migrations
                     b.HasIndex("MediaId")
                         .IsUnique();
 
-                    b.ToTable("DynamicMediaInformation");
+                    b.ToTable("DynamicMediaInformation", (string)null);
                 });
 
             modelBuilder.Entity("ef_json_query_testing.Data.Models.Media_Dynamic", b =>
@@ -173,7 +172,7 @@ namespace ef_json_query_testing.Data.Migrations
 
                     b.HasKey("Media_DynamicId");
 
-                    b.ToTable("Media_Dynamic");
+                    b.ToTable("Media_Dynamic", (string)null);
                 });
 
             modelBuilder.Entity("ef_json_query_testing.Data.Models.Media_Json", b =>
@@ -219,7 +218,7 @@ namespace ef_json_query_testing.Data.Migrations
 
                     b.HasKey("Media_JsonId");
 
-                    b.ToTable("Media_Json");
+                    b.ToTable("Media_Json", (string)null);
                 });
 
             modelBuilder.Entity("ef_json_query_testing.Data.Models.DynamicField", b =>

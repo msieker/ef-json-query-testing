@@ -1,5 +1,6 @@
 ﻿using ef_json_query_testing.Data.Models;
 using ef_json_query_testing.Data.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace ef_json_query_testing
 {
@@ -48,7 +49,18 @@ namespace ef_json_query_testing
             return _context.Media_Json.Where( j => j.JsonDict.ContainsKey(field.JsonName) && j.GetJsonValue(field.JsonName).Equals(value)).ToList();
         }
 
-       
+        public List<Media_Json> MediaJsonSearch_RAW_SqlInterpolated(int DynamicFieldId, string value)
+        {
+            var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
+            if (field == null)
+            {
+                return new List<Media_Json>();
+            }
+
+            // FromSqlInterpolated allows for use of string interpolation but it is handled in a way to avoid sql injection.
+            return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([JsonDetails], '$.{field.JsonName}') = {value}").ToList();
+        }
+
 
         #endregion
 

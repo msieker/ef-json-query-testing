@@ -9,6 +9,19 @@ namespace ef_json_query_testing.Data.Models
 {
     public class DynamicField
     {
+        public DynamicField()
+        {
+
+        }
+
+        public DynamicField(string name)
+        {
+            DisplayName = name;
+
+            //create a unique json prop name with a guid and add simplified display name for human readability.
+            JsonName = MakeJsonName();
+        }
+
         public int DynamicFieldId { get; set; }
 
         // Model Properties
@@ -26,5 +39,12 @@ namespace ef_json_query_testing.Data.Models
         // Relationships
         public int? DynamicListTypeId { get; set; }
         public DynamicListItem? DynamicListType { get; set; }
+
+        // methods
+
+        public string MakeJsonName()
+        {
+            return Guid.NewGuid().ToString() + "__" + string.Concat(Array.FindAll(DisplayName.ToCharArray(), char.IsLetterOrDigit));
+        }
     }
 }

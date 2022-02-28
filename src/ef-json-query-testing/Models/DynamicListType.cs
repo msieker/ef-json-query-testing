@@ -8,6 +8,16 @@ namespace ef_json_query_testing.Data.Models
 {
     public class DynamicListType
     {
+        public DynamicListType()
+        {
+
+        }
+
+        public DynamicListType(string name)
+        {
+            DisplayName = name;
+        }
+
         public int DynamicListTypeId { get; set; }
 
         // Model Properties

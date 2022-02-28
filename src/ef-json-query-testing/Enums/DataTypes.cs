@@ -14,6 +14,6 @@ namespace ef_json_query_testing.Data.Enums
         BoolValue = 2, // exact match
         DateTimeValue = 3, //??
         DecimalValue = 4, //??
-        ListSingleValue = 5, // exact
+        //ListSingleValue = 5, // exact
     }
 }

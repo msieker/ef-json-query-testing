@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ef_json_query_testing.Data.Models
@@ -18,12 +19,37 @@ namespace ef_json_query_testing.Data.Models
         public string FilePath { get; set; } = "";
         public DateTime CreatedDate { get; set; }
         public int FileSize { get; set; }
-        public int FileWidth { get; set; }
-        public int FileHeight { get; set; }
+        public int? FileWidth { get; set; }
+        public int? FileHeight { get; set; }
         public string Description { get; set; } = "";
         public bool Hold { get; set; }
 
         // Relationships
-        public DynamicMediaInformation DynamicMediaInformation { get; set; }
+        public ICollection<DynamicMediaInformation> DynamicMediaInformation { get; set; } = new List<DynamicMediaInformation>();
+
+        // methods
+        public Media_Json GetMediaJsonCopy()
+        {
+            var jsonModel = new Media_Json();
+            jsonModel.UploadDate = UploadDate;
+            jsonModel.OriginalFileName = OriginalFileName;
+            jsonModel.FilePath = FilePath;
+            jsonModel.CreatedDate = CreatedDate;
+            jsonModel.FileSize = FileSize;
+            jsonModel.FileWidth = FileWidth;
+            jsonModel.FileHeight = FileHeight;
+            jsonModel.Description = Description;
+            jsonModel.Hold = Hold;
+
+            var dict = new Dictionary<string, object>();
+            foreach (var info in DynamicMediaInformation)
+            {
+                dict.Add(info.Field.JsonName, info.Value);
+            }
+
+            jsonModel.JsonDetails = JsonSerializer.Serialize(dict);
+
+            return jsonModel;
+        }
     }
 }

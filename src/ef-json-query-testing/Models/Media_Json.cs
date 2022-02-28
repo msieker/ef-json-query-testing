@@ -19,8 +19,8 @@ namespace ef_json_query_testing.Data.Models
         public string FilePath { get; set; } = "";
         public DateTime CreatedDate { get; set; }
         public int FileSize { get; set; }
-        public int FileWidth { get; set; }
-        public int FileHeight { get; set; }
+        public int? FileWidth { get; set; }
+        public int? FileHeight { get; set; }
         public string Description { get; set; } = "";
         public bool Hold { get; set; }
 

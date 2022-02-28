@@ -9,6 +9,17 @@ namespace ef_json_query_testing.Data.Models
 {
     public class DynamicListItem
     {
+        public DynamicListItem()
+        {
+
+        }
+
+        public DynamicListItem(string name, int typeId)
+        {
+            DisplayName = name;
+            DynamicListTypeId = typeId;
+        }
+
         public int DynamicListItemId { get; set; }
 
         // Model Properties
@@ -18,6 +29,6 @@ namespace ef_json_query_testing.Data.Models
         // Relationships
         [Required]
         public int DynamicListTypeId { get; set; }
-        public DynamicListType DynamicListType { get; set; }
+        public DynamicListType? DynamicListType { get; set; }
     }
 }

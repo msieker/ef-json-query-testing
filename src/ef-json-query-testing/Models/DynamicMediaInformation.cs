@@ -9,6 +9,18 @@ namespace ef_json_query_testing.Data.Models
 {
     public class DynamicMediaInformation
     {
+        public DynamicMediaInformation()
+        {
+
+        }
+
+        public DynamicMediaInformation(int mediaId, int fieldId, string value)
+        {
+            MediaId = mediaId;
+            FieldId = fieldId;
+            Value = value;
+        }
+
         public int DynamicMediaInformationId { get; set; }
 
 

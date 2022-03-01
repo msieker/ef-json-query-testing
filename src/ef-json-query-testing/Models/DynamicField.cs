@@ -44,7 +44,8 @@ namespace ef_json_query_testing.Data.Models
 
         public string MakeJsonName()
         {
-            return Guid.NewGuid().ToString() + "__" + string.Concat(Array.FindAll(DisplayName.ToCharArray(), char.IsLetterOrDigit));
+            // takes a string like "there's 123!@# things here" into "theres-123-things-here" with a guid attached.
+            return Guid.NewGuid().ToString() + "__" + string.Concat(Array.FindAll(DisplayName.ToCharArray(), (c) => char.IsLetterOrDigit(c) || c == ' ')).Replace(' ', '-');
         }
     }
 }

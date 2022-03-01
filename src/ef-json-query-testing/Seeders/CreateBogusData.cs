@@ -73,8 +73,9 @@ namespace ef_json_query_testing.Data.Seeders
             {
                 var field = new DynamicField(t.DisplayName);
                 field.IsQueryable = true;
+                field.IsRequired = faker.Random.Bool();
                 field.Description = faker.Lorem.Paragraph();
-                field.DataType = Enums.DataTypes.IntValue;
+                field.DataType = DataTypes.IntValue;
                 field.DynamicListTypeId = t.DynamicListTypeId;
 
                 dynamicFields.Add(field);
@@ -138,7 +139,7 @@ namespace ef_json_query_testing.Data.Seeders
 
         private static Dictionary<int, int> GetListItemCounts(EfTestDbContext context)
         {
-            return context.DynamicListItems.GroupBy(d => d.DynamicListTypeId).ToDictionary(g => g.Key, g => g.Count());
+            return context.DynamicListItems.GroupBy(d => d.DynamicListTypeId).Select(g => new { g.Key, Count = g.Count() }).ToDictionary(g => g.Key, g => g.Count);
         }
 
         private static List<DynamicMediaInformation> GenerateFieldValues(Media_Dynamic item, IEnumerable<DynamicField> fields, Faker faker, Dictionary<int, int> listItemsCounts)
@@ -177,7 +178,7 @@ namespace ef_json_query_testing.Data.Seeders
         };
 
         public static Faker<DynamicField> FakerDynamicField => new Faker<DynamicField>()
-            .RuleFor(d => d.DisplayName, f => f.Lorem.Word())
+            .RuleFor(d => d.DisplayName, f => string.Join(" ", f.Lorem.Words()))
             .RuleFor(d => d.JsonName, (f, d) => d.MakeJsonName())
             .RuleFor(d => d.IsQueryable, f => f.Random.Bool())
             .RuleFor(d => d.IsRequired, f => f.Random.Bool())

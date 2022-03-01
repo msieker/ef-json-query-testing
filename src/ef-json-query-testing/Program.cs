@@ -1,4 +1,6 @@
-﻿using ef_json_query_testing.Data.Seeders;
+﻿using BenchmarkDotNet.Running;
+using ef_json_query_testing;
+using ef_json_query_testing.Data.Seeders;
 
 public class Program
 {
@@ -6,7 +8,9 @@ public class Program
     {
         using (var context = new EfTestDbContext())
         {
-            CreateBogusData.LoadData(context);
+            //CreateBogusData.LoadData(context);
+
+            var summary = BenchmarkRunner.Run<BenchmarkTests>();
         }
     }
 }

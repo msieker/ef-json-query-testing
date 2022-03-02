@@ -21,8 +21,6 @@ namespace ef_json_query_testing.Data.Seeders
 {
     public static class CreateBogusData
     {
-        private const int _ListTypeCount = 10;
-
         private const int _ListItemCount_Min = 3;
         private const int _ListItemCount_Max = 20;
 
@@ -33,15 +31,25 @@ namespace ef_json_query_testing.Data.Seeders
         private const int _Media_Dynamic_FileHeight_Min = 256;
         private const int _Media_Dynamic_FileHeight_Max = 4096;
 
-        public static void LoadData(EfTestDbContext context)
+        public static void LoadAllData(EfTestDbContext context, int fieldsCount = 50, int mediaItemsCount = 1000, int listTypeCount = 10)
         {
-            LoadDynamicListTypes(context);
+            LoadSharedData(context, fieldsCount, listTypeCount);
+
+            LoadMediaData(context, mediaItemsCount);
+        }
+
+        public static void LoadSharedData(EfTestDbContext context, int fieldsCount = 50, int listTypeCount = 10)
+        {
+            LoadDynamicListTypes(context, listTypeCount);
 
 
-            context.DynamicFields.AddRange(FakerDynamicField.Generate(50));
+            context.DynamicFields.AddRange(FakerDynamicField.Generate(fieldsCount));
             context.SaveChanges();
+        }
 
-            context.Media_Dynamic.AddRange(FakerMedia_Dynamic.Generate(1000));
+        public static void LoadMediaData(EfTestDbContext context, int mediaItemsCount = 1000)
+        {
+            context.Media_Dynamic.AddRange(FakerMedia_Dynamic.Generate(mediaItemsCount));
             context.SaveChanges();
 
 
@@ -50,11 +58,29 @@ namespace ef_json_query_testing.Data.Seeders
             LoadMediaJson(context);
         }
 
-        private static void LoadDynamicListTypes(EfTestDbContext context)
+        public static Faker<DynamicField> FakerDynamicField => new Faker<DynamicField>()
+            .RuleFor(d => d.DisplayName, f => string.Join(" ", f.Lorem.Words()))
+            .RuleFor(d => d.JsonName, (f, d) => d.MakeJsonName())
+            .RuleFor(d => d.IsQueryable, f => f.Random.Bool())
+            .RuleFor(d => d.IsRequired, f => f.Random.Bool())
+            .RuleFor(d => d.Description, f => f.Lorem.Paragraph())
+            .RuleFor(d => d.DataType, f => f.Random.Enum<DataTypes>());
+
+        public static Faker<Media_Dynamic> FakerMedia_Dynamic => new Faker<Media_Dynamic>()
+            .RuleFor(m => m.OriginalFileName, f => f.System.FileName())
+            .RuleFor(m => m.FilePath, f => f.System.DirectoryPath())
+            .RuleFor(m => m.CreatedDate, f => f.Date.Recent(_Media_Dynamic_CreatedDayRange))
+            .RuleFor(m => m.FileSize, f => f.Random.Number(_Media_Dynamic_FileSize_Max))
+            .RuleFor(m => m.FileWidth, (f, m) => f.Random.Bool() ? f.Random.Number(_Media_Dynamic_FileWidth_Min, _Media_Dynamic_FileWidth_Max) : null)
+            .RuleFor(m => m.FileHeight, (f, m) => m.FileWidth.HasValue ? f.Random.Number(_Media_Dynamic_FileHeight_Min, _Media_Dynamic_FileHeight_Max) : null)
+            .RuleFor(m => m.Description, f => f.Lorem.Paragraph())
+            .RuleFor(m => m.Hold, f => f.Random.Bool());
+
+        private static void LoadDynamicListTypes(EfTestDbContext context, int listTypeCount)
         {
             // List types
             var faker = new Faker();
-            var cats = faker.Commerce.Categories(_ListTypeCount);
+            var cats = faker.Commerce.Categories(listTypeCount);
             var dynamicListTypes = new List<DynamicListType>();
             foreach (var c in cats)
             {
@@ -176,23 +202,5 @@ namespace ef_json_query_testing.Data.Seeders
             DataTypes.DecimalValue => faker.Random.Decimal(decimal.MaxValue).ToString(),
             _ => string.Empty
         };
-
-        public static Faker<DynamicField> FakerDynamicField => new Faker<DynamicField>()
-            .RuleFor(d => d.DisplayName, f => string.Join(" ", f.Lorem.Words()))
-            .RuleFor(d => d.JsonName, (f, d) => d.MakeJsonName())
-            .RuleFor(d => d.IsQueryable, f => f.Random.Bool())
-            .RuleFor(d => d.IsRequired, f => f.Random.Bool())
-            .RuleFor(d => d.Description, f => f.Lorem.Paragraph())
-            .RuleFor(d => d.DataType, f => f.Random.Enum<DataTypes>());
-
-        public static Faker<Media_Dynamic> FakerMedia_Dynamic => new Faker<Media_Dynamic>()
-            .RuleFor(m => m.OriginalFileName, f => f.System.FileName())
-            .RuleFor(m => m.FilePath, f => f.System.DirectoryPath())
-            .RuleFor(m => m.CreatedDate, f => f.Date.Recent(_Media_Dynamic_CreatedDayRange))
-            .RuleFor(m => m.FileSize, f => f.Random.Number(_Media_Dynamic_FileSize_Max))
-            .RuleFor(m => m.FileWidth, (f, m) => f.Random.Bool() ? f.Random.Number(_Media_Dynamic_FileWidth_Min, _Media_Dynamic_FileWidth_Max) : null)
-            .RuleFor(m => m.FileHeight, (f, m) => m.FileWidth.HasValue ? f.Random.Number(_Media_Dynamic_FileHeight_Min, _Media_Dynamic_FileHeight_Max) : null)
-            .RuleFor(m => m.Description, f => f.Lorem.Paragraph())
-            .RuleFor(m => m.Hold, f => f.Random.Bool());
     }
 }

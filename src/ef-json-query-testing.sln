@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ef-json-query-testing", "ef-json-query-testing\ef-json-query-testing.csproj", "{9246A49D-2922-4552-B8B4-77C30184543A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ef-json-query-testing.Tests", "ef-json-query-testing.Tests\ef-json-query-testing.Tests.csproj", "{E692E34F-167B-4F4D-BDCA-A3D5F0760B2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9246A49D-2922-4552-B8B4-77C30184543A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9246A49D-2922-4552-B8B4-77C30184543A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9246A49D-2922-4552-B8B4-77C30184543A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E692E34F-167B-4F4D-BDCA-A3D5F0760B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E692E34F-167B-4F4D-BDCA-A3D5F0760B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E692E34F-167B-4F4D-BDCA-A3D5F0760B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E692E34F-167B-4F4D-BDCA-A3D5F0760B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

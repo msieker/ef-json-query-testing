@@ -1,6 +1,4 @@
-﻿using ef_json_query_testing.Data.Models;
-using ef_json_query_testing.Data.Enums;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace ef_json_query_testing

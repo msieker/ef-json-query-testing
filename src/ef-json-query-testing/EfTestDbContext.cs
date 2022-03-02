@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ef_json_query_testing.Data.Models;
+using ef_json_query_testing;
 using Microsoft.EntityFrameworkCore;
 
 [ExcludeFromCodeCoverage]

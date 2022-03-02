@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ef_json_query_testing.Data.Migrations
+namespace ef_json_query_testing
 {
     public partial class Initial : Migration
     {

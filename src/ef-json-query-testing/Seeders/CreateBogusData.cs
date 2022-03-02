@@ -1,6 +1,4 @@
 ﻿using Bogus;
-using ef_json_query_testing.Data.Enums;
-using ef_json_query_testing.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +15,7 @@ using System.Threading.Tasks;
 // DynamicMediaInformation - each saved field for a given media item
 
 
-namespace ef_json_query_testing.Data.Seeders
+namespace ef_json_query_testing
 {
     public static class CreateBogusData
     {

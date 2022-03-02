@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ef_json_query_testing.Data.Models
+namespace ef_json_query_testing
 {
     public class Media_Dynamic
     {

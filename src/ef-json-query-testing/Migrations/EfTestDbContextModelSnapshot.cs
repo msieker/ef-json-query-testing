@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ef_json_query_testing.Data.Migrations
+namespace ef_json_query_testing
 {
     [DbContext(typeof(EfTestDbContext))]
     partial class EfTestDbContextModelSnapshot : ModelSnapshot

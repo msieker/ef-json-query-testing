@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace ef_json_query_testing.Data.Migrations
+namespace ef_json_query_testing
 {
     public partial class additionsforsearch : Migration
     {

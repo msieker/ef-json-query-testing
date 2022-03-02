@@ -6,7 +6,7 @@ public class EfTestDbContextFactory : IDesignTimeDbContextFactory<EfTestDbContex
     public EfTestDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
-        optionsBuilder.UseSqlServer("Server=localhost;Initial Catalog=ef_testing;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+        optionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ef_testing;Integrated Security=SSPI;Connection Timeout=5;");
 
         return new EfTestDbContext(optionsBuilder.Options);
     }

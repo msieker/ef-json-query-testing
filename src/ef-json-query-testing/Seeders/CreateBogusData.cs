@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 // DynamicListTypes - types of list dropdowns 
 // DynamicListItems - the items available for each list type
@@ -149,10 +150,10 @@ namespace ef_json_query_testing
             }
         }
 
-        private static void LoadMediaJson(EfTestDbContext context)
+        public static void LoadMediaJson(EfTestDbContext context)
         {
             var mediaJson = new List<Media_Json>();
-            foreach (var media in context.Media_Dynamic)
+            foreach (var media in context.Media_Dynamic.Include(m=>m.DynamicMediaInformation).ThenInclude(m=>m.Field))
             {
                 mediaJson.Add(media.GetMediaJsonCopy());
             }

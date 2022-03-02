@@ -24,25 +24,25 @@ namespace ef_json_query_testing.Tests
         {
             // SearchServiceTests should run once for this class
 
-            [Theory]
-            [InlineData(0, "asdasdasd")] // field doesnt exist
-            [InlineData(1, "00000000000")] // string shouldnt exist
-            public void JsonDocument_NoMatch(int i, string str)
-            {
-                var media = _service.MediaJsonSearch_JsonDocument(i, str);
+            //[Theory]
+            //[InlineData(0, "asdasdasd")] // field doesnt exist
+            //[InlineData(1, "00000000000")] // string shouldnt exist
+            //public void JsonDocument_NoMatch(int i, string str)
+            //{
+            //    var media = _service.MediaJsonSearch_JsonDocument(i, str);
 
-                Assert.Empty(media);
-            }
+            //    Assert.Empty(media);
+            //}
 
-            [Theory]
-            [InlineData(0, "asdasdasd")]
-            [InlineData(1, "00000000000")]
-            public void JsonDocumentCombo_NoMatch(int i, string str)
-            {
-                var media = _service.MediaJsonSearch_JsonDocumentCombo(i, str);
+            //[Theory]
+            //[InlineData(0, "asdasdasd")]
+            //[InlineData(1, "00000000000")]
+            //public void JsonDocumentCombo_NoMatch(int i, string str)
+            //{
+            //    var media = _service.MediaJsonSearch_JsonDocumentCombo(i, str);
 
-                Assert.Empty(media);
-            }
+            //    Assert.Empty(media);
+            //}
 
             [Theory]
             //[InlineData(0, "asdasdasd")]

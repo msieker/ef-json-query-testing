@@ -19,13 +19,13 @@ namespace ef_json_query_testing
             yield return new object[] { 14, "0" };
         }
 
-        [Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void Benchmark_NoMatch_MediaJsonSearch_JsonDocument(int i, string str) => _search.MediaJsonSearch_JsonDocument(i, str);
+        //[Benchmark]
+        //[ArgumentsSource(nameof(BenchmarkData_NoMatch))]
+        //public void Benchmark_NoMatch_MediaJsonSearch_JsonDocument(int i, string str) => _search.MediaJsonSearch_JsonDocument(i, str);
 
-        [Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void Benchmark_NotMatch_MediaJsonSearch_JsonDocumentCombo(int i, string str) => _search.MediaJsonSearch_JsonDocumentCombo(i, str);
+        //[Benchmark]
+        //[ArgumentsSource(nameof(BenchmarkData_NoMatch))]
+        //public void Benchmark_NotMatch_MediaJsonSearch_JsonDocumentCombo(int i, string str) => _search.MediaJsonSearch_JsonDocumentCombo(i, str);
 
         [Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_NoMatch))]

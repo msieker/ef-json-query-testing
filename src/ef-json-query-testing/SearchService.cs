@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace ef_json_query_testing
 {
-    public class SearchService
+    public class SearchService : ISearchService
     {
         private readonly EfTestDbContext _context;
 
@@ -26,7 +26,7 @@ namespace ef_json_query_testing
             }
 
             JsonElement throwaway;
-            return _context.Media_Json.Where(j => j.JsonDocument.RootElement.TryGetProperty(field.JsonName, out throwaway) && j.JsonDocument.RootElement.GetProperty(field.JsonName).ValueEquals(value)).ToList();
+            return _context.Media_Json.Where(j => j.JsonDetails != null && j.JsonDocument.RootElement.TryGetProperty(field.JsonName, out throwaway) && j.JsonDocument.RootElement.GetProperty(field.JsonName).ValueEquals(value)).ToList();
         }
 
         public List<Media_Json> MediaJsonSearch_JsonDocumentCombo(int DynamicFieldId, string value)
@@ -39,17 +39,6 @@ namespace ef_json_query_testing
 
             JsonElement throwaway;
             return _context.Media_Json.Where(j => j.JsonDetails != null && j.JsonDetails.Contains(value) && j.JsonDocument.RootElement.TryGetProperty(field.JsonName, out throwaway) && j.JsonDocument.RootElement.GetProperty(field.JsonName).ValueEquals(value)).ToList();
-        }
-
-        public List<Media_Json> MediaJsonSearch_Dictionary(int DynamicFieldId, string value)
-        {
-            var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
-            if (field == null)
-            {
-                return new List<Media_Json>();
-            }
-
-            return _context.Media_Json.Where( j => j.JsonDict.ContainsKey(field.JsonName) && j.GetJsonValue(field.JsonName).Equals(value)).ToList();
         }
 
         public List<Media_Json> MediaJsonSearch_RAW_SqlInterpolated(int DynamicFieldId, string value)
@@ -98,5 +87,15 @@ namespace ef_json_query_testing
         }
 
         #endregion
+    }
+
+    public interface ISearchService
+    {
+        List<Media_Json> MediaJsonSearch_JsonDocument(int DynamicFieldId, string value);
+        List<Media_Json> MediaJsonSearch_JsonDocumentCombo(int DynamicFieldId, string value);
+        List<Media_Json> MediaJsonSearch_RAW_SqlInterpolated(int DynamicFieldId, string value);
+
+        List<DynamicMediaInformation> MediaTableSearch_OnlyContains(int DynamicFieldId, string value);
+        List<DynamicMediaInformation> MediaTableSearch_ContainsOrEquals(int DynamicFieldId, string value);
     }
 }

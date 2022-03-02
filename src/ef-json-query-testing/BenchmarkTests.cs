@@ -29,10 +29,6 @@ namespace ef_json_query_testing
 
         [Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void Benchmark_NotMatch_MediaJsonSearch_Dictionary(int i, string str) => _search.MediaJsonSearch_Dictionary(i, str);
-
-        [Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
         public void Benchmark_NotMatch_MediaJsonSearch_RAW_SqlInterpolated(int i, string str) => _search.MediaJsonSearch_RAW_SqlInterpolated(i, str);
 
         [Benchmark]

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Dynamic;
@@ -28,15 +30,19 @@ namespace ef_json_query_testing.Data.Models
         public string? JsonDetails { get; set; }
 
         [NotMapped]
-        public JsonDocument JsonDocument => JsonDetails != null ? JsonDocument.Parse(JsonDetails) : JsonDocument.Parse("");
+        public JsonDocument JsonDocument { get; set; } = JsonDocument.Parse("{}", new JsonDocumentOptions());
+        
 
-        [NotMapped]
-        public IDictionary<string, object> JsonDict => JsonSerializer.Deserialize<IDictionary<string, object>>(JsonDetails ?? "") ?? new Dictionary<string, object>();
 
-        public object GetJsonValue(string jsonName)
+        public class Media_JsonConfiguration : IEntityTypeConfiguration<Media_Json>
         {
-            JsonDict.TryGetValue(jsonName, out object? t);
-            return t ?? "";
+            public void Configure(EntityTypeBuilder<Media_Json> builder)
+            {
+                // This Converter will perform the conversion to and from Json to the desired type
+                builder.Property(e => e.JsonDocument).HasConversion(
+                    v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
+                    v => JsonSerializer.Deserialize<JsonDocument>(v, new JsonSerializerOptions(JsonSerializerDefaults.General)) ?? JsonDocument.Parse("{}", new JsonDocumentOptions()));
+            }
         }
     }
 }

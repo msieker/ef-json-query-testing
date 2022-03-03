@@ -15,18 +15,6 @@ namespace ef_json_query_testing
 
         #region JSON
 
-        public List<Media_Json> MediaJsonSearch_JsonDocument(int DynamicFieldId, string value)
-        {
-            var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
-            if (field == null)
-            {
-                return new List<Media_Json>();
-            }
-
-            JsonElement throwaway;
-            return _context.Media_Json.Where(j => j.JsonDocument.RootElement.TryGetProperty(field.JsonName, out throwaway) && j.JsonDocument.RootElement.GetProperty(field.JsonName).ValueEquals(value)).ToList();
-        }
-
         public List<Media_Json> MediaJsonSearch_RAW_SqlInterpolated(int DynamicFieldId, string value)
         {
             var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
@@ -34,12 +22,11 @@ namespace ef_json_query_testing
             {
                 return new List<Media_Json>();
             }
-
-            var jsonPath = $"$.\"{field.JsonName}\"";
+                       
             // FromSqlInterpolated allows for use of string interpolation but it is handled in a way to avoid sql injection.
-            var results = _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}").ToList();
-            var results2 = _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE FileWidth IS NOT NULL");
-            return results;
+            var jsonPath = $"$.\"{field.JsonName}\"";
+            var results = _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}");
+            return results.ToList();           
         }
 
 
@@ -80,7 +67,6 @@ namespace ef_json_query_testing
 
     public interface ISearchService
     {
-        List<Media_Json> MediaJsonSearch_JsonDocument(int DynamicFieldId, string value);
         List<Media_Json> MediaJsonSearch_RAW_SqlInterpolated(int DynamicFieldId, string value);
 
         List<DynamicMediaInformation> MediaTableSearch_OnlyContains(int DynamicFieldId, string value);

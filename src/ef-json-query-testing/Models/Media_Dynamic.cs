@@ -41,14 +41,10 @@ namespace ef_json_query_testing
             jsonModel.Description = Description;
             jsonModel.Hold = Hold;
 
-            var dict = new Dictionary<string, object>();
             foreach (var info in DynamicMediaInformation)
             {
-                dict.Add(info.Field.JsonName, info.Value);
                 jsonModel.Details.Add(info.Field.JsonName, info.Value);
             }
-
-            jsonModel.JsonDocument = JsonDocument.Parse(JsonSerializer.Serialize(dict));
 
             return jsonModel;
         }

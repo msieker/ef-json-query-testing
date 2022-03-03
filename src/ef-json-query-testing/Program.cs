@@ -7,9 +7,13 @@ public class Program
     {
         using (var context = new EfTestDbContext())
         {
-            //CreateBogusData.LoadData(context);
+            //CreateBogusData.LoadAllData(context);
 
-            var summary = BenchmarkRunner.Run<BenchmarkTests>();
+            var svc = new SearchService(context);
+
+            svc.MediaJsonSearch_RAW_SqlInterpolated(1, "7");
+
+            //var summary = BenchmarkRunner.Run<BenchmarkTests>();
         }
     }
 }

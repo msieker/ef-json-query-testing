@@ -22,6 +22,7 @@ public class EfTestDbContext : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             optionsBuilder.UseSqlServer("Server=localhost;Initial Catalog=ef_testing;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+            optionsBuilder.LogTo((l) => Console.WriteLine(l)).EnableSensitiveDataLogging(true);
         }
     }
 

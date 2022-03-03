@@ -45,9 +45,10 @@ namespace ef_json_query_testing
             foreach (var info in DynamicMediaInformation)
             {
                 dict.Add(info.Field.JsonName, info.Value);
+                jsonModel.Details.Add(info.Field.JsonName, info.Value);
             }
 
-            jsonModel.JsonDetails = JsonSerializer.Serialize(dict);
+            jsonModel.JsonDocument = JsonDocument.Parse(JsonSerializer.Serialize(dict));
 
             return jsonModel;
         }

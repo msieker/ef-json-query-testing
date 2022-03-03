@@ -35,16 +35,6 @@ namespace ef_json_query_testing.Tests
             }
 
             [Theory]
-            [InlineData(0, "asdasdasd")]
-            [InlineData(1, "00000000000")]
-            public void JsonDocumentCombo_NoMatch(int i, string str)
-            {
-                var media = _service.MediaJsonSearch_JsonDocumentCombo(i, str);
-
-                Assert.Empty(media);
-            }
-
-            [Theory]
             //[InlineData(0, "asdasdasd")]
             [InlineData(1, "askkkkkkkkkkkkkkkkkkdasd")]
             public void RAW_SqlInterpolated_NoMatch(int i, string str)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -27,9 +28,8 @@ namespace ef_json_query_testing
         public bool Hold { get; set; }
 
 
-        public string? JsonDetails { get; set; }
+        public Dictionary<string, object> Details { get; set; } = new();
 
-        [NotMapped]
         public JsonDocument JsonDocument { get; set; } = JsonDocument.Parse("{}", new JsonDocumentOptions());
         
 
@@ -39,9 +39,23 @@ namespace ef_json_query_testing
             public void Configure(EntityTypeBuilder<Media_Json> builder)
             {
                 // This Converter will perform the conversion to and from Json to the desired type
-                builder.Property(e => e.JsonDocument).HasConversion(
+               
+                builder.Property(e => e.Details)
+                    .HasConversion(
                     v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
-                    v => JsonSerializer.Deserialize<JsonDocument>(v, new JsonSerializerOptions(JsonSerializerDefaults.General)) ?? JsonDocument.Parse("{}", new JsonDocumentOptions()));
+                    v =>
+                        JsonSerializer.Deserialize<Dictionary<string, object>>(v, new JsonSerializerOptions(JsonSerializerDefaults.General))
+                        ?? new Dictionary<string, object>(),
+                    new ValueComparer<Dictionary<string, object>>(
+                        (d1, d2) => d1.OrderBy(kv => kv.Key).SequenceEqual(d2.OrderBy(kv => kv.Key)),
+                        c => c.Aggregate(0, (a, kv) => HashCode.Combine(a, kv.Key.GetHashCode(), kv.Value.GetHashCode()))
+                    ))
+                    .HasColumnType("nvarchar(max)");
+
+                builder.Property(e => e.JsonDocument).HasConversion(
+                   v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
+                   v => JsonSerializer.Deserialize<JsonDocument>(v, new JsonSerializerOptions(JsonSerializerDefaults.General))
+                        ?? JsonDocument.Parse("{}", new JsonDocumentOptions()));
             }
         }
     }

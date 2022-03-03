@@ -9,11 +9,11 @@ public class Program
         {
             //CreateBogusData.LoadAllData(context);
 
-            var svc = new SearchService(context);
+            //var svc = new SearchService(context);
 
-            svc.MediaJsonSearch_RAW_SqlInterpolated(1, "7");
+            //svc.MediaJsonSearch_RAW_SqlInterpolated(1, "7");
 
-            //var summary = BenchmarkRunner.Run<BenchmarkTests>();
+            var summary = BenchmarkRunner.Run<BenchmarkTests>();
         }
     }
 }

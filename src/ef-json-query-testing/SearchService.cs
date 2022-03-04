@@ -15,7 +15,7 @@ namespace ef_json_query_testing
 
         #region JSON
 
-        public List<Media_Json> MediaJsonSearch_RAW_SqlInterpolated(int DynamicFieldId, string value)
+        public List<Media_Json> JsonSearch(int DynamicFieldId, string value)
         {
             var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
             if (field == null)
@@ -25,8 +25,16 @@ namespace ef_json_query_testing
                        
             // FromSqlInterpolated allows for use of string interpolation but it is handled in a way to avoid sql injection.
             var jsonPath = $"$.\"{field.JsonName}\"";
-            var results = _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}");
-            return results.ToList();           
+
+            if (field.DataType == DataTypes.StringValue)
+            {
+                var containsString = "%" + value + "%";
+                return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) like {containsString}").ToList();
+            }
+            else
+            {
+                return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}").ToList();
+            }
         }
 
 
@@ -35,12 +43,7 @@ namespace ef_json_query_testing
 
         #region Dynamic Table Store
 
-        public List<DynamicMediaInformation> MediaTableSearch_OnlyContains(int DynamicFieldId, string value)
-        {
-            return _context.DynamicMediaInformation.Where(d => d.FieldId == DynamicFieldId && d.Value.Contains(value)).ToList();
-        }
-
-        public List<DynamicMediaInformation> MediaTableSearch_ContainsOrEquals(int DynamicFieldId, string value)
+        public List<DynamicMediaInformation> TableSearch(int DynamicFieldId, string value)
         {
             var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
 
@@ -67,9 +70,8 @@ namespace ef_json_query_testing
 
     public interface ISearchService
     {
-        List<Media_Json> MediaJsonSearch_RAW_SqlInterpolated(int DynamicFieldId, string value);
+        List<Media_Json> JsonSearch(int DynamicFieldId, string value);
 
-        List<DynamicMediaInformation> MediaTableSearch_OnlyContains(int DynamicFieldId, string value);
-        List<DynamicMediaInformation> MediaTableSearch_ContainsOrEquals(int DynamicFieldId, string value);
+        List<DynamicMediaInformation> TableSearch(int DynamicFieldId, string value);
     }
 }

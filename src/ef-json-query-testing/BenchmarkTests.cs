@@ -25,15 +25,11 @@ namespace ef_json_query_testing
 
         //[Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void Benchmark_NotMatch_JSON_RAW_SqlInterpolated(int i, string str) => _search.MediaJsonSearch_RAW_SqlInterpolated(i, str);
+        public void Benchmark_NotMatch_JSON(int i, string str) => _search.JsonSearch(i, str);
 
-        //[Benchmark]
+        // [Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void Benchmark_NotMatch_Table_OnlyContains(int i, string str) => _search.MediaTableSearch_OnlyContains(i, str);
-
-       // [Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void Benchmark_NotMatch_Table_ContainsOrEquals(int i, string str) => _search.MediaTableSearch_ContainsOrEquals(i, str);
+        public void Benchmark_NotMatch_Table(int i, string str) => _search.TableSearch(i, str);
 
 
 
@@ -45,28 +41,20 @@ namespace ef_json_query_testing
         {
             var intTypeField = _context.DynamicFields.First(m => !m.DynamicListTypeId.HasValue && m.DataType == DataTypes.IntValue);
 
-
             var faker = new Faker();
-            var itemRand = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == intTypeField.DynamicFieldId));
-           
-            foreach(var item in itemRand)
-            {
-                yield return new object[] { item.FieldId, item.Value };
-            }
+            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == intTypeField.DynamicFieldId)).FirstOrDefault();
+
+            yield return new object[] { item.FieldId, item.Value };
         }
 
         //[Benchmark(OperationsPerInvoke = 20)]
-        [Benchmark]
+        //[Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_IntMatch))]
-        public void Benchmark_Int_JSON_RAW_SqlInterpolated(int i, string str) => _search.MediaJsonSearch_RAW_SqlInterpolated(i, str);
+        public void Benchmark_Int_JSON(int i, string str) => _search.JsonSearch(i, str);
 
         //[Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_IntMatch))]
-        public void Benchmark_Int_Table_OnlyContains(int i, string str) => _search.MediaTableSearch_OnlyContains(i, str);
-
-        //[Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_IntMatch))]
-        public void Benchmark_Int_Table_ContainsOrEquals(int i, string str) => _search.MediaTableSearch_ContainsOrEquals(i, str);
+        public void Benchmark_Int_Table(int i, string str) => _search.TableSearch(i, str);
 
 
 
@@ -79,27 +67,19 @@ namespace ef_json_query_testing
         {
             var listTypeField = _context.DynamicFields.First(m => m.DynamicListTypeId.HasValue);
 
-
             var faker = new Faker();
-            var itemRand = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == listTypeField.DynamicFieldId));
-            
-            foreach (var item in itemRand)
-            {
-                yield return new object[] { item.FieldId, item.Value };
-            }
+            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == listTypeField.DynamicFieldId)).FirstOrDefault();
+
+            yield return new object[] { item.FieldId, item.Value };
         }
 
-        [Benchmark]
+        //[Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_ListMatch))]
-        public void Benchmark_ListInt_JSON_RAW_SqlInterpolated(int i, string str) => _search.MediaJsonSearch_RAW_SqlInterpolated(i, str);
+        public void Benchmark_ListInt_JSON(int i, string str) => _search.JsonSearch(i, str);
 
         //[Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_ListMatch))]
-        public void Benchmark_ListInt_Table_OnlyContains(int i, string str) => _search.MediaTableSearch_OnlyContains(i, str);
-
-        //[Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_ListMatch))]
-        public void Benchmark_ListInt_Table_ContainsOrEquals(int i, string str) => _search.MediaTableSearch_ContainsOrEquals(i, str);
+        public void Benchmark_ListInt_Table(int i, string str) => _search.TableSearch(i, str);
 
 
 
@@ -119,27 +99,19 @@ namespace ef_json_query_testing
         {
             var boolTypeField = _context.DynamicFields.First(m => m.DataType == DataTypes.BoolValue);
 
-
             var faker = new Faker();
-            var itemRand = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == boolTypeField.DynamicFieldId));
-            
-            foreach (var item in itemRand)
-            {
-                yield return new object[] { item.FieldId, item.Value };
-            }
+            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == boolTypeField.DynamicFieldId)).FirstOrDefault();
+
+            yield return new object[] { item.FieldId, item.Value };
         }
 
-        [Benchmark]
+        //[Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_BoolMatch))]
-        public void Benchmark_Bool_JSON_RAW_SqlInterpolated(int i, string str) => _search.MediaJsonSearch_RAW_SqlInterpolated(i, str);
+        public void Benchmark_Bool_JSON(int i, string str) => _search.JsonSearch(i, str);
 
         //[Benchmark]
         [ArgumentsSource(nameof(BenchmarkData_BoolMatch))]
-        public void Benchmark_Bool_Table_OnlyContains(int i, string str) => _search.MediaTableSearch_OnlyContains(i, str);
-
-        //[Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_BoolMatch))]
-        public void Benchmark_Bool_Table_ContainsOrEquals(int i, string str) => _search.MediaTableSearch_ContainsOrEquals(i, str);
+        public void Benchmark_Bool_Table(int i, string str) => _search.TableSearch(i, str);
 
 
 
@@ -153,31 +125,23 @@ namespace ef_json_query_testing
 
 
 
-
-        public IEnumerable<object[]> BenchmarkData_StringMatch()
+        // string match should be a contains, so these should be different than the above
+        public IEnumerable<object[]> BenchmarkData_StringFind()
         {
             var stringTypeField = _context.DynamicFields.First(m => m.DataType == DataTypes.StringValue);
 
-
             var faker = new Faker();
-            var itemRand = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == stringTypeField.DynamicFieldId));
-            
-            foreach (var item in itemRand)
-            {
-                yield return new object[] { item.FieldId, item.Value };
-            }
+            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == stringTypeField.DynamicFieldId)).FirstOrDefault();
+
+            yield return new object[] { item.FieldId, item.Value };
         }
 
-        [Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_StringMatch))]
-        public void Benchmark_String_JSON_RAW_SqlInterpolated(int i, string str) => _search.MediaJsonSearch_RAW_SqlInterpolated(i, str);
+        //[Benchmark]
+        [ArgumentsSource(nameof(BenchmarkData_StringFind))]
+        public void Benchmark_String_JSON(int i, string str) => _search.JsonSearch(i, str);
 
         //[Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_StringMatch))]
-        public void Benchmark_String_Table_OnlyContains(int i, string str) => _search.MediaTableSearch_OnlyContains(i, str);
-
-        //[Benchmark]
-        [ArgumentsSource(nameof(BenchmarkData_StringMatch))]
-        public void Benchmark_String_Table_ContainsOrEquals(int i, string str) => _search.MediaTableSearch_ContainsOrEquals(i, str);
+        [ArgumentsSource(nameof(BenchmarkData_StringFind))]
+        public void Benchmark_String_Table(int i, string str) => _search.TableSearch(i, str);
     }
 }

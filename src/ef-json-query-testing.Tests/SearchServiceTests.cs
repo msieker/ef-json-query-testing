@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using Xunit;
 
 namespace ef_json_query_testing.Tests
@@ -20,45 +18,29 @@ namespace ef_json_query_testing.Tests
             CreateBogusData.LoadAllData(_context, 15, 20, 5);
         }
 
-        public class MediaJsonSearch : SearchServiceTests
-        {
-            // SearchServiceTests should run once for this class
 
-            // this test refuses to work for whatever reason, but runs when program is run.
-            //[Theory]
-            ////[InlineData(0, "asdasdasd")]
-            //[InlineData(1, "askkkkkkkkkkkkkkkkkkdasd")]
-            //public void RAW_SqlInterpolated_NoMatch(int i, string str)
-            //{
-            //    var media = _service.MediaJsonSearch_RAW_SqlInterpolated(i, str);
-            //
-            //    Assert.Empty(media);
-            //}
+        [Theory]
+        [InlineData(0, "asdasdasd")]
+        [InlineData(1, "00000000000")]
+        public void ContainsOrEquals_NoMatch(int i, string str)
+        {
+            var media = _service.TableSearch(i, str);
+
+            Assert.Empty(media);
         }
 
-        public class MediaTableSearch : SearchServiceTests
-        {
-            // SearchServiceTests should run once for this class
+        // SearchServiceTests should run once for this class
 
-            [Theory]
-            [InlineData(0, "asdasdasd")]
-            [InlineData(1, "00000000000")]
-            public void OnlyContains_NoMatch(int i, string str)
-            {
-                var media = _service.MediaTableSearch_OnlyContains(i, str);
+        // this test refuses to work for whatever reason, but runs when program is run.
+        //[Theory]
+        ////[InlineData(0, "asdasdasd")]
+        //[InlineData(1, "askkkkkkkkkkkkkkkkkkdasd")]
+        //public void RAW_SqlInterpolated_NoMatch(int i, string str)
+        //{
+        //    var media = _service.MediaJsonSearch_RAW_SqlInterpolated(i, str);
+        //
+        //    Assert.Empty(media);
+        //}
 
-                Assert.Empty(media);
-            }
-
-            [Theory]
-            [InlineData(0, "asdasdasd")]
-            [InlineData(1, "00000000000")]
-            public void ContainsOrEquals_NoMatch(int i, string str)
-            {
-                var media = _service.MediaTableSearch_ContainsOrEquals(i, str);
-
-                Assert.Empty(media);
-            }
-        }
     }
 }

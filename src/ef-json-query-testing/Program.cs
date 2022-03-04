@@ -5,11 +5,13 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        using (var context = new EfTestDbContext())
-        {
-            //CreateBogusData.LoadAllData(context, 30, 5000, 5);
+        await using var context = EfTestDbContext.Create(Console.WriteLine);
+        CreateBogusData.LoadAllData(context);
 
-            var summary = BenchmarkRunner.Run<BenchmarkTests>();
-        }
+        //var svc = new SearchService(context);
+
+        //svc.MediaJsonSearch_RAW_SqlInterpolated(1, "7");
+
+        //var summary = BenchmarkRunner.Run<BenchmarkTests>();
     }
 }

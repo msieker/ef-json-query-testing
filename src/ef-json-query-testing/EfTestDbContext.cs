@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ef_json_query_testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 [ExcludeFromCodeCoverage]
 public class EfTestDbContext : DbContext
@@ -17,13 +18,18 @@ public class EfTestDbContext : DbContext
         //dotnet ef --startup-project ../ef-json-query-testing database update
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public static EfTestDbContext Create(Action<string>? logger = null)
     {
-        if (!optionsBuilder.IsConfigured)
+        var options = new DbContextOptionsBuilder<EfTestDbContext>();
+
+        options.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ef_testing_202203041105;Integrated Security=SSPI;Connection Timeout=5;");
+
+        if (logger != null)
         {
-            optionsBuilder.UseSqlServer("Server=localhost;Initial Catalog=ef_testing;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
-            optionsBuilder.LogTo((l) => Console.WriteLine(l)).EnableSensitiveDataLogging(true);
+            options.LogTo(logger, minimumLevel: LogLevel.Information).EnableSensitiveDataLogging(true);
         }
+
+        return new EfTestDbContext(options.Options);
     }
 
     public DbSet<DynamicField> DynamicFields { get; set; }

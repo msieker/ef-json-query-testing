@@ -1,21 +1,23 @@
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ef_json_query_testing.Tests
 {
     public class SearchServiceTests
     {
+        private readonly ITestOutputHelper output;
         private readonly ISearchService _service;
         private readonly EfTestDbContext _context;
 
-        public SearchServiceTests()
+        public SearchServiceTests(ITestOutputHelper output)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
-            optionsBuilder.UseInMemoryDatabase("testingDB");
-            _context = new EfTestDbContext(optionsBuilder.Options);
+            this.output = output;
+            _context = EfTestDbContext.Create(output.WriteLine);
             _service = new SearchService(_context);
 
-            CreateBogusData.LoadAllData(_context, 15, 20, 5);
+            //CreateBogusData.LoadAllData(_context, 15, 20, 5);
         }
 
 
@@ -26,21 +28,30 @@ namespace ef_json_query_testing.Tests
         {
             var media = _service.TableSearch(i, str);
 
-            Assert.Empty(media);
+            media.Should().BeEmpty();
         }
 
         // SearchServiceTests should run once for this class
 
-        // this test refuses to work for whatever reason, but runs when program is run.
-        //[Theory]
-        ////[InlineData(0, "asdasdasd")]
-        //[InlineData(1, "askkkkkkkkkkkkkkkkkkdasd")]
-        //public void RAW_SqlInterpolated_NoMatch(int i, string str)
-        //{
-        //    var media = _service.MediaJsonSearch_RAW_SqlInterpolated(i, str);
-        //
-        //    Assert.Empty(media);
-        //}
+         //this test refuses to work for whatever reason, but runs when program is run.
+        [Theory]
+        [InlineData(1, "askkkkkkkkkkkkkkkkkkdasd")]
+        public void RAW_SqlInterpolated_NoMatch(int i, string str)
+        {
+            var media = _service.JsonSearch(i, str);
 
+            media.Should().BeEmpty();
+        }
+
+
+        [Theory]
+        [InlineData(2, "3")]
+        [InlineData(19, "Ratione")]
+        public void RAW_SqlInterpolated_Matches(int i, string str)
+        {
+            var media = _service.JsonSearch(i, str);
+
+            media.Should().NotBeEmpty();
+        }
     }
 }

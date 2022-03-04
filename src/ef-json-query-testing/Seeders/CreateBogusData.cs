@@ -30,8 +30,12 @@ namespace ef_json_query_testing
         private const int _Media_Dynamic_FileHeight_Min = 256;
         private const int _Media_Dynamic_FileHeight_Max = 4096;
 
+        private const int FakerSeed = 42;
+        
+            
         public static void LoadAllData(EfTestDbContext context, int fieldsCount = 50, int mediaItemsCount = 1000, int listTypeCount = 10)
         {
+            Randomizer.Seed = new Random(FakerSeed);
             LoadSharedData(context, fieldsCount, listTypeCount);
 
             LoadMediaData(context, mediaItemsCount);
@@ -79,6 +83,7 @@ namespace ef_json_query_testing
         {
             // List types
             var faker = new Faker();
+            
             var cats = faker.Commerce.Categories(listTypeCount);
             var dynamicListTypes = new List<DynamicListType>();
             foreach (var c in cats)

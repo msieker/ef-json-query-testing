@@ -6,8 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/*
+ *  [AnyCategoriesFilter("A", "1")] - should run any benchmark that has a matching filter
+ *      - options: "json", "table", "nomatch", "int", "listInt", "bool", "string"
+ */
+
 namespace ef_json_query_testing
 {
+    [CategoriesColumn]
+    //[AnyCategoriesFilter("string")]
     public class BenchmarkTests
     {
         private EfTestDbContext _context = new EfTestDbContext();
@@ -23,11 +30,13 @@ namespace ef_json_query_testing
             yield return new object[] { 1, "aaaaaaaaaaaaaaaa" };
         }
 
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("json", "nomatch")]
         [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
         public void Benchmark_NotMatch_JSON(int i, string str) => _search.JsonSearch(i, str);
 
-        // [Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("table", "nomatch")]
         [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
         public void Benchmark_NotMatch_Table(int i, string str) => _search.TableSearch(i, str);
 
@@ -48,11 +57,13 @@ namespace ef_json_query_testing
         }
 
         //[Benchmark(OperationsPerInvoke = 20)]
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("json", "int")]
         [ArgumentsSource(nameof(BenchmarkData_IntMatch))]
         public void Benchmark_Int_JSON(int i, string str) => _search.JsonSearch(i, str);
 
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("table", "int")]
         [ArgumentsSource(nameof(BenchmarkData_IntMatch))]
         public void Benchmark_Int_Table(int i, string str) => _search.TableSearch(i, str);
 
@@ -73,11 +84,13 @@ namespace ef_json_query_testing
             yield return new object[] { item.FieldId, item.Value };
         }
 
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("json", "listInt")]
         [ArgumentsSource(nameof(BenchmarkData_ListMatch))]
         public void Benchmark_ListInt_JSON(int i, string str) => _search.JsonSearch(i, str);
 
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("table", "listInt")]
         [ArgumentsSource(nameof(BenchmarkData_ListMatch))]
         public void Benchmark_ListInt_Table(int i, string str) => _search.TableSearch(i, str);
 
@@ -105,11 +118,13 @@ namespace ef_json_query_testing
             yield return new object[] { item.FieldId, item.Value };
         }
 
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("json", "bool")]
         [ArgumentsSource(nameof(BenchmarkData_BoolMatch))]
         public void Benchmark_Bool_JSON(int i, string str) => _search.JsonSearch(i, str);
 
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("table", "bool")]
         [ArgumentsSource(nameof(BenchmarkData_BoolMatch))]
         public void Benchmark_Bool_Table(int i, string str) => _search.TableSearch(i, str);
 
@@ -136,11 +151,13 @@ namespace ef_json_query_testing
             yield return new object[] { item.FieldId, item.Value };
         }
 
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("json", "string")]
         [ArgumentsSource(nameof(BenchmarkData_StringFind))]
         public void Benchmark_String_JSON(int i, string str) => _search.JsonSearch(i, str);
 
-        //[Benchmark]
+        [Benchmark]
+        [BenchmarkCategory("table", "string")]
         [ArgumentsSource(nameof(BenchmarkData_StringFind))]
         public void Benchmark_String_Table(int i, string str) => _search.TableSearch(i, str);
     }

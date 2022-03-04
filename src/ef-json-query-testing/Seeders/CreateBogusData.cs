@@ -30,14 +30,14 @@ namespace ef_json_query_testing
         private const int _Media_Dynamic_FileHeight_Min = 256;
         private const int _Media_Dynamic_FileHeight_Max = 4096;
 
-        public static void LoadAllData(EfTestDbContext context, int fieldsCount = 50, int mediaItemsCount = 1000, int listTypeCount = 10)
+        public static void LoadAllData(EfTestDbContext context, int fieldsCount = 30, int mediaItemsCount = 500, int listTypeCount = 5)
         {
             LoadSharedData(context, fieldsCount, listTypeCount);
 
             LoadMediaData(context, mediaItemsCount);
         }
 
-        public static void LoadSharedData(EfTestDbContext context, int fieldsCount = 50, int listTypeCount = 10)
+        public static void LoadSharedData(EfTestDbContext context, int fieldsCount = 30, int listTypeCount = 10)
         {
             LoadDynamicListTypes(context, listTypeCount);
 

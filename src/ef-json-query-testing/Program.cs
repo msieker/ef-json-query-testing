@@ -7,11 +7,7 @@ public class Program
     {
         using (var context = new EfTestDbContext())
         {
-            //CreateBogusData.LoadAllData(context);
-
-            //var svc = new SearchService(context);
-
-            //svc.MediaJsonSearch_RAW_SqlInterpolated(1, "7");
+            //CreateBogusData.LoadAllData(context, 30, 5000, 5);
 
             var summary = BenchmarkRunner.Run<BenchmarkTests>();
         }

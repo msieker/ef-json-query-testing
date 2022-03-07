@@ -118,7 +118,7 @@ namespace ef_json_query_testing
             var faker = new Faker();
             var dynamicListItems = new List<DynamicListItem>();
 
-            foreach (var t in context.DynamicListTypes)
+            foreach (var t in context.DynamicListTypes.AsNoTracking())
             {
                 var itemCount = faker.Random.Number(_ListItemCount_Min, _ListItemCount_Max);
                 for (int j = 0; j < itemCount; j++)
@@ -133,8 +133,8 @@ namespace ef_json_query_testing
 
         public static void LoadMediaInformation(EfTestDbContext context)
         {
-            var requiredFields = context.DynamicFields.Where(f => f.IsRequired).ToList();
-            var optionalFields = context.DynamicFields.Where(f => !f.IsRequired).ToList();
+            var requiredFields = context.DynamicFields.AsNoTracking().Where(f => f.IsRequired).ToList();
+            var optionalFields = context.DynamicFields.AsNoTracking().Where(f => !f.IsRequired).ToList();
 
             var listItemsCounts = GetListItemCounts(context);
 
@@ -149,14 +149,15 @@ namespace ef_json_query_testing
                 infoItems.AddRange(GenerateFieldValues(item, faker.PickRandom(optionalFields, randomCount), faker, listItemsCounts));
 
                 item.DynamicMediaInformation = infoItems;
-                context.SaveChanges();
             }
+
+            context.SaveChanges();
         }
 
         public static void LoadMediaInformationLarge(EfTestDbContext context)
         {
-            var requiredFields = context.DynamicFields.Where(f => f.IsRequired).ToList();
-            var optionalFields = context.DynamicFields.Where(f => !f.IsRequired).ToList();
+            var requiredFields = context.DynamicFields.AsNoTracking().Where(f => f.IsRequired).ToList();
+            var optionalFields = context.DynamicFields.AsNoTracking().Where(f => !f.IsRequired).ToList();
 
             var listItemsCounts = GetListItemCounts(context);
             var hasItems = true;
@@ -164,7 +165,7 @@ namespace ef_json_query_testing
             {
 
                 GenerateMediaInformationGroup(context, requiredFields, listItemsCounts, optionalFields);
-                hasItems = context.Media_Dynamic.Include(d => d.DynamicMediaInformation).FirstOrDefault(d => d.DynamicMediaInformation.Count() == 0) != null;
+                hasItems = context.Media_Dynamic.AsNoTracking().Include(d => d.DynamicMediaInformation).FirstOrDefault(d => d.DynamicMediaInformation.Count() == 0) != null;
                 Thread.Sleep(30000);// let cpu rest for a couple seconds. then do another batch.
             }
         }
@@ -172,7 +173,7 @@ namespace ef_json_query_testing
         private static void GenerateMediaInformationGroup(EfTestDbContext context, List<DynamicField>? requiredFields, Dictionary<int, int>? listItemsCounts, List<DynamicField>? optionalFields)
         {
             var faker = new Faker();
-            var mediaItems = context.Media_Dynamic.Include(d => d.DynamicMediaInformation).OrderBy(d => d.Media_DynamicId).Take(10000).ToList();
+            var mediaItems = context.Media_Dynamic.AsNoTracking().Include(d => d.DynamicMediaInformation).OrderBy(d => d.Media_DynamicId).Take(10000).ToList();
             foreach (var item in mediaItems)
             {
                 var infoItems = new List<DynamicMediaInformation>();
@@ -183,13 +184,14 @@ namespace ef_json_query_testing
 
                 item.DynamicMediaInformation = infoItems;
             }
+
             context.SaveChanges();
         }
 
         public static void LoadMediaJson(EfTestDbContext context)
         {
             var mediaJson = new List<Media_Json>();
-            var mediaItems = context.Media_Dynamic.OrderBy(d => d.Media_DynamicId);
+            var mediaItems = context.Media_Dynamic.AsNoTracking().OrderBy(d => d.Media_DynamicId);
             foreach (var item in mediaItems)
             {
                 mediaJson.Add(item.GetMediaJsonCopy());
@@ -201,14 +203,14 @@ namespace ef_json_query_testing
 
         public static void LoadMediaJsonLarge(EfTestDbContext context)
         {
-            var maxJsonId = context.Media_Json.Count() > 0 ? context.Media_Json.Max(j => j.Media_JsonId) : 0;
-            var hasItems = context.Media_Dynamic.Max(d => d.Media_DynamicId) > maxJsonId;
+            var maxJsonId = context.Media_Json.AsNoTracking().Count() > 0 ? context.Media_Json.AsNoTracking().Max(j => j.Media_JsonId) : 0;
+            var hasItems = context.Media_Dynamic.AsNoTracking().Max(d => d.Media_DynamicId) > maxJsonId;
             while (hasItems)
             {
                 GenerateJson(context, maxJsonId);
 
-                maxJsonId = context.Media_Json.Max(j => j.Media_JsonId);
-                hasItems = context.Media_Dynamic.Max(d => d.Media_DynamicId) > maxJsonId;
+                maxJsonId = context.Media_Json.AsNoTracking().Max(j => j.Media_JsonId);
+                hasItems = context.Media_Dynamic.AsNoTracking().Max(d => d.Media_DynamicId) > maxJsonId;
                 //Thread.Sleep(10000);// let cpu rest for a couple seconds. then do another batch.
             }
         }
@@ -235,7 +237,10 @@ namespace ef_json_query_testing
 
         private static Dictionary<int, int> GetListItemCounts(EfTestDbContext context)
         {
-            return context.DynamicListItems.GroupBy(d => d.DynamicListTypeId).Select(g => new { g.Key, Count = g.Count() }).ToDictionary(g => g.Key, g => g.Count);
+            return context.DynamicListItems.AsNoTracking()
+                .GroupBy(d => d.DynamicListTypeId)
+                .Select(g => new { g.Key, Count = g.Count() })
+                .ToDictionary(g => g.Key, g => g.Count);
         }
 
         private static List<DynamicMediaInformation> GenerateFieldValues(Media_Dynamic item, IEnumerable<DynamicField> fields, Faker faker, Dictionary<int, int> listItemsCounts)

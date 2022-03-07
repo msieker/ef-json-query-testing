@@ -15,7 +15,7 @@ namespace ef_json_query_testing
 
         #region JSON
 
-        public List<Media_Json> JsonSearch(int DynamicFieldId, string value)
+        public List<Media_Json> JsonSearch_Raw(int DynamicFieldId, string value)
         {
             var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
             if (field == null)
@@ -38,7 +38,7 @@ namespace ef_json_query_testing
         }
 
 
-        public List<Media_Json> JsonSearch(Dictionary<int, string> searchFields)
+        public List<Media_Json> JsonSearch_Raw(Dictionary<int, string> searchFields)
         {
             if (searchFields == null || searchFields.Count() == 0)
             {
@@ -144,7 +144,7 @@ namespace ef_json_query_testing
 
         #region Dynamic Table Store
 
-        public List<Media_Dynamic> TableSearch_ViaInfoTable(int DynamicFieldId, string value)
+        public List<Media_Dynamic> TableSearch_Info(int DynamicFieldId, string value)
         {
             var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
 
@@ -169,7 +169,7 @@ namespace ef_json_query_testing
             return _context.Media_Dynamic.Include(m => m.DynamicMediaInformation).Where(m => ids.Contains(m.Media_DynamicId)).ToList();
         }
 
-        public List<Media_Dynamic> TableSearch_ViaMediaTable(int DynamicFieldId, string value)
+        public List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value)
         {
             var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
 
@@ -192,7 +192,7 @@ namespace ef_json_query_testing
         }
 
 
-        public List<Media_Dynamic> TableSearch_ViaMediaTable(Dictionary<int, string> searchFields)
+        public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields)
         {
             if (searchFields == null || searchFields.Count() == 0)
             {
@@ -227,16 +227,16 @@ namespace ef_json_query_testing
 
     public interface ISearchService
     {
-        List<Media_Json> JsonSearch(int DynamicFieldId, string value);
-        List<Media_Json> JsonSearch(Dictionary<int, string> searchFields);
+        List<Media_Json> JsonSearch_Raw(int DynamicFieldId, string value);
+        List<Media_Json> JsonSearch_Raw(Dictionary<int, string> searchFields);
 
         List<Media_Json> JsonSearch_EfMagic(int DynamicFieldId, string value);
         List<Media_Json> JsonSearch_EfMagic(Dictionary<int, string> searchFields);
 
 
-        List<Media_Dynamic> TableSearch_ViaInfoTable(int DynamicFieldId, string value);
-        List<Media_Dynamic> TableSearch_ViaMediaTable(int DynamicFieldId, string value);
+        List<Media_Dynamic> TableSearch_Info(int DynamicFieldId, string value);
+        List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value);
 
-        List<Media_Dynamic> TableSearch_ViaMediaTable(Dictionary<int, string> searchFields);
+        List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields);
     }
 }

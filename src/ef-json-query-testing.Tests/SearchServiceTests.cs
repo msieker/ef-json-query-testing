@@ -26,7 +26,7 @@ namespace ef_json_query_testing.Tests
         [InlineData(1, "00000000000")]
         public void ContainsOrEquals_NoMatch(int i, string str)
         {
-            var media = _service.TableSearch(i, str);
+            var media = _service.TableSearch_Media(i, str);
 
             media.Should().BeEmpty();
         }
@@ -38,7 +38,7 @@ namespace ef_json_query_testing.Tests
         [InlineData(1, "askkkkkkkkkkkkkkkkkkdasd")]
         public void RAW_SqlInterpolated_NoMatch(int i, string str)
         {
-            var media = _service.JsonSearch(i, str);
+            var media = _service.JsonSearch_Raw(i, str);
 
             media.Should().BeEmpty();
         }
@@ -49,7 +49,7 @@ namespace ef_json_query_testing.Tests
         [InlineData(34, "voluptate")]
         public void RAW_SqlInterpolated_Matches(int i, string str)
         {
-            var media = _service.JsonSearch(i, str);
+            var media = _service.JsonSearch_Raw(i, str);
 
             media.Should().NotBeEmpty();
         }

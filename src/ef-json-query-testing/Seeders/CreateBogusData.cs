@@ -81,7 +81,7 @@ namespace ef_json_query_testing
         {
             // List types
             var faker = new Faker();
-            
+
             var cats = faker.Commerce.Categories(listTypeCount);
             var dynamicListTypes = new List<DynamicListType>();
             foreach (var c in cats)
@@ -131,7 +131,7 @@ namespace ef_json_query_testing
             context.SaveChanges();
         }
 
-        private static void LoadMediaInformation(EfTestDbContext context)
+        public static void LoadMediaInformation(EfTestDbContext context)
         {
             var requiredFields = context.DynamicFields.Where(f => f.IsRequired).ToList();
             var optionalFields = context.DynamicFields.Where(f => !f.IsRequired).ToList();
@@ -153,12 +153,80 @@ namespace ef_json_query_testing
             }
         }
 
-        private static void LoadMediaJson(EfTestDbContext context)
+        public static void LoadMediaInformationLarge(EfTestDbContext context)
+        {
+            var requiredFields = context.DynamicFields.Where(f => f.IsRequired).ToList();
+            var optionalFields = context.DynamicFields.Where(f => !f.IsRequired).ToList();
+
+            var listItemsCounts = GetListItemCounts(context);
+            var hasItems = true;
+            while (hasItems)
+            {
+
+                GenerateMediaInformationGroup(context, requiredFields, listItemsCounts, optionalFields);
+                hasItems = context.Media_Dynamic.Include(d => d.DynamicMediaInformation).FirstOrDefault(d => d.DynamicMediaInformation.Count() == 0) != null;
+                Thread.Sleep(30000);// let cpu rest for a couple seconds. then do another batch.
+            }
+        }
+
+        private static void GenerateMediaInformationGroup(EfTestDbContext context, List<DynamicField>? requiredFields, Dictionary<int, int>? listItemsCounts, List<DynamicField>? optionalFields)
+        {
+            var faker = new Faker();
+            var mediaItems = context.Media_Dynamic.Include(d => d.DynamicMediaInformation).OrderBy(d => d.Media_DynamicId).Take(10000).ToList();
+            foreach (var item in mediaItems)
+            {
+                var infoItems = new List<DynamicMediaInformation>();
+                infoItems.AddRange(GenerateFieldValues(item, requiredFields, faker, listItemsCounts));
+
+                var randomCount = faker.Random.Number(0, optionalFields.Count());
+                infoItems.AddRange(GenerateFieldValues(item, faker.PickRandom(optionalFields, randomCount), faker, listItemsCounts));
+
+                item.DynamicMediaInformation = infoItems;
+            }
+            context.SaveChanges();
+        }
+
+        public static void LoadMediaJson(EfTestDbContext context)
         {
             var mediaJson = new List<Media_Json>();
-            foreach (var media in context.Media_Dynamic)
+            var mediaItems = context.Media_Dynamic.OrderBy(d => d.Media_DynamicId);
+            foreach (var item in mediaItems)
             {
-                mediaJson.Add(media.GetMediaJsonCopy());
+                mediaJson.Add(item.GetMediaJsonCopy());
+            }
+
+            context.Media_Json.AddRange(mediaJson);
+            context.SaveChanges();
+        }
+
+        public static void LoadMediaJsonLarge(EfTestDbContext context)
+        {
+            var maxJsonId = context.Media_Json.Count() > 0 ? context.Media_Json.Max(j => j.Media_JsonId) : 0;
+            var hasItems = context.Media_Dynamic.Max(d => d.Media_DynamicId) > maxJsonId;
+            while (hasItems)
+            {
+                GenerateJson(context, maxJsonId);
+
+                maxJsonId = context.Media_Json.Max(j => j.Media_JsonId);
+                hasItems = context.Media_Dynamic.Max(d => d.Media_DynamicId) > maxJsonId;
+                //Thread.Sleep(10000);// let cpu rest for a couple seconds. then do another batch.
+            }
+        }
+
+        private static void GenerateJson(EfTestDbContext context, int maxJsonId)
+        {
+            var mediaJson = new List<Media_Json>();
+            var mediaItems = context.Media_Dynamic
+                .AsNoTracking()
+                .Include(d => d.DynamicMediaInformation)
+                .ThenInclude(i => i.Field)
+                .Where(d => d.Media_DynamicId > maxJsonId)
+                .OrderBy(d => d.Media_DynamicId)
+                .Take(10000)
+                .ToList();
+            foreach (var item in mediaItems)
+            {
+                mediaJson.Add(item.GetMediaJsonCopy());
             }
 
             context.Media_Json.AddRange(mediaJson);

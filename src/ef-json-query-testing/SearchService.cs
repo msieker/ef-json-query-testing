@@ -49,7 +49,7 @@ namespace ef_json_query_testing
 
             var fieldList = _context.DynamicFields.ToList();
             var query = _context.Media_Json.AsQueryable();
-
+            var q2 = _context.Media_Dynamic.AsQueryable();
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
@@ -103,6 +103,35 @@ namespace ef_json_query_testing
             }
         }
 
+        public List<Media_Dynamic> TableSearch(Dictionary<int, string> searchFields)
+        {
+            if (searchFields == null || searchFields.Count() == 0)
+            {
+                return new List<Media_Dynamic>();
+            }
+
+            var fieldList = _context.DynamicFields.ToList();
+            var query = _context.Media_Dynamic.AsQueryable();
+            foreach (var searchField in searchFields)
+            {
+                var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
+                if (field == null)
+                {
+                    continue;
+                }
+                var jsonPath = $"$.\"{field.JsonName}\"";
+                if (field.DataType == DataTypes.StringValue)
+                {
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value.Contains(searchField.Value)));
+                }
+                else
+                {
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == searchField.Value));
+                }
+            }
+
+            return query.ToList();
+        }
         #endregion
     }
 

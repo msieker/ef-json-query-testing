@@ -15,6 +15,7 @@ public class Program
         //var result = svc.JsonSearch(4, "6");
         //var result1 = svc.JsonSearch(4, "6");
         var result = svc.JsonSearch(new Dictionary<int, string>() { { 4, "6" }, {24, "Suscipit" } });
+        var result1 = svc.TableSearch(new Dictionary<int, string>() { { 4, "6" }, { 24, "Suscipit" } });
         Console.WriteLine(result.Count);
         //var summary = BenchmarkRunner.Run<BenchmarkTests>();
     }

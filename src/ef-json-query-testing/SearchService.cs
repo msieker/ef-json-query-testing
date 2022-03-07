@@ -60,19 +60,19 @@ namespace ef_json_query_testing
 
                 parameters.Add(MakeJsonPath(field.JsonName));
 
-                sqlStatement += $" AND JSON_VALUE([Details], {count}) ";
+                sqlStatement += $" AND JSON_VALUE([Details], {{{count}}}) ";
                 count++;
 
                 if (field.DataType == DataTypes.StringValue)
                 {
                     var containsString = "%" + searchField.Value + "%";
                     parameters.Add(containsString);
-                    sqlStatement += $" like {count}";
+                    sqlStatement += $" like {{{count}}}";
                 }
                 else
                 {
                     parameters.Add(searchField.Value);
-                    sqlStatement += $" = {count}";
+                    sqlStatement += $" = {{{count}}}";
                 }
 
                 count++;

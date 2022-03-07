@@ -12,7 +12,6 @@ namespace ef_json_query_testing
             _context = context;
         }
 
-
         #region JSON
 
         public List<Media_Json> JsonSearch(int DynamicFieldId, string value)
@@ -37,6 +36,55 @@ namespace ef_json_query_testing
             }
         }
 
+
+        public List<Media_Json> JsonSearch(Dictionary<int, string> searchFields)
+        {
+            if (searchFields == null || searchFields.Count() == 0)
+            {
+                return new List<Media_Json>();
+            }
+
+            var fieldList = _context.DynamicFields.ToList();
+
+            var sqlStatement = "SELECT * FROM [dbo].[Media_Json] WHERE 1=1 ";
+
+            var count = 0;
+            var parameters = new List<object>();
+            foreach (var searchField in searchFields)
+            {
+                var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
+                if (field == null)
+                {
+                    continue;
+                }
+
+                parameters.Add(MakeJsonPath(field.JsonName));
+
+                sqlStatement += $" AND JSON_VALUE([Details], {count}) ";
+                count++;
+
+                if (field.DataType == DataTypes.StringValue)
+                {
+                    var containsString = "%" + searchField.Value + "%";
+                    parameters.Add(containsString);
+                    sqlStatement += $" like {count}";
+                }
+                else
+                {
+                    parameters.Add(searchField.Value);
+                    sqlStatement += $" = {count}";
+                }
+
+                count++;
+            }
+
+            return _context.Media_Json.FromSqlRaw(sqlStatement, parameters.ToArray()).ToList();
+        }
+
+        private string MakeJsonPath(string name)
+        {
+            return $"$.\"{name}\"";
+        }
 
         #endregion
 

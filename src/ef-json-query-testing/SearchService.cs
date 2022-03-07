@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using ef_json_query_testing.Translators;
 
 namespace ef_json_query_testing
 {
@@ -32,7 +33,9 @@ namespace ef_json_query_testing
             }
             else
             {
-                return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}").ToList();
+                var q = _context.Media_Json.Where(m => EF.Functions.JsonValue(m.Details, jsonPath) == value);
+                return q.ToList();
+                //return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}").ToList();
             }
         }
 
@@ -45,11 +48,8 @@ namespace ef_json_query_testing
             }
 
             var fieldList = _context.DynamicFields.ToList();
+            var query = _context.Media_Json.AsQueryable();
 
-            var sqlStatement = "SELECT * FROM [dbo].[Media_Json] WHERE 1=1 ";
-
-            var count = 0;
-            var parameters = new List<object>();
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
@@ -57,28 +57,18 @@ namespace ef_json_query_testing
                 {
                     continue;
                 }
-
-                parameters.Add(MakeJsonPath(field.JsonName));
-
-                sqlStatement += $" AND JSON_VALUE([Details], {{{count}}}) ";
-                count++;
-
+                var jsonPath = $"$.\"{field.JsonName}\"";
                 if (field.DataType == DataTypes.StringValue)
                 {
-                    var containsString = "%" + searchField.Value + "%";
-                    parameters.Add(containsString);
-                    sqlStatement += $" like {{{count}}}";
+                    query = query.Where(q => EF.Functions.JsonValue(q.Details, jsonPath).Contains(searchField.Value));
                 }
                 else
                 {
-                    parameters.Add(searchField.Value);
-                    sqlStatement += $" = {{{count}}}";
+                    query = query.Where(q => EF.Functions.JsonValue(q.Details, jsonPath) == searchField.Value);
                 }
-
-                count++;
             }
 
-            return _context.Media_Json.FromSqlRaw(sqlStatement, parameters.ToArray()).ToList();
+            return query.ToList();
         }
 
         private string MakeJsonPath(string name)

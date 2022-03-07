@@ -17,7 +17,7 @@ namespace ef_json_query_testing
     //[AnyCategoriesFilter("string")]
     public class BenchmarkTests
     {
-        private EfTestDbContext _context = new EfTestDbContext();
+        private EfTestDbContext _context = EfTestDbContext.Create();
         private SearchService _search;
 
         public BenchmarkTests()
@@ -38,7 +38,7 @@ namespace ef_json_query_testing
         [Benchmark]
         [BenchmarkCategory("table", "nomatch")]
         [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void Benchmark_NotMatch_Table(int i, string str) => _search.TableSearch(i, str);
+        public void Benchmark_NotMatch_Table(int i, string str) => _search.TableSearch_ViaInfoTable(i, str);
 
 
 
@@ -65,7 +65,7 @@ namespace ef_json_query_testing
         [Benchmark]
         [BenchmarkCategory("table", "int")]
         [ArgumentsSource(nameof(BenchmarkData_IntMatch))]
-        public void Benchmark_Int_Table(int i, string str) => _search.TableSearch(i, str);
+        public void Benchmark_Int_Table(int i, string str) => _search.TableSearch_ViaInfoTable(i, str);
 
 
 
@@ -92,7 +92,7 @@ namespace ef_json_query_testing
         [Benchmark]
         [BenchmarkCategory("table", "listInt")]
         [ArgumentsSource(nameof(BenchmarkData_ListMatch))]
-        public void Benchmark_ListInt_Table(int i, string str) => _search.TableSearch(i, str);
+        public void Benchmark_ListInt_Table(int i, string str) => _search.TableSearch_ViaInfoTable(i, str);
 
 
 
@@ -126,7 +126,7 @@ namespace ef_json_query_testing
         [Benchmark]
         [BenchmarkCategory("table", "bool")]
         [ArgumentsSource(nameof(BenchmarkData_BoolMatch))]
-        public void Benchmark_Bool_Table(int i, string str) => _search.TableSearch(i, str);
+        public void Benchmark_Bool_Table(int i, string str) => _search.TableSearch_ViaInfoTable(i, str);
 
 
 
@@ -159,6 +159,6 @@ namespace ef_json_query_testing
         [Benchmark]
         [BenchmarkCategory("table", "string")]
         [ArgumentsSource(nameof(BenchmarkData_StringFind))]
-        public void Benchmark_String_Table(int i, string str) => _search.TableSearch(i, str);
+        public void Benchmark_String_Table(int i, string str) => _search.TableSearch_ViaInfoTable(i, str);
     }
 }

@@ -8,7 +8,7 @@ public class Program
     public static async Task Main(string[] args)
     {
         await using var context = EfTestDbContext.Create(Console.WriteLine);
-        CreateBogusData.LoadAllData(context);
+        //CreateBogusData.LoadAllData(context);
 
         //var svc = new SearchService(context);
 

@@ -191,7 +191,11 @@ namespace ef_json_query_testing
         public static void LoadMediaJson(EfTestDbContext context)
         {
             var mediaJson = new List<Media_Json>();
-            var mediaItems = context.Media_Dynamic.AsNoTracking().OrderBy(d => d.Media_DynamicId);
+            var mediaItems = context.Media_Dynamic
+                .AsNoTracking()
+                .Include(d => d.DynamicMediaInformation)
+                .ThenInclude(i => i.Field)
+                .OrderBy(d => d.Media_DynamicId);
             foreach (var item in mediaItems)
             {
                 mediaJson.Add(item.GetMediaJsonCopy());

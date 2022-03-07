@@ -3,6 +3,8 @@ using ef_json_query_testing;
 
 public class Program
 {
+    // run benchmarks using:
+    // dotnet run -c Release
     public static async Task Main(string[] args)
     {
         await using var context = EfTestDbContext.Create(Console.WriteLine);

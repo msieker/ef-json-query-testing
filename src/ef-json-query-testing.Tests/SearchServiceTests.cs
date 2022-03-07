@@ -45,8 +45,8 @@ namespace ef_json_query_testing.Tests
 
 
         [Theory]
-        [InlineData(2, "3")]
-        [InlineData(19, "Ratione")]
+        [InlineData(4, "6")]
+        [InlineData(34, "voluptate")]
         public void RAW_SqlInterpolated_Matches(int i, string str)
         {
             var media = _service.JsonSearch(i, str);

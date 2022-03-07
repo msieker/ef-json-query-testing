@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ef_json_query_testing
 {
@@ -36,5 +33,15 @@ namespace ef_json_query_testing
         [Required]
         public int FieldId { get; set; }
         public DynamicField Field { get; set; }
+
+
+        internal class Configuration : IEntityTypeConfiguration<DynamicMediaInformation>
+        {
+            public void Configure(EntityTypeBuilder<DynamicMediaInformation> builder)
+            {
+                builder.HasIndex(b => b.FieldId)
+                    .IncludeProperties(i => new { i.Value, i.MediaId });
+            }
+        }
     }
 }

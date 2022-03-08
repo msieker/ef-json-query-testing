@@ -242,15 +242,14 @@ namespace ef_json_query_testing
                 int id = faker.PickRandom<int>(mediaIds);
                 var values = _context.DynamicMediaInformation.AsNoTracking().Include(i => i.Field).Where(i => i.MediaId == id).ToList();
 
-                // pick fields to search with one of each type.
-                var intField = faker.PickRandom(values.Where(v => v.Field.DataType == DataTypes.IntValue && !v.Field.DynamicListTypeId.HasValue));
-                var listIntField = faker.PickRandom(values.Where(v => v.Field.DataType == DataTypes.IntValue && v.Field.DynamicListTypeId.HasValue));
-                var boolField = faker.PickRandom(values.Where(v => v.Field.DataType == DataTypes.BoolValue));
-                var stringField = faker.PickRandom(values.Where(v => v.Field.DataType == DataTypes.StringValue && v.Value.Length > 15));
+                var intFields = values.Where(v => v.Field.DataType == DataTypes.IntValue && !v.Field.DynamicListTypeId.HasValue);
+                var listIntFields = values.Where(v => v.Field.DataType == DataTypes.IntValue && v.Field.DynamicListTypeId.HasValue);
+                var boolFields = values.Where(v => v.Field.DataType == DataTypes.BoolValue);
+                var stringFields = values.Where(v => v.Field.DataType == DataTypes.StringValue && v.Value.Length > 15);
 
                 // if each field doesnt have an available option, try again.
                 // (this is based on the idea it's easier to just pick random again, than it is to search for all the matching criteria.)
-                if (intField == null || listIntField == null || boolField == null || stringField == null)
+                if (intFields.Count() == 0 || listIntFields.Count() == 0 || boolFields.Count() == 0 || stringFields.Count() == 0)
                 {
                     continue;
                 }
@@ -259,6 +258,12 @@ namespace ef_json_query_testing
                     // all fields have an option, dont repeat the loop.
                     loopCount = maxloops;
                 }
+
+                // pick fields to search with, one of each type.
+                var intField = faker.PickRandom(intFields);
+                var listIntField = faker.PickRandom(listIntFields);
+                var boolField = faker.PickRandom(boolFields);
+                var stringField = faker.PickRandom(stringFields);                
 
                 // add search values to dict                
                 list.Add(intField.FieldId, intField.Value);

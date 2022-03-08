@@ -14,7 +14,7 @@ namespace ef_json_query_testing.Tests
         public SearchServiceTests(ITestOutputHelper output)
         {
             this.output = output;
-            _context = EfTestDbContext.Create(output.WriteLine);
+            _context = EfTestDbContext.Create(true, output.WriteLine);
             _service = new SearchService(_context);
 
             //CreateBogusData.LoadAllData(_context, 15, 20, 5);

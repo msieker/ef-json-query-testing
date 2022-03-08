@@ -44,7 +44,7 @@ namespace ef_json_query_testing
                         JsonSerializer.Deserialize<Dictionary<string, object>>(v, new JsonSerializerOptions(JsonSerializerDefaults.General))
                         ?? new Dictionary<string, object>(),
                     new ValueComparer<Dictionary<string, object>>(
-                        (d1, d2) => d1.OrderBy(kv => kv.Key).SequenceEqual(d2.OrderBy(kv => kv.Key)),
+                        (d1, d2) => d2 != null && d1 != null && d1.OrderBy(kv => kv.Key).SequenceEqual(d2.OrderBy(kv => kv.Key)),
                         c => c.Aggregate(0, (a, kv) => HashCode.Combine(a, kv.Key.GetHashCode(), kv.Value.GetHashCode()))
                     ));
             }

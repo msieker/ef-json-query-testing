@@ -8,15 +8,15 @@ public class Program
     // dotnet run -c Release
     public static async Task Main(string[] args)
     {
-        //for running with a debugger: BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
-        await using var context = EfTestDbContext.Create(Console.WriteLine);
+        await using var context = EfTestDbContext.Create(true);
         //CreateBogusData.LoadAllData(context);
 
-        //var svc = new SearchService(context);
+        var svc = new SearchService(context);
 
         //svc.MediaJsonSearch_RAW_SqlInterpolated(1, "7");
-
+        //var result1 = svc.JsonSearch_Raw(new Dictionary<int, string>() { { 4, "6" }, { 24, "Suscipit" } });
+        //var result2 = svc.JsonSearch_EfMagic(new Dictionary<int, string>() { { 4, "6" }, { 24, "Suscipit" } });
+        //Console.WriteLine($"{result1.Count}, {result2.Count}");
         var summary = BenchmarkRunner.Run<BenchmarkTests>();
-
     }
 }

@@ -61,22 +61,18 @@ namespace ef_json_query_testing
 
                 parameters.Add($"$.\"{field.JsonName}\"");
 
-                sqlStatement += $" AND JSON_VALUE([Details], {{{count}}}) ";
-                count++;
-
                 if (field.DataType == DataTypes.StringValue)
                 {
-                    var containsString = "%" + searchField.Value + "%";
-                    parameters.Add(containsString);
-                    sqlStatement += $" like {{{count}}}";
+                    sqlStatement += $" AND CHARINDEX(JSON_VALUE([Details], {{{count++}}}), {{{count++}}}) > 0 ";
+                    parameters.Add(searchField.Value);
                 }
                 else
                 {
+                    sqlStatement += $" AND JSON_VALUE([Details], {{{count++}}}) = {{{count++}}}";
                     parameters.Add(searchField.Value);
-                    sqlStatement += $" = {{{count}}}";
                 }
 
-                count++;
+                //count++;
             }
 
             return _context.Media_Json.FromSqlRaw(sqlStatement, parameters.ToArray()).ToList();

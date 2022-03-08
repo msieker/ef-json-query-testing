@@ -21,12 +21,14 @@ namespace ef_json_query_testing
     [AnyCategoriesFilter("many")]
     public class BenchmarkTests
     {
-        private EfTestDbContext _context = EfTestDbContext.Create();
+        private EfTestDbContext _context = EfTestDbContext.Create(false);
         private SearchService _search;
 
         public BenchmarkTests()
         {
             _search = new SearchService(_context);
+            Randomizer.Seed = new Random(42);
+            searchFields = BenchmarkData_List();
         }
 
         public IEnumerable<object[]> BenchmarkData_NoMatch()
@@ -65,7 +67,7 @@ namespace ef_json_query_testing
             var intTypeField = _context.DynamicFields.First(m => !m.DynamicListTypeId.HasValue && m.DataType == DataTypes.IntValue);
 
             var faker = new Faker();
-            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == intTypeField.DynamicFieldId)).FirstOrDefault();
+            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == intTypeField.DynamicFieldId)).First();
 
             yield return new object[] { item.FieldId, item.Value };
         }
@@ -103,7 +105,7 @@ namespace ef_json_query_testing
             var listTypeField = _context.DynamicFields.First(m => m.DynamicListTypeId.HasValue);
 
             var faker = new Faker();
-            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == listTypeField.DynamicFieldId)).FirstOrDefault();
+            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == listTypeField.DynamicFieldId)).First();
 
             yield return new object[] { item.FieldId, item.Value };
         }
@@ -147,7 +149,7 @@ namespace ef_json_query_testing
             var boolTypeField = _context.DynamicFields.First(m => m.DataType == DataTypes.BoolValue);
 
             var faker = new Faker();
-            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == boolTypeField.DynamicFieldId)).FirstOrDefault();
+            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == boolTypeField.DynamicFieldId)).First();
 
             yield return new object[] { item.FieldId, item.Value };
         }
@@ -190,7 +192,7 @@ namespace ef_json_query_testing
             var stringTypeField = _context.DynamicFields.First(m => m.DataType == DataTypes.StringValue);
 
             var faker = new Faker();
-            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == stringTypeField.DynamicFieldId)).FirstOrDefault();
+            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == stringTypeField.DynamicFieldId)).First();
 
             yield return new object[] { item.FieldId, item.Value };
         }
@@ -228,7 +230,7 @@ namespace ef_json_query_testing
 
 
 
-        public IEnumerable<object> BenchmarkData_List()
+        public Dictionary<int,string> BenchmarkData_List()
         {
             // all values need to be in one object
             // select an object.
@@ -278,10 +280,10 @@ namespace ef_json_query_testing
                 throw new Exception("Didnt find a good test value.");
             }
 
-            yield return list;
+            return list;
         }
 
-        [ParamsSource(nameof(BenchmarkData_List))]
+        //[ParamsSource(nameof(BenchmarkData_List))]
         public Dictionary<int, string> searchFields { get; set; }
 
 

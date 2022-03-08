@@ -11,14 +11,14 @@ using System.Threading.Tasks;
  *  [AnyCategoriesFilter("A", "1")] - should run any benchmark that has a matching filter
  *      - options: 
  *           srategy used: "json", "table"
- *           test type: "nomatch", "int", "listInt", "bool", "string", "many", "all"
+ *           test type: "nomatch", "int", "listInt", "bool", "string", "fewfields", "allfields"
  *           method used: "raw", "magic", "info", "media"
  */
 
 namespace ef_json_query_testing
 {
     [CategoriesColumn]
-    [AnyCategoriesFilter("all")]
+    [AnyCategoriesFilter("allfields")]
     public class BenchmarkTests
     {
         private EfTestDbContext _context = EfTestDbContext.Create(false);
@@ -289,16 +289,16 @@ namespace ef_json_query_testing
 
 
         [Benchmark]
-        [BenchmarkCategory("json", "few", "raw")]
-        public void Benchmark_Few_JSON_Raw() => _search.JsonSearch_Raw(fewSearchFields);
+        [BenchmarkCategory("json", "fewfields", "raw")]
+        public void Benchmark_FewFields_JSON_Raw() => _search.JsonSearch_Raw(fewSearchFields);
 
         [Benchmark]
-        [BenchmarkCategory("json", "few", "magic")]
-        public void Benchmark_Few_JSON_Magic() => _search.JsonSearch_EfMagic(fewSearchFields);
+        [BenchmarkCategory("json", "fewfields", "magic")]
+        public void Benchmark_FewFields_JSON_Magic() => _search.JsonSearch_EfMagic(fewSearchFields);
 
         [Benchmark]
-        [BenchmarkCategory("table", "few", "media")]
-        public void Benchmark_Few_Table_Media() => _search.TableSearch_Media(fewSearchFields);
+        [BenchmarkCategory("table", "fewfields", "media")]
+        public void Benchmark_FewFields_Table_Media() => _search.TableSearch_Media(fewSearchFields);
 
 
 
@@ -338,15 +338,15 @@ namespace ef_json_query_testing
 
 
         [Benchmark]
-        [BenchmarkCategory("json", "all", "raw")]
-        public void Benchmark_All_JSON_Raw() => _search.JsonSearch_Raw(allSearchFields);
+        [BenchmarkCategory("json", "allfields", "raw")]
+        public void Benchmark_AllFields_JSON_Raw() => _search.JsonSearch_Raw(allSearchFields);
 
         [Benchmark]
-        [BenchmarkCategory("json", "all", "magic")]
-        public void Benchmark_All_JSON_Magic() => _search.JsonSearch_EfMagic(allSearchFields);
+        [BenchmarkCategory("json", "allfields", "magic")]
+        public void Benchmark_AllFields_JSON_Magic() => _search.JsonSearch_EfMagic(allSearchFields);
 
         [Benchmark]
-        [BenchmarkCategory("table", "all", "media")]
-        public void Benchmark_All_Table_Media() => _search.TableSearch_Media(allSearchFields);
+        [BenchmarkCategory("table", "allfields", "media")]
+        public void Benchmark_AllFields_Table_Media() => _search.TableSearch_Media(allSearchFields);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Bogus;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 namespace ef_json_query_testing
 {
     [CategoriesColumn]
-    //[AnyCategoriesFilter("string")]
+    [AnyCategoriesFilter("many")]
     public class BenchmarkTests
     {
         private EfTestDbContext _context = EfTestDbContext.Create();
@@ -227,32 +228,70 @@ namespace ef_json_query_testing
 
 
 
-        public IEnumerable<object[]> BenchmarkData_List()
+        public Dictionary<int, string> BenchmarkData_List()
         {
-            var list = new List<object[]>();
+            // all values need to be in one object
+            // select an object.
+            var mediaIds = _context.Media_Dynamic.AsNoTracking().Select(m => m.Media_DynamicId);
+            var faker = new Faker();
 
-            list.AddRange(BenchmarkData_NoMatch());
-            list.AddRange(BenchmarkData_IntMatch());
-            list.AddRange(BenchmarkData_ListMatch());
-            list.AddRange(BenchmarkData_BoolMatch());
-            list.AddRange(BenchmarkData_StringFind());
+            var list = new Dictionary<int, string>();
+            var maxloops = 10;
+            for (int loopCount = 0; loopCount < maxloops; loopCount++)
+            {
+                int id = faker.PickRandom<int>(mediaIds);
+                var values = _context.DynamicMediaInformation.AsNoTracking().Include(i => i.Field).Where(i => i.MediaId == id).ToList();
+
+                // pick fields to search with one of each type.
+                var intField = faker.PickRandom(values.Where(v => v.Field.DataType == DataTypes.IntValue && !v.Field.DynamicListTypeId.HasValue));
+                var listIntField = faker.PickRandom(values.Where(v => v.Field.DataType == DataTypes.IntValue && v.Field.DynamicListTypeId.HasValue));
+                var boolField = faker.PickRandom(values.Where(v => v.Field.DataType == DataTypes.BoolValue));
+                var stringField = faker.PickRandom(values.Where(v => v.Field.DataType == DataTypes.StringValue && v.Value.Length > 15));
+
+                // if each field doesnt have an available option, try again.
+                // (this is based on the idea it's easier to just pick random again, than it is to search for all the matching criteria.)
+                if (intField == null || listIntField == null || boolField == null || stringField == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    // all fields have an option, dont repeat the loop.
+                    loopCount = maxloops;
+                }
+
+                // add search values to dict                
+                list.Add(intField.FieldId, intField.Value);
+                list.Add(listIntField.FieldId, listIntField.Value);
+                list.Add(boolField.FieldId, boolField.Value);
+                list.Add(stringField.FieldId, faker.PickRandom<string>(stringField.Value.Split(' ')));
+
+            }
+
+            //throw if something wasnt picked.
+            if (list.Count < 3)
+            {
+                throw new Exception("Didnt find a good test value.");
+            }
 
             return list;
         }
 
+        [ParamsSource(nameof(BenchmarkData_List))]
+        public Dictionary<int, string> searchFields { get; set; }
+
+
+
         [Benchmark]
         [BenchmarkCategory("json", "many", "raw")]
-        [ArgumentsSource(nameof(BenchmarkData_StringFind))]
-        public void Benchmark_String_JSON_Raw(Dictionary<int, string> searchFields) => _search.JsonSearch_Raw(searchFields);
+        public void Benchmark_Many_JSON_Raw() => _search.JsonSearch_Raw(searchFields);
 
         [Benchmark]
         [BenchmarkCategory("json", "many", "magic")]
-        [ArgumentsSource(nameof(BenchmarkData_StringFind))]
-        public void Benchmark_String_JSON_Magic(Dictionary<int, string> searchFields) => _search.JsonSearch_EfMagic(searchFields);
+        public void Benchmark_Many_JSON_Magic() => _search.JsonSearch_EfMagic(searchFields);
 
         [Benchmark]
         [BenchmarkCategory("table", "many", "media")]
-        [ArgumentsSource(nameof(BenchmarkData_StringFind))]
-        public void Benchmark_String_Table_Media(Dictionary<int, string> searchFields) => _search.TableSearch_Media(searchFields);
+        public void Benchmark_Many_Table_Media() => _search.TableSearch_Media(searchFields);
     }
 }

@@ -228,7 +228,7 @@ namespace ef_json_query_testing
 
 
 
-        public Dictionary<int, string> BenchmarkData_List()
+        public IEnumerable<object> BenchmarkData_List()
         {
             // all values need to be in one object
             // select an object.
@@ -264,8 +264,7 @@ namespace ef_json_query_testing
                 list.Add(intField.FieldId, intField.Value);
                 list.Add(listIntField.FieldId, listIntField.Value);
                 list.Add(boolField.FieldId, boolField.Value);
-                list.Add(stringField.FieldId, faker.PickRandom<string>(stringField.Value.Split(' ')));
-
+                list.Add(stringField.FieldId, faker.PickRandom(stringField.Value.Split(' ')));
             }
 
             //throw if something wasnt picked.
@@ -274,7 +273,7 @@ namespace ef_json_query_testing
                 throw new Exception("Didnt find a good test value.");
             }
 
-            return list;
+            yield return list;
         }
 
         [ParamsSource(nameof(BenchmarkData_List))]

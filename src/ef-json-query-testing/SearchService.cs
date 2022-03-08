@@ -38,7 +38,7 @@ namespace ef_json_query_testing
         }
 
 
-        public List<Media_Json> JsonSearch_Raw(Dictionary<int, string> searchFields)
+        public List<Media_Json> JsonSearch_Raw_CharIndex(Dictionary<int, string> searchFields)
         {
             if (searchFields == null || searchFields.Count() == 0)
             {
@@ -65,6 +65,46 @@ namespace ef_json_query_testing
                 {
                     sqlStatement += $" AND CHARINDEX(JSON_VALUE([Details], {{{count++}}}), {{{count++}}}) > 0 ";
                     parameters.Add(searchField.Value);
+                }
+                else
+                {
+                    sqlStatement += $" AND JSON_VALUE([Details], {{{count++}}}) = {{{count++}}}";
+                    parameters.Add(searchField.Value);
+                }
+
+                //count++;
+            }
+
+            return _context.Media_Json.FromSqlRaw(sqlStatement, parameters.ToArray()).ToList();
+        }
+
+        public List<Media_Json> JsonSearch_Raw_Like(Dictionary<int, string> searchFields)
+        {
+            if (searchFields == null || searchFields.Count() == 0)
+            {
+                return new List<Media_Json>();
+            }
+
+            var fieldList = _context.DynamicFields.ToList();
+
+            var sqlStatement = "SELECT * FROM [dbo].[Media_Json] WHERE 1=1 ";
+
+            var count = 0;
+            var parameters = new List<object>();
+            foreach (var searchField in searchFields)
+            {
+                var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
+                if (field == null)
+                {
+                    continue;
+                }
+
+                parameters.Add($"$.\"{field.JsonName}\"");
+
+                if (field.DataType == DataTypes.StringValue)
+                {
+                    sqlStatement += $" AND JSON_VALUE([Details], {{{count++}}}) like {{{count++}}}";
+                    parameters.Add($"%{searchField.Value}%");
                 }
                 else
                 {
@@ -224,7 +264,8 @@ namespace ef_json_query_testing
     public interface ISearchService
     {
         List<Media_Json> JsonSearch_Raw(int DynamicFieldId, string value);
-        List<Media_Json> JsonSearch_Raw(Dictionary<int, string> searchFields);
+        List<Media_Json> JsonSearch_Raw_Like(Dictionary<int, string> searchFields);
+        List<Media_Json> JsonSearch_Raw_CharIndex(Dictionary<int, string> searchFields);
 
         List<Media_Json> JsonSearch_EfMagic(int DynamicFieldId, string value);
         List<Media_Json> JsonSearch_EfMagic(Dictionary<int, string> searchFields);

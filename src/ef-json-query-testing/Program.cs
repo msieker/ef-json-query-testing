@@ -9,7 +9,7 @@ public class Program
     public static async Task Main(string[] args)
     {
         //for running with a debugger: BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
-        await using var context = EfTestDbContext.Create(Console.WriteLine);
+        await using var context = EfTestDbContext.Create(true);
         //CreateBogusData.LoadAllData(context);
 
         //var svc = new SearchService(context);

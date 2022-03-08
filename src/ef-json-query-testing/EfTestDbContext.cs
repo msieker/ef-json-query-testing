@@ -7,6 +7,20 @@ using Microsoft.Extensions.Logging;
 [ExcludeFromCodeCoverage]
 public class EfTestDbContext : DbContext
 {
+    private static readonly DbContextOptionsBuilder<EfTestDbContext> OptionsBuilder;
+    private static readonly DbContextOptions<EfTestDbContext> Options;
+    static EfTestDbContext()
+    {
+
+        OptionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
+
+        OptionsBuilder.UseSqlServer("Server=localhost;Initial Catalog=ef_testing;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=5;");
+        OptionsBuilder.UseJsonFunctions();
+
+        Options = OptionsBuilder.Options;
+
+    }
+
     public EfTestDbContext(DbContextOptions<EfTestDbContext> options) : base(options)
     {
     }
@@ -18,28 +32,21 @@ public class EfTestDbContext : DbContext
         //Apply changes
         //dotnet ef --startup-project ../ef-json-query-testing database update
     }
-
-    public static EfTestDbContext Create(Action<string>? logger = null)
+    public static EfTestDbContext Create(bool useLogging = true, Action<string>? logger = null, LogLevel minimumLevel = LogLevel.Information)
     {
-        var options = new DbContextOptionsBuilder<EfTestDbContext>();
+        if (!useLogging) return new EfTestDbContext(Options);
 
-        options.UseSqlServer("Server=localhost;Initial Catalog=ef_testing;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=5;");
-        options.UseJsonFunctions();
-
-        if (logger != null)
-        {
-            options.LogTo(logger, minimumLevel: LogLevel.Information).EnableSensitiveDataLogging(true);
-        }
-
+        var options = new DbContextOptionsBuilder<EfTestDbContext>(Options);
+        options.LogTo(logger ?? Console.WriteLine, minimumLevel).EnableSensitiveDataLogging(true);
         return new EfTestDbContext(options.Options);
     }
 
-    public DbSet<DynamicField> DynamicFields { get; set; }
-    public DbSet<DynamicListType> DynamicListTypes { get; set; }
-    public DbSet<DynamicListItem> DynamicListItems { get; set; }
-    public DbSet<DynamicMediaInformation> DynamicMediaInformation { get; set; }
-    public DbSet<Media_Dynamic> Media_Dynamic { get; set; }
-    public DbSet<Media_Json> Media_Json { get; set; }
+    public DbSet<DynamicField> DynamicFields => Set<DynamicField>();
+    public DbSet<DynamicListType> DynamicListTypes => Set<DynamicListType>();
+    public DbSet<DynamicListItem> DynamicListItems => Set<DynamicListItem>();
+    public DbSet<DynamicMediaInformation> DynamicMediaInformation => Set<DynamicMediaInformation>();
+    public DbSet<Media_Dynamic> Media_Dynamic => Set<Media_Dynamic>();
+    public DbSet<Media_Json> Media_Json => Set<Media_Json>();
 
 
     protected override void OnModelCreating(ModelBuilder builder)

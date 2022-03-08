@@ -24,7 +24,7 @@ namespace ef_json_query_testing.Translators
         private static readonly MethodInfo _jsonValueMethod
             = typeof(QueryJsonExtensions).GetMethod(
                 nameof(QueryJsonExtensions.JsonValue), 
-                new[] { typeof(DbFunctions), typeof(object), typeof(string) });
+                new[] { typeof(DbFunctions), typeof(object), typeof(string) })!;
 
         public QueryJsonTranslator(ISqlExpressionFactory expressionFactory)
         {

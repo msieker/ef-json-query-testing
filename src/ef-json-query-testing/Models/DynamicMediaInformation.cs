@@ -28,11 +28,11 @@ namespace ef_json_query_testing
         // Relationships
         [Required]
         public int MediaId { get; set; }
-        public Media_Dynamic Media { get; set; }
+        public Media_Dynamic Media { get; set; } = null!;
 
         [Required]
         public int FieldId { get; set; }
-        public DynamicField Field { get; set; }
+        public DynamicField Field { get; set; } = null!;
 
 
         internal class Configuration : IEntityTypeConfiguration<DynamicMediaInformation>

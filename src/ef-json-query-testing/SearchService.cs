@@ -40,7 +40,7 @@ namespace ef_json_query_testing
 
         public List<Media_Json> JsonSearch_Raw(Dictionary<int, string> searchFields)
         {
-            if (searchFields == null || searchFields.Count() == 0)
+            if (searchFields == null || !searchFields.Any())
             {
                 return new List<Media_Json>();
             }
@@ -110,7 +110,7 @@ namespace ef_json_query_testing
 
         public List<Media_Json> JsonSearch_EfMagic(Dictionary<int, string> searchFields)
         {
-            if (searchFields == null || searchFields.Count() == 0)
+            if (searchFields == null || !searchFields.Any())
             {
                 return new List<Media_Json>();
             }
@@ -194,7 +194,7 @@ namespace ef_json_query_testing
 
         public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields)
         {
-            if (searchFields == null || searchFields.Count() == 0)
+            if (searchFields == null || !searchFields.Any())
             {
                 return new List<Media_Dynamic>();
             }

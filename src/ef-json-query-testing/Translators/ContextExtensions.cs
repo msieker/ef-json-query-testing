@@ -31,7 +31,7 @@ namespace ef_json_query_testing.Translators
 
     public class SqlServerDbContextOptionsExtension : IDbContextOptionsExtension
     {
-        private DbContextOptionsExtensionInfo _info;
+        private DbContextOptionsExtensionInfo? _info;
 
         public void Validate(IDbContextOptions options)
         {

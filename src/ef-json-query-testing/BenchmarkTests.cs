@@ -11,22 +11,25 @@ using System.Threading.Tasks;
  *  [AnyCategoriesFilter("A", "1")] - should run any benchmark that has a matching filter
  *      - options: 
  *           srategy used: "json", "table"
- *           test type: "nomatch", "int", "listInt", "bool", "string", "many"
+ *           test type: "nomatch", "int", "listInt", "bool", "string", "many", "all"
  *           method used: "raw", "magic", "info", "media"
  */
 
 namespace ef_json_query_testing
 {
     [CategoriesColumn]
-    [AnyCategoriesFilter("many")]
+    [AnyCategoriesFilter("all")]
     public class BenchmarkTests
     {
-        private EfTestDbContext _context = EfTestDbContext.Create();
+        private EfTestDbContext _context = EfTestDbContext.Create(false);
         private SearchService _search;
 
         public BenchmarkTests()
         {
             _search = new SearchService(_context);
+            Randomizer.Seed = new Random(42);
+            fewSearchFields = BenchmarkData_List_Few();
+            allSearchFields = BenchmarkData_List_All();
         }
 
         public IEnumerable<object[]> BenchmarkData_NoMatch()
@@ -65,7 +68,7 @@ namespace ef_json_query_testing
             var intTypeField = _context.DynamicFields.First(m => !m.DynamicListTypeId.HasValue && m.DataType == DataTypes.IntValue);
 
             var faker = new Faker();
-            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == intTypeField.DynamicFieldId)).FirstOrDefault();
+            var item = faker.PickRandom<DynamicMediaInformation>(_context.DynamicMediaInformation.Where(m => m.FieldId == intTypeField.DynamicFieldId));
 
             yield return new object[] { item.FieldId, item.Value };
         }
@@ -103,7 +106,7 @@ namespace ef_json_query_testing
             var listTypeField = _context.DynamicFields.First(m => m.DynamicListTypeId.HasValue);
 
             var faker = new Faker();
-            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == listTypeField.DynamicFieldId)).FirstOrDefault();
+            var item = faker.PickRandom<DynamicMediaInformation>(_context.DynamicMediaInformation.Where(m => m.FieldId == listTypeField.DynamicFieldId));
 
             yield return new object[] { item.FieldId, item.Value };
         }
@@ -147,7 +150,7 @@ namespace ef_json_query_testing
             var boolTypeField = _context.DynamicFields.First(m => m.DataType == DataTypes.BoolValue);
 
             var faker = new Faker();
-            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == boolTypeField.DynamicFieldId)).FirstOrDefault();
+            var item = faker.PickRandom<DynamicMediaInformation>(_context.DynamicMediaInformation.Where(m => m.FieldId == boolTypeField.DynamicFieldId));
 
             yield return new object[] { item.FieldId, item.Value };
         }
@@ -190,7 +193,7 @@ namespace ef_json_query_testing
             var stringTypeField = _context.DynamicFields.First(m => m.DataType == DataTypes.StringValue);
 
             var faker = new Faker();
-            var item = faker.PickRandom(_context.DynamicMediaInformation.Where(m => m.FieldId == stringTypeField.DynamicFieldId)).FirstOrDefault();
+            var item = faker.PickRandom<DynamicMediaInformation>(_context.DynamicMediaInformation.Where(m => m.FieldId == stringTypeField.DynamicFieldId));
 
             yield return new object[] { item.FieldId, item.Value };
         }
@@ -228,7 +231,7 @@ namespace ef_json_query_testing
 
 
 
-        public IEnumerable<object> BenchmarkData_List()
+        public Dictionary<int, string> BenchmarkData_List_Few()
         {
             // all values need to be in one object
             // select an object.
@@ -249,7 +252,7 @@ namespace ef_json_query_testing
 
                 // if each field doesnt have an available option, try again.
                 // (this is based on the idea it's easier to just pick random again, than it is to search for all the matching criteria.)
-                if (intFields.Count() == 0 || listIntFields.Count() == 0 || boolFields.Count() == 0 || stringFields.Count() == 0)
+                if (!intFields.Any() || !listIntFields.Any() || !boolFields.Any() || !stringFields.Any())
                 {
                     continue;
                 }
@@ -263,7 +266,7 @@ namespace ef_json_query_testing
                 var intField = faker.PickRandom(intFields);
                 var listIntField = faker.PickRandom(listIntFields);
                 var boolField = faker.PickRandom(boolFields);
-                var stringField = faker.PickRandom(stringFields);                
+                var stringField = faker.PickRandom(stringFields);
 
                 // add search values to dict                
                 list.Add(intField.FieldId, intField.Value);
@@ -278,24 +281,72 @@ namespace ef_json_query_testing
                 throw new Exception("Didnt find a good test value.");
             }
 
-            yield return list;
+            return list;
         }
 
-        [ParamsSource(nameof(BenchmarkData_List))]
-        public Dictionary<int, string> searchFields { get; set; }
+        public Dictionary<int, string> fewSearchFields { get; set; }
 
 
 
         [Benchmark]
-        [BenchmarkCategory("json", "many", "raw")]
-        public void Benchmark_Many_JSON_Raw() => _search.JsonSearch_Raw(searchFields);
+        [BenchmarkCategory("json", "few", "raw")]
+        public void Benchmark_Few_JSON_Raw() => _search.JsonSearch_Raw(fewSearchFields);
 
         [Benchmark]
-        [BenchmarkCategory("json", "many", "magic")]
-        public void Benchmark_Many_JSON_Magic() => _search.JsonSearch_EfMagic(searchFields);
+        [BenchmarkCategory("json", "few", "magic")]
+        public void Benchmark_Few_JSON_Magic() => _search.JsonSearch_EfMagic(fewSearchFields);
 
         [Benchmark]
-        [BenchmarkCategory("table", "many", "media")]
-        public void Benchmark_Many_Table_Media() => _search.TableSearch_Media(searchFields);
+        [BenchmarkCategory("table", "few", "media")]
+        public void Benchmark_Few_Table_Media() => _search.TableSearch_Media(fewSearchFields);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public Dictionary<int, string> BenchmarkData_List_All()
+        {
+            // all values need to be in one object
+            // select an object.
+            var mediaIds = _context.Media_Dynamic.AsNoTracking().Select(m => m.Media_DynamicId);
+            var faker = new Faker();
+
+            var list = new Dictionary<int, string>();
+
+            int id = faker.PickRandom<int>(mediaIds);
+            var mediaInfo = _context.DynamicMediaInformation.AsNoTracking().Include(i => i.Field).Where(i => i.MediaId == id).ToList();
+
+            foreach (var info in mediaInfo)
+            {
+                list.Add(info.FieldId, info.Value);
+            }
+
+            return list;
+        }
+
+        public Dictionary<int, string> allSearchFields { get; set; }
+
+
+
+        [Benchmark]
+        [BenchmarkCategory("json", "all", "raw")]
+        public void Benchmark_All_JSON_Raw() => _search.JsonSearch_Raw(allSearchFields);
+
+        [Benchmark]
+        [BenchmarkCategory("json", "all", "magic")]
+        public void Benchmark_All_JSON_Magic() => _search.JsonSearch_EfMagic(allSearchFields);
+
+        [Benchmark]
+        [BenchmarkCategory("table", "all", "media")]
+        public void Benchmark_All_Table_Media() => _search.TableSearch_Media(allSearchFields);
     }
 }

@@ -1,4 +1,5 @@
-﻿using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Running;
 using ef_json_query_testing;
 
 public class Program
@@ -7,6 +8,7 @@ public class Program
     // dotnet run -c Release
     public static async Task Main(string[] args)
     {
+        //for running with a debugger: BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
         await using var context = EfTestDbContext.Create(Console.WriteLine);
         //CreateBogusData.LoadAllData(context);
 
@@ -14,6 +16,7 @@ public class Program
 
         //svc.MediaJsonSearch_RAW_SqlInterpolated(1, "7");
 
-        //var summary = BenchmarkRunner.Run<BenchmarkTests>();
+        var summary = BenchmarkRunner.Run<BenchmarkTests>();
+
     }
 }

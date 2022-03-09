@@ -210,6 +210,7 @@ namespace ef_json_query_testing
                 // contains search
                 return _context.Media_Dynamic
                     .AsNoTracking()
+                    .Include(d => d.DynamicMediaInformation)
                     .Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Contains(value)) != null)
                     .ToList();
             }
@@ -218,6 +219,7 @@ namespace ef_json_query_testing
                 // exact match search
                 return _context.Media_Dynamic
                     .AsNoTracking()
+                    .Include(d => d.DynamicMediaInformation)
                     .Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Equals(value)) != null)
                     .ToList();
             }
@@ -232,7 +234,7 @@ namespace ef_json_query_testing
             }
 
             var fieldList = _context.DynamicFields.AsNoTracking().ToList();
-            var query = _context.Media_Dynamic.AsNoTracking().AsQueryable();
+            var query = _context.Media_Dynamic.AsNoTracking().Include(d => d.DynamicMediaInformation).AsQueryable();
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);

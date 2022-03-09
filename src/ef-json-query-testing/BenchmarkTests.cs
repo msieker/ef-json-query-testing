@@ -11,14 +11,14 @@ using System.Threading.Tasks;
  *  [AnyCategoriesFilter("A", "1")] - should run any benchmark that has a matching filter
  *      - options: 
  *           srategy used: "json", "table"
- *           test type: "nomatch", "int", "listInt", "bool", "string", "fewfields", "allfields"
+ *           test type: "nomatch", "int", "listInt", "bool", "string", "fewfields", "allfields", "stringfields"
  *           method used: "raw", "magic", "info", "media"
  */
 
 namespace ef_json_query_testing
 {
     [CategoriesColumn]
-    [AnyCategoriesFilter("allfields")]
+    [AnyCategoriesFilter("string")]
     public class BenchmarkTests
     {
         private EfTestDbContext _context = EfTestDbContext.Create(false);
@@ -30,6 +30,7 @@ namespace ef_json_query_testing
             Randomizer.Seed = new Random(42);
             fewSearchFields = BenchmarkData_List_Few();
             allSearchFields = BenchmarkData_List_All();
+            stringSearchFields = BenchmarkData_List_Strings();
         }
 
         public IEnumerable<object[]> BenchmarkData_NoMatch()
@@ -190,7 +191,7 @@ namespace ef_json_query_testing
         // string match should be a contains, so these should be different than the above
         public IEnumerable<object[]> BenchmarkData_StringFind()
         {
-            var stringTypeField = _context.DynamicFields.First(m => m.DataType == DataTypes.StringValue);
+            var stringTypeField = _context.DynamicFields.First(m => m.DataType == DataTypes.StringValue && m.IsRequired);
 
             var faker = new Faker();
             var item = faker.PickRandom<DynamicMediaInformation>(_context.DynamicMediaInformation.Where(m => m.FieldId == stringTypeField.DynamicFieldId));
@@ -348,5 +349,81 @@ namespace ef_json_query_testing
         [Benchmark]
         [BenchmarkCategory("table", "allfields", "media")]
         public void Benchmark_AllFields_Table_Media() => _search.TableSearch_Media(allSearchFields);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public Dictionary<int, string> BenchmarkData_List_Strings()
+        {
+            // all values need to be in one object
+            // select an object.
+            var mediaIds = _context.Media_Dynamic.AsNoTracking().Select(m => m.Media_DynamicId);
+            var faker = new Faker();
+
+            var list = new Dictionary<int, string>();
+            var maxloops = 10;
+            for (int loopCount = 0; loopCount < maxloops; loopCount++)
+            {
+                int id = faker.PickRandom<int>(mediaIds);
+                var values = _context.DynamicMediaInformation.AsNoTracking().Include(i => i.Field).Where(i => i.MediaId == id).ToList();
+
+                var requiredString = values.Where(v => v.Field.DataType == DataTypes.StringValue && v.Field.IsRequired);
+                var optionalString = values.Where(v => v.Field.DataType == DataTypes.StringValue && !v.Field.IsRequired);
+
+                // if each field doesnt have an available option, try again.
+                // (this is based on the idea it's easier to just pick random again, than it is to search for all the matching criteria.)
+                if (!requiredString.Any() || !optionalString.Any())
+                {
+                    continue;
+                }
+                else
+                {
+                    // all fields have an option, dont repeat the loop.
+                    loopCount = maxloops;
+                }
+
+                // pick fields to search with, one of each type.
+                var requiredField = faker.PickRandom(requiredString);
+                var optionalField = faker.PickRandom(optionalString);
+
+                // add search values to dict                
+                list.Add(requiredField.FieldId, requiredField.Value);
+                list.Add(optionalField.FieldId, optionalField.Value);
+            }
+
+            //throw if something wasnt picked.
+            if (list.Count < 3)
+            {
+                throw new Exception("Didnt find a good test value.");
+            }
+
+            return list;
+        }
+
+        public Dictionary<int, string> stringSearchFields { get; set; }
+
+
+
+        [Benchmark]
+        [BenchmarkCategory("json", "stringfields", "raw")]
+        public void Benchmark_StringFields_JSON_Raw() => _search.JsonSearch_Raw(stringSearchFields);
+
+        [Benchmark]
+        [BenchmarkCategory("json", "stringfields", "magic")]
+        public void Benchmark_StringFields_JSON_Magic() => _search.JsonSearch_EfMagic(stringSearchFields);
+
+        [Benchmark]
+        [BenchmarkCategory("table", "stringfields", "media")]
+        public void Benchmark_StringFields_Table_Media() => _search.TableSearch_Media(stringSearchFields);
     }
 }

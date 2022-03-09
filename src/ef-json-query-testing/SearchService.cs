@@ -17,7 +17,7 @@ namespace ef_json_query_testing
 
         public List<Media_Json> JsonSearch_Raw(int DynamicFieldId, string value)
         {
-            var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
+            var field = _context.DynamicFields.AsNoTracking().FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
             if (field == null)
             {
                 return new List<Media_Json>();
@@ -29,11 +29,17 @@ namespace ef_json_query_testing
             if (field.DataType == DataTypes.StringValue)
             {
                 var containsString = "%" + value + "%";
-                return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) like {containsString}").ToList();
+                return _context.Media_Json
+                    .FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) LIKE {containsString}")
+                    .AsNoTracking()
+                    .ToList();
             }
             else
             {
-                return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}").ToList();
+                return _context.Media_Json
+                    .FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}")
+                    .AsNoTracking()
+                    .ToList();
             }
         }
 
@@ -45,7 +51,7 @@ namespace ef_json_query_testing
                 return new List<Media_Json>();
             }
 
-            var fieldList = _context.DynamicFields.ToList();
+            var fieldList = _context.DynamicFields.AsNoTracking().ToList();
 
             var sqlStatement = "SELECT * FROM [dbo].[Media_Json] WHERE 1=1 ";
 
@@ -60,7 +66,6 @@ namespace ef_json_query_testing
                 }
 
                 parameters.Add($"$.\"{field.JsonName}\"");
-
                 sqlStatement += $" AND JSON_VALUE([Details], {{{count}}}) ";
                 count++;
 
@@ -68,7 +73,7 @@ namespace ef_json_query_testing
                 {
                     var containsString = "%" + searchField.Value + "%";
                     parameters.Add(containsString);
-                    sqlStatement += $" like {{{count}}}";
+                    sqlStatement += $" LIKE {{{count}}}";
                 }
                 else
                 {
@@ -79,32 +84,39 @@ namespace ef_json_query_testing
                 count++;
             }
 
-            return _context.Media_Json.FromSqlRaw(sqlStatement, parameters.ToArray()).ToList();
+            return _context.Media_Json
+                .FromSqlRaw(sqlStatement, parameters.ToArray())
+                .AsNoTracking()
+                .ToList();
         }
 
 
 
         public List<Media_Json> JsonSearch_EfMagic(int DynamicFieldId, string value)
         {
-            var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
+            var field = _context.DynamicFields
+                .AsNoTracking()
+                .FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
+
             if (field == null)
             {
                 return new List<Media_Json>();
             }
 
-            // FromSqlInterpolated allows for use of string interpolation but it is handled in a way to avoid sql injection.
             var jsonPath = $"$.\"{field.JsonName}\"";
-
             if (field.DataType == DataTypes.StringValue)
             {
-                var containsString = "%" + value + "%";
-                return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) like {containsString}").ToList();
+                return _context.Media_Json
+                    .AsNoTracking()
+                    .Where(m => EF.Functions.JsonValue(m.Details, jsonPath).Contains(value))
+                    .ToList();
             }
             else
             {
-                var q = _context.Media_Json.Where(m => EF.Functions.JsonValue(m.Details, jsonPath) == value);
-                return q.ToList();
-                //return _context.Media_Json.FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}").ToList();
+                return _context.Media_Json
+                    .AsNoTracking()
+                    .Where(m => EF.Functions.JsonValue(m.Details, jsonPath) == value)
+                    .ToList();
             }
         }
 
@@ -115,9 +127,8 @@ namespace ef_json_query_testing
                 return new List<Media_Json>();
             }
 
-            var fieldList = _context.DynamicFields.ToList();
-            var query = _context.Media_Json.AsQueryable();
-            var q2 = _context.Media_Dynamic.AsQueryable();
+            var fieldList = _context.DynamicFields.AsNoTracking().ToList();
+            var query = _context.Media_Json.AsNoTracking().AsQueryable();
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
@@ -125,6 +136,7 @@ namespace ef_json_query_testing
                 {
                     continue;
                 }
+
                 var jsonPath = $"$.\"{field.JsonName}\"";
                 if (field.DataType == DataTypes.StringValue)
                 {
@@ -146,7 +158,9 @@ namespace ef_json_query_testing
 
         public List<Media_Dynamic> TableSearch_Info(int DynamicFieldId, string value)
         {
-            var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
+            var field = _context.DynamicFields
+                .AsNoTracking()
+                .FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
 
             if (field == null)
             {
@@ -158,20 +172,32 @@ namespace ef_json_query_testing
             if (DataTypes.StringValue == field.DataType)
             {
                 // contains search
-                ids = _context.DynamicMediaInformation.Where(d => d.FieldId == DynamicFieldId && d.Value.Contains(value)).Select(d => d.MediaId).ToList();
+                ids = _context.DynamicMediaInformation
+                    .AsNoTracking()
+                    .Where(d => d.FieldId == DynamicFieldId && d.Value.Contains(value))
+                    .Select(d => d.MediaId)
+                    .ToList();
             }
             else
             {
                 // exact match search
-                ids = _context.DynamicMediaInformation.Where(d => d.FieldId == DynamicFieldId && d.Value.Equals(value)).Select(d => d.MediaId).ToList();
+                ids = _context.DynamicMediaInformation
+                    .AsNoTracking()
+                    .Where(d => d.FieldId == DynamicFieldId && d.Value.Equals(value))
+                    .Select(d => d.MediaId)
+                    .ToList();
             }
 
-            return _context.Media_Dynamic.Include(m => m.DynamicMediaInformation).Where(m => ids.Contains(m.Media_DynamicId)).ToList();
+            return _context.Media_Dynamic
+                .AsNoTracking()
+                .Include(m => m.DynamicMediaInformation)
+                .Where(m => ids.Contains(m.Media_DynamicId))
+                .ToList();
         }
 
         public List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value)
         {
-            var field = _context.DynamicFields.FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
+            var field = _context.DynamicFields.AsNoTracking().FirstOrDefault(f => f.DynamicFieldId == DynamicFieldId);
 
             if (field == null)
             {
@@ -182,12 +208,18 @@ namespace ef_json_query_testing
             if (DataTypes.StringValue == field.DataType)
             {
                 // contains search
-                return _context.Media_Dynamic.Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Contains(value)) != null).ToList();
+                return _context.Media_Dynamic
+                    .AsNoTracking()
+                    .Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Contains(value)) != null)
+                    .ToList();
             }
             else
             {
                 // exact match search
-                return _context.Media_Dynamic.Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Equals(value)) != null).ToList();
+                return _context.Media_Dynamic
+                    .AsNoTracking()
+                    .Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Equals(value)) != null)
+                    .ToList();
             }
         }
 
@@ -199,8 +231,8 @@ namespace ef_json_query_testing
                 return new List<Media_Dynamic>();
             }
 
-            var fieldList = _context.DynamicFields.ToList();
-            var query = _context.Media_Dynamic.AsQueryable();
+            var fieldList = _context.DynamicFields.AsNoTracking().ToList();
+            var query = _context.Media_Dynamic.AsNoTracking().AsQueryable();
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
@@ -235,8 +267,8 @@ namespace ef_json_query_testing
 
 
         List<Media_Dynamic> TableSearch_Info(int DynamicFieldId, string value);
-        List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value);
 
+        List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value);
         List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields);
     }
 }

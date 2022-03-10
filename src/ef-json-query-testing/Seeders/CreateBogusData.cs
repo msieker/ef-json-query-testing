@@ -1,10 +1,7 @@
 ﻿using Bogus;
+using ef_json_query_testing.Enums;
+using ef_json_query_testing.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // DynamicListTypes - types of list dropdowns 
 // DynamicListItems - the items available for each list type
@@ -16,7 +13,7 @@ using System.Threading.Tasks;
 // DynamicMediaInformation - each saved field for a given media item
 
 
-namespace ef_json_query_testing
+namespace ef_json_query_testing.Seeders
 {
     public static class CreateBogusData
     {

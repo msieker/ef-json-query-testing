@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations;
 
-namespace ef_json_query_testing
+namespace ef_json_query_testing.Models
 {
     public class DynamicMediaInformation
     {

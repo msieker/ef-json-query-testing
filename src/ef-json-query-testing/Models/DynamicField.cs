@@ -1,11 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ef_json_query_testing.Enums;
 
-namespace ef_json_query_testing
+namespace ef_json_query_testing.Models
 {
     public class DynamicField
     {

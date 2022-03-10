@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ef_json_query_testing;
+using ef_json_query_testing.Models;
 using ef_json_query_testing.Translators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ public class EfTestDbContext : DbContext
 
         OptionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
 
-        OptionsBuilder.UseSqlServer("Server=localhost;Initial Catalog=ef_testing;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=5;");
+        OptionsBuilder.UseSqlServer("Server=localhost;Initial Catalog=ef_testing_aaa;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=5;");
         OptionsBuilder.UseJsonFunctions();
 
         Options = OptionsBuilder.Options;

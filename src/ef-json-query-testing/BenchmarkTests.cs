@@ -1,11 +1,8 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Bogus;
+using ef_json_query_testing.Enums;
+using ef_json_query_testing.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 /*
  *  [AnyCategoriesFilter("A", "1")] - should run any benchmark that has a matching filter

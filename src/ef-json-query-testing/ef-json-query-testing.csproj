@@ -24,4 +24,8 @@
     <PackageReference Include="NaughtyStrings.Bogus" Version="2.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Benchmarks\" />
+  </ItemGroup>
+
 </Project>

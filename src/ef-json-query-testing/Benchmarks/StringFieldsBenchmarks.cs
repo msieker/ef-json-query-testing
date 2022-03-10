@@ -64,14 +64,14 @@ namespace ef_json_query_testing.Benchmarks
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "raw")]
-        public void Benchmark_StringFields_JSON_Raw() => Search.JsonSearch_Raw(stringSearchFields);
+        public void JSON_Raw() => Search.JsonSearch_Raw(stringSearchFields);
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "magic")]
-        public void Benchmark_StringFields_JSON_Magic() => Search.JsonSearch_EfMagic(stringSearchFields);
+        public void JSON_Magic() => Search.JsonSearch_EfMagic(stringSearchFields);
 
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "media")]
-        public void Benchmark_StringFields_Table_Media() => Search.TableSearch_Media(stringSearchFields);
+        public void Table_Media() => Search.TableSearch_Media(stringSearchFields);
     }
 }

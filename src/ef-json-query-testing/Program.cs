@@ -48,7 +48,7 @@ public class Program
 
         BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
             .Run(args, DefaultConfig.Instance
-                .AddFilter(new AllCategoriesFilter(new string[] { "json", "fewfields" }))
+                .AddFilter(new AllCategoriesFilter(new string[] { "json"}))
                 .AddExporter(RPlotExporter.Default)
                 .AddColumn(CategoriesColumn.Default));
 

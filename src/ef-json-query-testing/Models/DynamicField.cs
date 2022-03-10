@@ -33,7 +33,7 @@ namespace ef_json_query_testing.Models
 
         // Relationships
         public int? DynamicListTypeId { get; set; }
-        public DynamicListItem? DynamicListType { get; set; }
+        public DynamicListType? DynamicListType { get; set; }
 
         // methods
 

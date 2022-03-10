@@ -2,36 +2,61 @@
 using ef_json_query_testing.Models;
 using ef_json_query_testing.Translators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 [ExcludeFromCodeCoverage]
 public class EfTestDbContext : DbContext
 {
-    private static readonly DbContextOptionsBuilder<EfTestDbContext> OptionsBuilder;
-    private static readonly DbContextOptions<EfTestDbContext> Options;
+
+    private static DbContextOptionsBuilder<EfTestDbContext> OptionsBuilder;
+    private static DbContextOptions<EfTestDbContext> Options;
+
+    private static PooledDbContextFactory<EfTestDbContext> Factory;
+
     static EfTestDbContext()
     {
-
+        var connStr = Environment.GetEnvironmentVariable("BENCHMARK_SQL_CONN") ?? "Server=localhost;Initial Catalog=ef_testing;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=5;";
         OptionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
 
-        OptionsBuilder.UseSqlServer("Server=localhost;Initial Catalog=ef_testing_aaa;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=5;");
+        OptionsBuilder.UseSqlServer(connStr);
         OptionsBuilder.UseJsonFunctions();
 
         Options = OptionsBuilder.Options;
 
+        Factory = new PooledDbContextFactory<EfTestDbContext>(Options);
+
     }
 
+    public static void ResetDefault(string connStr, bool useLogging = false, Action<string>? logger = null, LogLevel minimumLevel = LogLevel.Information)
+    {
+        OptionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
+
+        OptionsBuilder.UseSqlServer(connStr);
+        OptionsBuilder.UseJsonFunctions();
+
+        if (useLogging)
+        {
+            OptionsBuilder.LogTo(logger ?? Console.WriteLine, minimumLevel).EnableSensitiveDataLogging(true);
+        }
+
+        Options = OptionsBuilder.Options;
+        Factory = new PooledDbContextFactory<EfTestDbContext>(Options);
+    }
     public EfTestDbContext(DbContextOptions<EfTestDbContext> options) : base(options)
     {
     }
 
-    public EfTestDbContext()
-    {
-        //For Migrations
-        //dotnet ef --startup-project ../ef-json-query-testing migrations add Initial
-        //Apply changes
-        //dotnet ef --startup-project ../ef-json-query-testing database update
-    }
+    //public EfTestDbContext()
+    //{
+    //    //For Migrations
+    //    //dotnet ef --startup-project ../ef-json-query-testing migrations add Initial
+    //    //Apply changes
+    //    //dotnet ef --startup-project ../ef-json-query-testing database update
+    //}
+
+    public static EfTestDbContext FromFactory() => Factory.CreateDbContext();
+
     public static EfTestDbContext Create(bool useLogging = true, Action<string>? logger = null, LogLevel minimumLevel = LogLevel.Information)
     {
         if (!useLogging) return new EfTestDbContext(Options);

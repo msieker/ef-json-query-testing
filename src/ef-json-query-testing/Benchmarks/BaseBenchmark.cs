@@ -12,5 +12,13 @@ namespace ef_json_query_testing.Benchmarks
             Search = new SearchService(Context);
             Randomizer.Seed = new Random(42);
         }
+
+        public static void Run(Action<SearchService> act)
+        {
+            using var context = EfTestDbContext.FromFactory();
+            var search = new SearchService(context);
+
+            act(search);
+        }
     }
 }

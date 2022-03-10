@@ -1,6 +1,11 @@
-﻿using BenchmarkDotNet.Configs;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Columns;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Exporters;
+using BenchmarkDotNet.Filters;
 using BenchmarkDotNet.Running;
-using ef_json_query_testing;
+
+
 
 public class Program
 {
@@ -10,30 +15,42 @@ public class Program
     {
         //for running with a debugger:
         //BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
-        
-        
+
+
         //await using var context = EfTestDbContext.Create(true);
         //CreateBogusData.LoadAllData(context);
 
         //var svc = new SearchService(context);
-        
+
         //var raw = svc.JsonSearch_Raw(27, "46503058185780657558627466918");
         //var magic = svc.JsonSearch_EfMagic(27, "46503058185780657558627466918");
         //var info = svc.TableSearch_Info(27, "46503058185780657558627466918");
         //var media = svc.TableSearch_Media(27, "46503058185780657558627466918");
-        
+
         //var fields = new Dictionary<int, string>() {
         //    { 30, "delectus" },
         //    { 13, "explicabo" },
         //    { 19, "dolores" }
         //};
-        
+
         //var raw_many = svc.JsonSearch_Raw(fields);
         //var magic_many = svc.JsonSearch_EfMagic(fields);
         //var media_many = svc.TableSearch_Media(fields);
 
+        /*
+        *  category filter options:
+        *           strategy used: "json", "table"
+        *           test type values:
+        *              single fields: "nomatch", "int", "listInt", "bool", "string"
+        *              multi fields: "fewfields", "allfields", "stringfields"
+        *           method used: "raw", "magic", "info", "media"
+        */
 
-        var summary = BenchmarkRunner.Run<BenchmarkTests>();
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
+            .Run(args, DefaultConfig.Instance
+                .AddFilter(new AllCategoriesFilter(new string[] { "json", "fewfields" }))
+                .AddExporter(RPlotExporter.Default)
+                .AddColumn(CategoriesColumn.Default));
 
     }
 }

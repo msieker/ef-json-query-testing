@@ -11,18 +11,15 @@ namespace ef_json_query_testing.Benchmarks
 {
     public class ManySearch : BaseBenchmark
     {
-        public ManySearch()
-        {
-            searchFields = BenchmarkData_List();
-        }
-        public Dictionary<int, string> BenchmarkData_List()
+        
+        [GlobalSetup]
+        public async Task GlobalSetup()
         {
             // all values need to be in one object
             // select an object.
-            var mediaIds = Context.Media_Dynamic.AsNoTracking().Select(m => m.Media_DynamicId);
+            var mediaIds = await Context.Media_Dynamic.AsNoTracking().Select(m => m.Media_DynamicId).ToListAsync();
             var faker = new Faker();
 
-            var list = new Dictionary<int, string>();
             var maxloops = 10;
             for (int loopCount = 0; loopCount < maxloops; loopCount++)
             {
@@ -53,40 +50,40 @@ namespace ef_json_query_testing.Benchmarks
                 var stringField = faker.PickRandom(stringFields);
 
                 // add search values to dict                
-                list.Add(intField.FieldId, intField.Value);
-                list.Add(listIntField.FieldId, listIntField.Value);
-                list.Add(boolField.FieldId, boolField.Value);
-                list.Add(stringField.FieldId, faker.PickRandom(stringField.Value.Split(' ')));
+                searchFields.Add(intField.FieldId, intField.Value);
+                searchFields.Add(listIntField.FieldId, listIntField.Value);
+                searchFields.Add(boolField.FieldId, boolField.Value);
+                searchFields.Add(stringField.FieldId, faker.PickRandom(stringField.Value.Split(' ')));
             }
 
             //throw if something wasnt picked.
-            if (list.Count < 3)
+            if (searchFields.Count < 3)
             {
                 throw new Exception("Didnt find a good test value.");
             }
 
-            return list;
+            
         }
 
         //[ParamsSource(nameof(BenchmarkData_List))]
-        public Dictionary<int, string> searchFields { get; set; }
+        private Dictionary<int, string> searchFields = new();
 
 
 
-        [Benchmark]
-        [BenchmarkCategory("json", "many", "raw_charindex")]
-        public void CharIndex() => Search.JsonSearch_Raw_CharIndex(searchFields);
+        //[Benchmark]
+        //[BenchmarkCategory("json", "many", "raw_charindex")]
+        //public Task CharIndex() => Search.JsonSearch_Raw_CharIndex(searchFields);
 
-        [Benchmark]
-        [BenchmarkCategory("json", "many", "raw_like")]
-        public void Like() => Search.JsonSearch_Raw_CharIndex(searchFields);
+        //[Benchmark]
+        //[BenchmarkCategory("json", "many", "raw_like")]
+        //public Task Like() => Search.JsonSearch_Raw_CharIndex(searchFields);
 
         [Benchmark]
         [BenchmarkCategory("json", "many", "magic")]
-        public void Magic() => Search.JsonSearch_EfMagic(searchFields);
+        public Task Magic() => Search.JsonSearch_EfMagic(searchFields);
 
         [Benchmark]
         [BenchmarkCategory("table", "many", "media")]
-        public void Media() => Search.TableSearch_Media(searchFields);
+        public Task Media() => Search.TableSearch_Media(searchFields);
     }
 }

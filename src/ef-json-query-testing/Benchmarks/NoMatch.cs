@@ -9,29 +9,23 @@ namespace ef_json_query_testing.Benchmarks
 {
     public class NoMatch : BaseBenchmark
     {
-        public IEnumerable<object[]> BenchmarkData_NoMatch()
-        {
-            yield return new object[] { 1, "aaaaaaaaaaaaaaaa" };
-        }
-
-        [Benchmark]
-        [BenchmarkCategory("json", "nomatch", "raw")]
-        [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void NoMatch_JSON_Raw(int i, string str) => Search.JsonSearch_Raw(i, str);
+        private int i = 1;
+        private string str = "aaaaaaaaaaaaaaa";
+        
+        //[Benchmark]
+        //[BenchmarkCategory("json", "nomatch", "raw")]
+        //public Task Raw() => Search.JsonSearch_Raw(i, str);
 
         [Benchmark]
         [BenchmarkCategory("json", "nomatch", "magic")]
-        [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void NoMatch_JSON_Magic(int i, string str) => Search.JsonSearch_EfMagic(i, str);
+        public Task Magic() => Search.JsonSearch_EfMagic(i, str);
 
-        [Benchmark]
-        [BenchmarkCategory("table", "nomatch", "info")]
-        [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void NoMatch_Table_Info(int i, string str) => Search.TableSearch_Info(i, str);
+        //[Benchmark]
+        //[BenchmarkCategory("table", "nomatch", "info")]
+        //public Task Info() => Search.TableSearch_Info(i, str);
 
         [Benchmark]
         [BenchmarkCategory("table", "nomatch", "media")]
-        [ArgumentsSource(nameof(BenchmarkData_NoMatch))]
-        public void NoMatch_Table_Media(int i, string str) => Search.TableSearch_Media(i, str);
+        public Task Media() => Search.TableSearch_Media(i, str);
     }
 }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -24,9 +25,9 @@ namespace ef_json_query_testing.Tests
         [Theory]
         [InlineData(0, "asdasdasd")]
         [InlineData(1, "00000000000")]
-        public void ContainsOrEquals_NoMatch(int i, string str)
+        public async Task ContainsOrEquals_NoMatch(int i, string str)
         {
-            var media = _service.TableSearch_Media(i, str);
+            var media = await _service.TableSearch_Media(i, str);
 
             media.Should().BeEmpty();
         }
@@ -36,9 +37,9 @@ namespace ef_json_query_testing.Tests
          //this test refuses to work for whatever reason, but runs when program is run.
         [Theory]
         [InlineData(1, "askkkkkkkkkkkkkkkkkkdasd")]
-        public void RAW_SqlInterpolated_NoMatch(int i, string str)
+        public async Task RAW_SqlInterpolated_NoMatch(int i, string str)
         {
-            var media = _service.JsonSearch_Raw(i, str);
+            var media = await _service.JsonSearch_Raw(i, str);
 
             media.Should().BeEmpty();
         }
@@ -47,9 +48,9 @@ namespace ef_json_query_testing.Tests
         [Theory]
         [InlineData(4, "6")]
         [InlineData(34, "voluptate")]
-        public void RAW_SqlInterpolated_Matches(int i, string str)
+        public async Task RAW_SqlInterpolated_Matches(int i, string str)
         {
-            var media = _service.JsonSearch_Raw(i, str);
+            var media = await _service.JsonSearch_Raw(i, str);
 
             media.Should().NotBeEmpty();
         }

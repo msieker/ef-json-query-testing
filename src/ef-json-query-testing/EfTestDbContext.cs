@@ -2,6 +2,7 @@
 using ef_json_query_testing;
 using ef_json_query_testing.Translators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 
 [ExcludeFromCodeCoverage]
@@ -10,6 +11,9 @@ public class EfTestDbContext : DbContext
 
     private static DbContextOptionsBuilder<EfTestDbContext> OptionsBuilder;
     private static DbContextOptions<EfTestDbContext> Options;
+
+    private static PooledDbContextFactory<EfTestDbContext> Factory;
+
     static EfTestDbContext()
     {
         var connStr = Environment.GetEnvironmentVariable("BENCHMARK_SQL_CONN") ?? "Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ef_testing_large_202203081505;Integrated Security=SSPI;Connection Timeout=5;";
@@ -19,6 +23,8 @@ public class EfTestDbContext : DbContext
         OptionsBuilder.UseJsonFunctions();
 
         Options = OptionsBuilder.Options;
+
+        Factory = new PooledDbContextFactory<EfTestDbContext>(Options);
 
     }
 
@@ -35,18 +41,21 @@ public class EfTestDbContext : DbContext
         }
 
         Options = OptionsBuilder.Options;
+        Factory = new PooledDbContextFactory<EfTestDbContext>(Options);
     }
     public EfTestDbContext(DbContextOptions<EfTestDbContext> options) : base(options)
     {
     }
 
-    public EfTestDbContext()
-    {
-        //For Migrations
-        //dotnet ef --startup-project ../ef-json-query-testing migrations add Initial
-        //Apply changes
-        //dotnet ef --startup-project ../ef-json-query-testing database update
-    }
+    //public EfTestDbContext()
+    //{
+    //    //For Migrations
+    //    //dotnet ef --startup-project ../ef-json-query-testing migrations add Initial
+    //    //Apply changes
+    //    //dotnet ef --startup-project ../ef-json-query-testing database update
+    //}
+
+    public static Task<EfTestDbContext> FromFactory() => Factory.CreateDbContextAsync();
 
     public static EfTestDbContext Create(bool useLogging = true, Action<string>? logger = null, LogLevel minimumLevel = LogLevel.Information)
     {

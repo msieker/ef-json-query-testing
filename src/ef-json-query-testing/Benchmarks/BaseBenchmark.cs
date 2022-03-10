@@ -17,5 +17,13 @@ namespace ef_json_query_testing.Benchmarks
             Search = new SearchService(Context);
             Randomizer.Seed = new Random(42);
         }
+
+        public static async Task Run(Func<SearchService, Task> func)
+        {
+            await using var context = await EfTestDbContext.FromFactory();
+            var search = new SearchService(context);
+
+            await func(search);
+        }
     }
 }

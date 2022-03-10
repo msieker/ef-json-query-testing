@@ -8,18 +8,33 @@ using Microsoft.Extensions.Logging;
 public class EfTestDbContext : DbContext
 {
 
-    private static readonly DbContextOptionsBuilder<EfTestDbContext> OptionsBuilder;
-    private static readonly DbContextOptions<EfTestDbContext> Options;
+    private static DbContextOptionsBuilder<EfTestDbContext> OptionsBuilder;
+    private static DbContextOptions<EfTestDbContext> Options;
     static EfTestDbContext()
     {
-
+        var connStr = Environment.GetEnvironmentVariable("BENCHMARK_SQL_CONN") ?? "Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ef_testing_large_202203081505;Integrated Security=SSPI;Connection Timeout=5;";
         OptionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
 
-        OptionsBuilder.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ef_testing_202203071330;Integrated Security=SSPI;Connection Timeout=5;");
+        OptionsBuilder.UseSqlServer(connStr);
         OptionsBuilder.UseJsonFunctions();
 
         Options = OptionsBuilder.Options;
 
+    }
+
+    public static void ResetDefault(string connStr, bool useLogging = false, Action<string>? logger = null, LogLevel minimumLevel = LogLevel.Information)
+    {
+        OptionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
+
+        OptionsBuilder.UseSqlServer(connStr);
+        OptionsBuilder.UseJsonFunctions();
+
+        if (useLogging)
+        {
+            OptionsBuilder.LogTo(logger ?? Console.WriteLine, minimumLevel).EnableSensitiveDataLogging(true);
+        }
+
+        Options = OptionsBuilder.Options;
     }
     public EfTestDbContext(DbContextOptions<EfTestDbContext> options) : base(options)
     {

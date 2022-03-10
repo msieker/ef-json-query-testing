@@ -31,12 +31,20 @@ namespace ef_json_query_testing
         private const int _Media_Dynamic_FileHeight_Max = 4096;
 
         private const int FakerSeed = 42;
-        public static void LoadAllData(EfTestDbContext context, int fieldsCount = 30, int mediaItemsCount = 500, int listTypeCount = 5)
+
+        public static void LoadAllData(EfTestDbContext context, int fieldsCount = 30, int mediaItemsCount = 100000, int listTypeCount = 10)
         {
             Randomizer.Seed = new Random(FakerSeed);
+            Console.WriteLine($"Loading shared data");
             LoadSharedData(context, fieldsCount, listTypeCount);
-
-            LoadMediaData(context, mediaItemsCount);
+            var batches = 10;
+            for (var i = 0; i < batches; i++)
+            {
+                Console.WriteLine($"Populating Batch {i}");
+                LoadMediaData(context, mediaItemsCount / batches);
+            }
+            Console.WriteLine($"Generating JSON");
+            LoadMediaJson(context);
         }
 
         public static void LoadSharedData(EfTestDbContext context, int fieldsCount = 30, int listTypeCount = 5)
@@ -53,10 +61,8 @@ namespace ef_json_query_testing
             context.Media_Dynamic.AddRange(FakerMedia_Dynamic.Generate(mediaItemsCount));
             context.SaveChanges();
 
-
             LoadMediaInformation(context);
 
-            LoadMediaJson(context);
         }
 
         public static Faker<DynamicField> FakerDynamicField => new Faker<DynamicField>()

@@ -264,31 +264,115 @@ namespace ef_json_query_testing.Tests
         {
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Dynamic] ON");
 
-            var media = CreateBogusData.FakerMedia_Dynamic.Generate();
-            media.Media_DynamicId = 1;
-            context.Media_Dynamic.Add(media);
+            var media = CreateBogusData.FakerMedia_Dynamic.Generate(10);
+            for (int i = 0; i < media.Count(); i++)
+            {
+                media[i].Media_DynamicId = i + 1;
+            }
+
+            context.Media_Dynamic.AddRange(media);
             context.SaveChanges();
 
             List<DynamicMediaInformation> info = new()
             {
-                new DynamicMediaInformation(media.Media_DynamicId, 1, "3"), // R, list
-                new DynamicMediaInformation(media.Media_DynamicId, 3, "13"), // R, list
-                new DynamicMediaInformation(media.Media_DynamicId, 4, "18"), // R, list
-                new DynamicMediaInformation(media.Media_DynamicId, 6, "456"), // R, int
-                new DynamicMediaInformation(media.Media_DynamicId, 8, "789"), // R, int
-                new DynamicMediaInformation(media.Media_DynamicId, 10, "my time"), // R, str
-                new DynamicMediaInformation(media.Media_DynamicId, 12, "long long time ago in a galaxy far far away"), // R. str
-                new DynamicMediaInformation(media.Media_DynamicId, 14, "0"), // R, bool
-                new DynamicMediaInformation(media.Media_DynamicId, 16, "1"), // R, bool
+                new DynamicMediaInformation(1, 1, "1"), // R, list (1-5)
+                new DynamicMediaInformation(1, 3, "9"), // R, list (9-15)
+                new DynamicMediaInformation(1, 4, "16"), // R, list (16-20)
+                new DynamicMediaInformation(1, 6, "2"), // R, int
+                new DynamicMediaInformation(1, 8, "111"), // R, int
+                new DynamicMediaInformation(1, 10, "my time"), // R, str
+                new DynamicMediaInformation(1, 12, "I swear by my pretty floral bonnet, I will end you."), // R. str
+                new DynamicMediaInformation(1, 14, "1"), // R, bool
+                new DynamicMediaInformation(1, 16, "1"), // R, bool
 
-                new DynamicMediaInformation(media.Media_DynamicId, 2, ""), // O, list
-                new DynamicMediaInformation(media.Media_DynamicId, 5, ""), // O, list
-                new DynamicMediaInformation(media.Media_DynamicId, 7, ""), // O, int
-                new DynamicMediaInformation(media.Media_DynamicId, 9, ""), // O, int
-                new DynamicMediaInformation(media.Media_DynamicId, 11, ""), // O, str
-                new DynamicMediaInformation(media.Media_DynamicId, 13, ""), // O, str
-                new DynamicMediaInformation(media.Media_DynamicId, 15, ""), // O, bool
-                new DynamicMediaInformation(media.Media_DynamicId, 17, ""), // O, bool
+                //new DynamicMediaInformation(1, 2, ""), // O, list (6-7)
+                //new DynamicMediaInformation(1, 5, ""), // O, list (21-25)
+                //new DynamicMediaInformation(1, 7, ""), // O, int
+                //new DynamicMediaInformation(1, 9, ""), // O, int
+                //new DynamicMediaInformation(1, 11, ""), // O, str
+                //new DynamicMediaInformation(1, 13, ""), // O, str
+                //new DynamicMediaInformation(1, 15, ""), // O, bool
+                //new DynamicMediaInformation(1, 17, ""), // O, bool
+
+
+                new DynamicMediaInformation(2, 1, "2"), // R, list (1-5)
+                new DynamicMediaInformation(2, 3, "10"), // R, list (9-15)
+                new DynamicMediaInformation(2, 4, "17"), // R, list (16-20)
+                new DynamicMediaInformation(2, 6, "222"), // R, int
+                new DynamicMediaInformation(2, 8, "555"), // R, int
+                new DynamicMediaInformation(2, 10, "my beats"), // R, str
+                new DynamicMediaInformation(2, 12, "D'ya know what the chain of command is? It’s the chain I go get and beat you with ’til you understand who’s in ruttin’ command here."), // R. str
+                new DynamicMediaInformation(2, 14, "1"), // R, bool
+                new DynamicMediaInformation(2, 16, "0"), // R, bool
+
+                //new DynamicMediaInformation(2, 2, ""), // O, list (6-7)
+                //new DynamicMediaInformation(2, 5, ""), // O, list (21-25)
+                //new DynamicMediaInformation(2, 7, ""), // O, int
+                //new DynamicMediaInformation(2, 9, ""), // O, int
+                //new DynamicMediaInformation(2, 11, ""), // O, str
+                //new DynamicMediaInformation(2, 13, ""), // O, str
+                //new DynamicMediaInformation(2, 15, ""), // O, bool
+                //new DynamicMediaInformation(2, 17, ""), // O, bool
+
+
+                new DynamicMediaInformation(3, 1, "3"), // R, list (1-5)
+                new DynamicMediaInformation(3, 3, "11"), // R, list (9-15)
+                new DynamicMediaInformation(3, 4, "18"), // R, list (16-20)
+                new DynamicMediaInformation(3, 6, "123"), // R, int
+                new DynamicMediaInformation(3, 8, "222"), // R, int
+                new DynamicMediaInformation(3, 10, "bears eat beats"), // R, str
+                new DynamicMediaInformation(3, 12, "Curse Your Sudden But Inevitable Betrayal!"), // R. str
+                new DynamicMediaInformation(3, 14, "0"), // R, bool
+                new DynamicMediaInformation(3, 16, "1"), // R, bool
+
+                //new DynamicMediaInformation(3, 2, ""), // O, list (6-7)
+                //new DynamicMediaInformation(3, 5, ""), // O, list (21-25)
+                //new DynamicMediaInformation(3, 7, ""), // O, int
+                //new DynamicMediaInformation(3, 9, ""), // O, int
+                //new DynamicMediaInformation(3, 11, ""), // O, str
+                //new DynamicMediaInformation(3, 13, ""), // O, str
+                //new DynamicMediaInformation(3, 15, ""), // O, bool
+                //new DynamicMediaInformation(3, 17, ""), // O, bool
+
+
+                new DynamicMediaInformation(4, 1, "4"), // R, list (1-5)
+                new DynamicMediaInformation(4, 3, "12"), // R, list (9-15)
+                new DynamicMediaInformation(4, 4, "19"), // R, list (16-20)
+                new DynamicMediaInformation(4, 6, "444"), // R, int
+                new DynamicMediaInformation(4, 8, "888"), // R, int
+                new DynamicMediaInformation(4, 10, "Battlestar Galactica"), // R, str
+                new DynamicMediaInformation(4, 12, "Ten percent of nothin' is... Let me do the math here... Nothin', and then nothin', Carry the nothing..."), // R. str
+                new DynamicMediaInformation(4, 14, "0"), // R, bool
+                new DynamicMediaInformation(4, 16, "0"), // R, bool
+
+                //new DynamicMediaInformation(4, 2, ""), // O, list (6-7)
+                //new DynamicMediaInformation(4, 5, ""), // O, list (21-25)
+                //new DynamicMediaInformation(4, 7, ""), // O, int
+                //new DynamicMediaInformation(4, 9, ""), // O, int
+                //new DynamicMediaInformation(4, 11, ""), // O, str
+                //new DynamicMediaInformation(4, 13, ""), // O, str
+                //new DynamicMediaInformation(4, 15, ""), // O, bool
+                //new DynamicMediaInformation(4, 17, ""), // O, bool
+
+
+                new DynamicMediaInformation(5, 1, "5"), // R, list (1-5)
+                new DynamicMediaInformation(5, 3, "13"), // R, list (9-15)
+                new DynamicMediaInformation(5, 4, "20"), // R, list (16-20)
+                new DynamicMediaInformation(5, 6, "999"), // R, int
+                new DynamicMediaInformation(5, 8, "333"), // R, int
+                new DynamicMediaInformation(5, 10, "pew pew"), // R, str
+                new DynamicMediaInformation(5, 12, "I am a leaf on the wind; watch how I soar"), // R. str
+                new DynamicMediaInformation(5, 14, "0"), // R, bool
+                new DynamicMediaInformation(5, 16, "1"), // R, bool
+
+                //new DynamicMediaInformation(5, 2, ""), // O, list (6-7)
+                //new DynamicMediaInformation(5, 5, ""), // O, list (21-25)
+                //new DynamicMediaInformation(5, 7, ""), // O, int
+                //new DynamicMediaInformation(5, 9, ""), // O, int
+                //new DynamicMediaInformation(5, 11, ""), // O, str
+                //new DynamicMediaInformation(5, 13, ""), // O, str
+                //new DynamicMediaInformation(5, 15, ""), // O, bool
+                //new DynamicMediaInformation(5, 17, ""), // O, bool
             };
 
 
@@ -296,9 +380,12 @@ namespace ef_json_query_testing.Tests
             context.SaveChanges();
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Dynamic] OFF");
 
-            context.Media_Json.Add(media.GetMediaJsonCopy());
-            context.SaveChanges();
+            foreach (var item in media)
+            {
+                context.Media_Json.Add(item.GetMediaJsonCopy());
+            }
 
+            context.SaveChanges();
         }
     }
 }

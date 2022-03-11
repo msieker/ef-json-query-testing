@@ -58,6 +58,7 @@ namespace ef_json_query_testing
 
             var count = 0;
             var parameters = new List<object>();
+            var hasSearchField = false;
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
@@ -65,6 +66,8 @@ namespace ef_json_query_testing
                 {
                     continue;
                 }
+
+                hasSearchField = true;
 
                 parameters.Add($"$.\"{field.JsonName}\"");
                 sqlStatement += $" AND JSON_VALUE([Details], {{{count}}}) ";
@@ -85,10 +88,17 @@ namespace ef_json_query_testing
                 count++;
             }
 
-            return _context.Media_Json
+            if (hasSearchField)
+            {
+                return _context.Media_Json
                 .FromSqlRaw(sqlStatement, parameters.ToArray())
                 .AsNoTracking()
                 .ToList();
+            }
+            else
+            {
+                return new List<Media_Json>();
+            }            
         }
 
 

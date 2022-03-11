@@ -285,7 +285,7 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(1, 14, "1"), // R, bool
                 new DynamicMediaInformation(1, 16, "1"), // R, bool
 
-                //new DynamicMediaInformation(1, 2, ""), // O, list (6-7)
+                //new DynamicMediaInformation(1, 2, ""), // O, list (6-8)
                 //new DynamicMediaInformation(1, 5, ""), // O, list (21-25)
                 //new DynamicMediaInformation(1, 7, ""), // O, int
                 //new DynamicMediaInformation(1, 9, ""), // O, int
@@ -305,7 +305,7 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(2, 14, "1"), // R, bool
                 new DynamicMediaInformation(2, 16, "0"), // R, bool
 
-                //new DynamicMediaInformation(2, 2, ""), // O, list (6-7)
+                //new DynamicMediaInformation(2, 2, ""), // O, list (6-8)
                 //new DynamicMediaInformation(2, 5, ""), // O, list (21-25)
                 //new DynamicMediaInformation(2, 7, ""), // O, int
                 //new DynamicMediaInformation(2, 9, ""), // O, int
@@ -325,9 +325,9 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(3, 14, "0"), // R, bool
                 new DynamicMediaInformation(3, 16, "1"), // R, bool
 
-                //new DynamicMediaInformation(3, 2, ""), // O, list (6-7)
+                new DynamicMediaInformation(3, 2, "6"), // O, list (6-8)
                 //new DynamicMediaInformation(3, 5, ""), // O, list (21-25)
-                //new DynamicMediaInformation(3, 7, ""), // O, int
+                new DynamicMediaInformation(3, 7, "333"), // O, int
                 //new DynamicMediaInformation(3, 9, ""), // O, int
                 //new DynamicMediaInformation(3, 11, ""), // O, str
                 //new DynamicMediaInformation(3, 13, ""), // O, str
@@ -345,9 +345,9 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(4, 14, "0"), // R, bool
                 new DynamicMediaInformation(4, 16, "0"), // R, bool
 
-                //new DynamicMediaInformation(4, 2, ""), // O, list (6-7)
-                //new DynamicMediaInformation(4, 5, ""), // O, list (21-25)
-                //new DynamicMediaInformation(4, 7, ""), // O, int
+                new DynamicMediaInformation(4, 2, "6"), // O, list (6-8)
+                new DynamicMediaInformation(4, 5, "21"), // O, list (21-25)
+                new DynamicMediaInformation(4, 7, "444"), // O, int
                 //new DynamicMediaInformation(4, 9, ""), // O, int
                 //new DynamicMediaInformation(4, 11, ""), // O, str
                 //new DynamicMediaInformation(4, 13, ""), // O, str
@@ -365,9 +365,9 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(5, 14, "0"), // R, bool
                 new DynamicMediaInformation(5, 16, "1"), // R, bool
 
-                //new DynamicMediaInformation(5, 2, ""), // O, list (6-7)
-                //new DynamicMediaInformation(5, 5, ""), // O, list (21-25)
-                //new DynamicMediaInformation(5, 7, ""), // O, int
+                new DynamicMediaInformation(5, 2, "7"), // O, list (6-8)
+                new DynamicMediaInformation(5, 5, "21"), // O, list (21-25)
+                new DynamicMediaInformation(5, 7, "444"), // O, int
                 //new DynamicMediaInformation(5, 9, ""), // O, int
                 //new DynamicMediaInformation(5, 11, ""), // O, str
                 //new DynamicMediaInformation(5, 13, ""), // O, str

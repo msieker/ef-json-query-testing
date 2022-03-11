@@ -1,3 +1,4 @@
+using ef_json_query_testing.Models;
 using FluentAssertions;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,8 @@ namespace ef_json_query_testing.Tests
         #region Json
 
         #region Raw Single
-                
-        
+
+
         [Theory]
         [InlineData(0, "asd")] // DynamicFields doesnt exist
         [InlineData(1, "asd")] // DynamicFields exsits, but no match
@@ -63,11 +64,11 @@ namespace ef_json_query_testing.Tests
 
         [Theory]
         [InlineData(1, "1", 1)]
-        [InlineData(10, "time", 1 )]
+        [InlineData(10, "time", 1)]
         public void Raw_Single_HasDynamicInformation(int fieldId, string str, int expectedId)
         {
             var media = _fixture.SearchService.JsonSearch_Raw(fieldId, str).FirstOrDefault();
-            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId ).ToDictionary(i => i.Field.JsonName, i => (object)i.Value);
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.JsonName, i => (object)i.Value);
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
@@ -77,6 +78,87 @@ namespace ef_json_query_testing.Tests
         #endregion
 
         #region Raw Dictionary
+
+        public static IEnumerable<object[]> Raw_Multi_NoMatch_TestCases()
+        {
+            // no fields given
+            yield return new object[] { new Dictionary<int, string>() };
+
+            // DynamicFields doesnt exist
+            yield return new object[] { new Dictionary<int, string>() {
+                { 500, "d" },
+                { 0, "d" }
+            } };
+
+            // DynamicFields exsits, but no match
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "asd" },
+                { 2, "0" }
+            } };
+
+            // DynamicFields exists, but no media has the field.
+            yield return new object[] { new Dictionary<int, string>() {
+                { 11, "asd" },
+                { 13, "0" },
+                { 17, "0" }
+            } };
+
+            // DynamicFields exists, value exists but doesnt match exactly
+            yield return new object[] { new Dictionary<int, string>() {
+                { 4, "1" },
+                { 8, "11" }
+            } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Raw_Multi_NoMatch_TestCases))]
+        public void Raw_Multi_NoMatch(Dictionary<int, string> searchFields)
+        {
+            List<Media_Json>? media = _fixture.SearchService.JsonSearch_Raw(searchFields);
+
+            Assert.Empty(media);
+        }
+
+
+        public static IEnumerable<object[]> Raw_Multi_Exact_TestCases()
+        {
+            yield return new object[] { new Dictionary<int, string>() { { 1, "1" } }, new int[] { 1 } };
+            yield return new object[] { new Dictionary<int, string>() { { 7, "444" }, { 2, "6" } }, new int[] { 4 } };
+            yield return new object[] { new Dictionary<int, string>() { { 7, "444" }, { 5, "21" } }, new int[] { 4, 5 } };
+
+        }
+
+        [Theory]
+        [MemberData(nameof(Raw_Multi_Exact_TestCases))]
+        public void Raw_Multi_Exact(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            List<Media_Json>? media = _fixture.SearchService.JsonSearch_Raw(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+        }
+
+
+        //[Theory]
+        //[InlineData(10, "my", new[] { 1, 2 })]
+        //[InlineData(10, "time", new[] { 1 })]
+        //[InlineData(10, "B", new[] { 2, 3, 4 })] // case doesnt matter for search
+        //[InlineData(12, "i", new[] { 1, 2, 3, 4, 5 })] // anywhere in sentence works
+        //[InlineData(12, "is?", new[] { 2 })] // special charecers
+        //[InlineData(12, "'", new[] { 2, 4 })] // sql string char
+        //[InlineData(12, "chain of command", new[] { 2 })] // multiple words
+        //public void Raw_Multi_Contains(Dictionary<int, string> searchFields)
+        //{
+        //
+        //}
+
+        //[Theory]
+        //[InlineData(1, "1", 1)]
+        //[InlineData(10, "time", 1)]
+        //public void Raw_Multi_HasDynamicInformation(Dictionary<int, string> searchFields)
+        //{
+        //
+        //}
 
         #endregion
 

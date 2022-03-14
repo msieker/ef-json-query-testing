@@ -187,19 +187,26 @@ namespace ef_json_query_testing.Seeders
 
         public static void LoadMediaJson(EfTestDbContext context)
         {
-            var mediaJson = new List<Media_Json>();
             var mediaItems = context.Media_Dynamic
                 .AsNoTracking()
                 .Include(d => d.DynamicMediaInformation)
-                .ThenInclude(i => i.Field)
-                .OrderBy(d => d.Media_DynamicId);
-            foreach (var item in mediaItems)
-            {
-                mediaJson.Add(item.GetMediaJsonCopy());
-            }
+                .ThenInclude(i => i.Field);
 
-            context.Media_Json.AddRange(mediaJson);
-            context.SaveChanges();
+            using (context.Database.BeginTransaction())
+            {
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Json] ON");
+                var mediaJson = new List<Media_Json>();
+                foreach (var item in mediaItems)
+                {
+                    mediaJson.Add(item.GetMediaJsonCopy(true));
+                }
+
+                context.Media_Json.AddRange(mediaJson);
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Json] OFF");
+
+                context.Database.CommitTransaction();
+            }
         }
 
         public static void LoadMediaJsonLarge(EfTestDbContext context)
@@ -218,22 +225,29 @@ namespace ef_json_query_testing.Seeders
 
         private static void GenerateJson(EfTestDbContext context, int maxJsonId)
         {
-            var mediaJson = new List<Media_Json>();
             var mediaItems = context.Media_Dynamic
                 .AsNoTracking()
                 .Include(d => d.DynamicMediaInformation)
                 .ThenInclude(i => i.Field)
                 .Where(d => d.Media_DynamicId > maxJsonId)
-                .OrderBy(d => d.Media_DynamicId)
                 .Take(10000)
                 .ToList();
-            foreach (var item in mediaItems)
-            {
-                mediaJson.Add(item.GetMediaJsonCopy());
-            }
 
-            context.Media_Json.AddRange(mediaJson);
-            context.SaveChanges();
+            using (context.Database.BeginTransaction())
+            {
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Json] ON");
+                var mediaJson = new List<Media_Json>();
+                foreach (var item in mediaItems)
+                {
+                    mediaJson.Add(item.GetMediaJsonCopy(true));
+                }
+
+                context.Media_Json.AddRange(mediaJson);
+                context.SaveChanges();
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Json] OFF");
+
+                context.Database.CommitTransaction();
+            }
         }
 
         private static Dictionary<int, int> GetListItemCounts(EfTestDbContext context)

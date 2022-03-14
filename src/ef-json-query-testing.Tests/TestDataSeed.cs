@@ -380,12 +380,14 @@ namespace ef_json_query_testing.Tests
             context.SaveChanges();
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Dynamic] OFF");
 
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Json] ON");
             foreach (var item in media)
             {
-                context.Media_Json.Add(item.GetMediaJsonCopy());
+                context.Media_Json.Add(item.GetMediaJsonCopy(true));
             }
 
             context.SaveChanges();
+            context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Media_Json] OFF");
         }
     }
 }

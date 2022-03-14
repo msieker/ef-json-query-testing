@@ -53,7 +53,7 @@ namespace ef_json_query_testing.Benchmarks
             }
 
             //throw if something wasnt picked.
-            if (list.Count < 3)
+            if (list.Count < 2)
             {
                 throw new Exception("Didnt find a good test value.");
             }

@@ -25,7 +25,7 @@ namespace ef_json_query_testing
             }
 
             // FromSqlInterpolated allows for use of string interpolation but it is handled in a way to avoid sql injection.
-            var jsonPath = $"$.\"{field.JsonName}\"";
+            var jsonPath = $"$.\"{field.DynamicFieldId}\"";
 
             if (field.DataType == DataTypes.StringValue)
             {
@@ -69,7 +69,7 @@ namespace ef_json_query_testing
 
                 hasSearchField = true;
 
-                parameters.Add($"$.\"{field.JsonName}\"");
+                parameters.Add($"$.\"{field.DynamicFieldId}\"");
                 sqlStatement += $" AND JSON_VALUE([Details], {{{count}}}) ";
                 count++;
 
@@ -114,7 +114,7 @@ namespace ef_json_query_testing
                 return new List<Media_Json>();
             }
 
-            var jsonPath = $"$.\"{field.JsonName}\"";
+            var jsonPath = $"$.\"{field.DynamicFieldId}\"";
             if (field.DataType == DataTypes.StringValue)
             {
                 return _context.Media_Json
@@ -150,7 +150,7 @@ namespace ef_json_query_testing
                 }
                 hasSearchField = true;
 
-                var jsonPath = $"$.\"{field.JsonName}\"";
+                var jsonPath = $"$.\"{field.DynamicFieldId}\"";
                 if (field.DataType == DataTypes.StringValue)
                 {
                     query = query.Where(q => EF.Functions.JsonValue(q.Details, jsonPath).Contains(searchField.Value));
@@ -265,7 +265,7 @@ namespace ef_json_query_testing
                 }
                 hasSearchField = true;
 
-                var jsonPath = $"$.\"{field.JsonName}\"";
+                var jsonPath = $"$.\"{field.DynamicFieldId}\"";
                 if (field.DataType == DataTypes.StringValue)
                 {
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value.Contains(searchField.Value)));

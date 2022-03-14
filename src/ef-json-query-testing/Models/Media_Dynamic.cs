@@ -19,7 +19,7 @@
         public ICollection<DynamicMediaInformation> DynamicMediaInformation { get; set; } = new List<DynamicMediaInformation>();
 
         // methods
-        public Media_Json GetMediaJsonCopy()
+        public Media_Json GetMediaJsonCopy(bool copyMediaId = false)
         {
             var jsonModel = new Media_Json();
             jsonModel.UploadDate = UploadDate;
@@ -31,10 +31,15 @@
             jsonModel.FileHeight = FileHeight;
             jsonModel.Description = Description;
             jsonModel.Hold = Hold;
+            
+            if (copyMediaId)
+            {
+                jsonModel.Media_JsonId = Media_DynamicId;
+            }
 
             foreach (var info in DynamicMediaInformation)
             {
-                jsonModel.Details.Add(info.Field.JsonName, info.Value);
+                jsonModel.Details.Add(info.Field.DynamicFieldId.ToString(), info.Value);
             }
 
             return jsonModel;

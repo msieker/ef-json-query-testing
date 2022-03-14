@@ -68,7 +68,7 @@ namespace ef_json_query_testing.Tests
         public void Raw_Single_HasDynamicInformation(int fieldId, string str, int expectedId)
         {
             var media = _fixture.SearchService.JsonSearch_Raw(fieldId, str).FirstOrDefault();
-            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.JsonName, i => (object)i.Value);
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.DynamicFieldId.ToString(), i => (object)i.Value);
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
@@ -252,7 +252,7 @@ namespace ef_json_query_testing.Tests
         public void Raw_Multi_HasDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
         {
             var media = _fixture.SearchService.JsonSearch_Raw(searchFields).FirstOrDefault();
-            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.JsonName, i => (object)i.Value);
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.DynamicFieldId.ToString(), i => (object)i.Value);
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
@@ -311,7 +311,7 @@ namespace ef_json_query_testing.Tests
         public void Magic_Single_HasDynamicInformation(int fieldId, string str, int expectedId)
         {
             var media = _fixture.SearchService.JsonSearch_EfMagic(fieldId, str).FirstOrDefault();
-            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.JsonName, i => (object)i.Value);
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.DynamicFieldId.ToString(), i => (object)i.Value);
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
@@ -495,7 +495,7 @@ namespace ef_json_query_testing.Tests
         public void Magic_Multi_HasDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
         {
             var media = _fixture.SearchService.JsonSearch_EfMagic(searchFields).FirstOrDefault();
-            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.JsonName, i => (object)i.Value);
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.DynamicFieldId.ToString(), i => (object)i.Value);
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
@@ -564,6 +564,7 @@ namespace ef_json_query_testing.Tests
             Assert.Equal(expectedId, media?.Media_DynamicId);
             Assert.All(media?.DynamicMediaInformation, l => expectedInfo.Contains(l));
         }
+
         #endregion
 
         #region Media Single

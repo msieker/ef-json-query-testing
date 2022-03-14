@@ -13,6 +13,7 @@ namespace ef_json_query_testing.Benchmarks
             stringSearchFields_both = BenchmarkData_List_Strings_both();
             stringSearchFields_required = BenchmarkData_List_Strings_required();
             stringSearchFields_optional = BenchmarkData_List_Strings_optional();
+            stringSearchFields_required2 = BenchmarkData_List_Strings_required2();
         }
 
         public Dictionary<int, string> stringSearchFields_both { get; set; }
@@ -164,5 +165,71 @@ namespace ef_json_query_testing.Benchmarks
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "op", "media")]
         public void Table_Media_op() => Search.TableSearch_Media(stringSearchFields_optional);
+
+
+
+
+
+
+
+
+        public Dictionary<int, string> stringSearchFields_required2 { get; set; }
+
+        public Dictionary<int, string> BenchmarkData_List_Strings_required2()
+        {
+            var ids = Context.Media_Dynamic.AsNoTracking()
+                .Where(m => m.DynamicMediaInformation
+                             .Where(d => d.Field.DataType == DataTypes.StringValue && d.Field.IsRequired)
+                             .Any())
+                .Select(m => m.Media_DynamicId)
+                .ToList();
+
+            var faker = new Faker();
+            var id = faker.PickRandom(ids);
+            var mediaItem = Context.Media_Dynamic.AsNoTracking()
+                .Include(m => m.DynamicMediaInformation)
+                .ThenInclude(d => d.Field)
+                .FirstOrDefault(m => m.Media_DynamicId == id);
+
+            var requiredStrings = mediaItem.DynamicMediaInformation.Where(v => v.Field.IsRequired);
+            //var optionalStrings = mediaItem.DynamicMediaInformation.Where(v => !v.Field.IsRequired);
+
+            // pick fields to search with, one of each type.
+            var requiredFields = faker.PickRandom(requiredStrings, 3);
+            //var optionalField = faker.PickRandom(optionalStrings);
+
+            // add search values to dict                
+            var list = new Dictionary<int, string>();
+            foreach (var field in requiredFields)
+            {
+                var min = field.Value.Length / 3;
+                var max = (field.Value.Length - min) * 2;
+
+                //get a chunk in the middle to search on. otherwise just take the string.
+                if (min > 0 && max > 0 && min < field.Value.Length && max < field.Value.Length && min < max)
+                {
+                    list.Add(field.FieldId, field.Value.Substring(min, min));
+                }
+                else
+                {
+                    list.Add(field.FieldId, field.Value);
+                }               
+            }            
+
+            return list;
+        }
+
+
+        [Benchmark]
+        [BenchmarkCategory("json", "stringfields", "req2", "raw")]
+        public void JSON_Raw_req2() => Search.JsonSearch_Raw(stringSearchFields_required2);
+
+        [Benchmark]
+        [BenchmarkCategory("json", "stringfields", "req2", "magic")]
+        public void JSON_Magic_req2() => Search.JsonSearch_EfMagic(stringSearchFields_required2);
+
+        [Benchmark]
+        [BenchmarkCategory("table", "stringfields", "req2", "media")]
+        public void Table_Media_req2() => Search.TableSearch_Media(stringSearchFields_required2);
     }
 }

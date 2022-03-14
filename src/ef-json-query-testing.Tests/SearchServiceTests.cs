@@ -321,6 +321,187 @@ namespace ef_json_query_testing.Tests
         #endregion
 
         #region Magic Dictionary
+
+        public static IEnumerable<object[]> Magic_Multi_NoMatch_TestCases()
+        {
+            // no fields given
+            yield return new object[] { new Dictionary<int, string>() };
+
+            // DynamicFields doesnt exist
+            yield return new object[] { new Dictionary<int, string>() {
+                { 500, "d" },
+                { 0, "d" }
+            } };
+
+            // DynamicFields exsits, but no match
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "asd" },
+                { 2, "0" }
+            } };
+
+            // DynamicFields exists, but no media has the field.
+            yield return new object[] { new Dictionary<int, string>() {
+                { 11, "asd" },
+                { 13, "0" },
+                { 17, "0" }
+            } };
+
+            // DynamicFields exists, value exists but dont match exactly
+            yield return new object[] { new Dictionary<int, string>() {
+                { 4, "1" },
+                { 8, "11" }
+            } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Magic_Multi_NoMatch_TestCases))]
+        public void Magic_Multi_NoMatch(Dictionary<int, string> searchFields)
+        {
+            List<Media_Json>? media = _fixture.SearchService.JsonSearch_EfMagic(searchFields);
+
+            Assert.Empty(media);
+        }
+
+
+        public static IEnumerable<object[]> Magic_Multi_Exact_TestCases()
+        {
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "1" }
+            }, new int[] { 1 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 7, "444" },
+                { 2, "6" }
+            }, new int[] { 4 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 7, "444" },
+                { 5, "21" }
+            }, new int[] { 4, 5 } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Magic_Multi_Exact_TestCases))]
+        public void Magic_Multi_Exact(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            List<Media_Json>? media = _fixture.SearchService.JsonSearch_EfMagic(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+        }
+
+
+        public static IEnumerable<object[]> Magic_Multi_Contains_TestCases()
+        {
+            yield return new object[] { new Dictionary<int, string>() {
+                { 10, "my" }
+            }, new int[] { 1, 2 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 10, "time" },
+                { 12, "I" }
+            }, new int[] { 1 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 10, "B" },
+                { 11, "this" }
+            }, new int[] { 2, 3, 4 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "i" },
+                { 10, "t" }
+            }, new int[] { 1, 2, 3, 4 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "wind;" }
+            }, new int[] { 5 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 10, "B" },
+                { 12, "'" }
+            }, new int[] { 2, 4 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "chain of command" }
+            }, new int[] { 2 } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Magic_Multi_Contains_TestCases))]
+        public void Magic_Multi_Contains(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            List<Media_Json>? media = _fixture.SearchService.JsonSearch_EfMagic(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+        }
+
+
+        public static IEnumerable<object[]> Magic_Multi_Any_TestCases()
+        {
+            // exact and contains matches
+            yield return new object[] { new Dictionary<int, string>() {
+                { 7, "444" },
+                { 12, "ten" }
+            }, new int[] { 4 } };
+
+            // lots of fields
+            yield return new object[] { new Dictionary<int, string>() {
+                { 3, "11" },
+                { 6, "123" },
+                { 10, "b" },
+                { 14, "0" },
+                { 2, "6" },
+                { 11, "alone" },
+            }, new int[] { 3 } };
+
+            // all
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "5" },
+                { 3, "13" },
+                { 4, "20" },
+                { 6, "999" },
+                { 8, "333" },
+                { 10, "pew" },
+                { 12, "leaf" },
+                { 14, "0" },
+                { 16, "1" },
+                { 2, "7" },
+                { 5, "21" },
+                { 7, "444" },
+                { 9, "50" },
+                { 11, "are" },
+                { 13, "true" },
+                { 15, "0" },
+                { 17, "1" },
+            }, new int[] { 5 } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Magic_Multi_Any_TestCases))]
+        public void Magic_Multi_Any(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            List<Media_Json>? media = _fixture.SearchService.JsonSearch_EfMagic(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+        }
+
+
+        public static IEnumerable<object[]> Magic_Multi_HasDynamicInformation_TestCases()
+        {
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "1" }
+            }, 1 };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "Inevitable Betrayal" }
+            }, 3 };
+        }
+
+        [Theory]
+        [MemberData(nameof(Magic_Multi_HasDynamicInformation_TestCases))]
+        public void Magic_Multi_HasDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
+        {
+            var media = _fixture.SearchService.JsonSearch_EfMagic(searchFields).FirstOrDefault();
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.JsonName, i => (object)i.Value);
+
+
+            Assert.Equal(expectedId, media?.Media_JsonId);
+            Assert.All(media?.Details, l => expectedInfo.Contains(l));
+        }
+
         #endregion
 
         #endregion
@@ -444,6 +625,187 @@ namespace ef_json_query_testing.Tests
         #endregion
 
         #region Media Dictionary
+
+        public static IEnumerable<object[]> Media_Multi_NoMatch_TestCases()
+        {
+            // no fields given
+            yield return new object[] { new Dictionary<int, string>() };
+
+            // DynamicFields doesnt exist
+            yield return new object[] { new Dictionary<int, string>() {
+                { 500, "d" },
+                { 0, "d" }
+            } };
+
+            // DynamicFields exsits, but no match
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "asd" },
+                { 2, "0" }
+            } };
+
+            // DynamicFields exists, but no media has the field.
+            yield return new object[] { new Dictionary<int, string>() {
+                { 11, "asd" },
+                { 13, "0" },
+                { 17, "0" }
+            } };
+
+            // DynamicFields exists, value exists but dont match exactly
+            yield return new object[] { new Dictionary<int, string>() {
+                { 4, "1" },
+                { 8, "11" }
+            } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_NoMatch_TestCases))]
+        public void Media_Multi_NoMatch(Dictionary<int, string> searchFields)
+        {
+            var media = _fixture.SearchService.TableSearch_Media(searchFields);
+
+            Assert.Empty(media);
+        }
+
+
+        public static IEnumerable<object[]> Media_Multi_Exact_TestCases()
+        {
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "1" }
+            }, new int[] { 1 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 7, "444" },
+                { 2, "6" }
+            }, new int[] { 4 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 7, "444" },
+                { 5, "21" }
+            }, new int[] { 4, 5 } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_Exact_TestCases))]
+        public void Media_Multi_Exact(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+        }
+
+
+        public static IEnumerable<object[]> Media_Multi_Contains_TestCases()
+        {
+            yield return new object[] { new Dictionary<int, string>() {
+                { 10, "my" }
+            }, new int[] { 1, 2 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 10, "time" },
+                { 12, "I" }
+            }, new int[] { 1 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 10, "B" },
+                { 11, "this" }
+            }, new int[] { 2, 3, 4 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "i" },
+                { 10, "t" }
+            }, new int[] { 1, 2, 3, 4 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "wind;" }
+            }, new int[] { 5 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 10, "B" },
+                { 12, "'" }
+            }, new int[] { 2, 4 } };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "chain of command" }
+            }, new int[] { 2 } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Raw_Multi_Contains_TestCases))]
+        public void Media_Multi_Contains(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+        }
+
+
+        public static IEnumerable<object[]> Media_Multi_Any_TestCases()
+        {
+            // exact and contains matches
+            yield return new object[] { new Dictionary<int, string>() {
+                { 7, "444" },
+                { 12, "ten" }
+            }, new int[] { 4 } };
+
+            // lots of fields
+            yield return new object[] { new Dictionary<int, string>() {
+                { 3, "11" },
+                { 6, "123" },
+                { 10, "b" },
+                { 14, "0" },
+                { 2, "6" },
+                { 11, "alone" },
+            }, new int[] { 3 } };
+
+            // all
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "5" },
+                { 3, "13" },
+                { 4, "20" },
+                { 6, "999" },
+                { 8, "333" },
+                { 10, "pew" },
+                { 12, "leaf" },
+                { 14, "0" },
+                { 16, "1" },
+                { 2, "7" },
+                { 5, "21" },
+                { 7, "444" },
+                { 9, "50" },
+                { 11, "are" },
+                { 13, "true" },
+                { 15, "0" },
+                { 17, "1" },
+            }, new int[] { 5 } };
+        }
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_Any_TestCases))]
+        public void Media_Multi_Any(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+        }
+
+
+        public static IEnumerable<object[]> Media_Multi_HasDynamicInformation_TestCases()
+        {
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "1" }
+            }, 1 };
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "Inevitable Betrayal" }
+            }, 3 };
+        }
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_HasDynamicInformation_TestCases))]
+        public void Media_Multi_HasDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
+        {
+            var media = _fixture.SearchService.TableSearch_Media(searchFields).FirstOrDefault();
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToList();
+
+
+            Assert.Equal(expectedId, media?.Media_DynamicId);
+            Assert.All(media?.DynamicMediaInformation, l => expectedInfo.Contains(l));
+        }
+
         #endregion
 
         #endregion

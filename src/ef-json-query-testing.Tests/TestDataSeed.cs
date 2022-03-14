@@ -309,7 +309,7 @@ namespace ef_json_query_testing.Tests
                 //new DynamicMediaInformation(2, 5, ""), // O, list (21-25)
                 //new DynamicMediaInformation(2, 7, ""), // O, int
                 //new DynamicMediaInformation(2, 9, ""), // O, int
-                //new DynamicMediaInformation(2, 11, ""), // O, str
+                new DynamicMediaInformation(2, 11, "this time it is mine"), // O, str
                 //new DynamicMediaInformation(2, 13, ""), // O, str
                 //new DynamicMediaInformation(2, 15, ""), // O, bool
                 //new DynamicMediaInformation(2, 17, ""), // O, bool
@@ -329,7 +329,7 @@ namespace ef_json_query_testing.Tests
                 //new DynamicMediaInformation(3, 5, ""), // O, list (21-25)
                 new DynamicMediaInformation(3, 7, "333"), // O, int
                 //new DynamicMediaInformation(3, 9, ""), // O, int
-                //new DynamicMediaInformation(3, 11, ""), // O, str
+                new DynamicMediaInformation(3, 11, "it's dangerous to go alone, you can't go without this"), // O, str
                 //new DynamicMediaInformation(3, 13, ""), // O, str
                 //new DynamicMediaInformation(3, 15, ""), // O, bool
                 //new DynamicMediaInformation(3, 17, ""), // O, bool
@@ -349,7 +349,7 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(4, 5, "21"), // O, list (21-25)
                 new DynamicMediaInformation(4, 7, "444"), // O, int
                 //new DynamicMediaInformation(4, 9, ""), // O, int
-                //new DynamicMediaInformation(4, 11, ""), // O, str
+                new DynamicMediaInformation(4, 11, "my time to shine in this spotlight"), // O, str
                 //new DynamicMediaInformation(4, 13, ""), // O, str
                 //new DynamicMediaInformation(4, 15, ""), // O, bool
                 //new DynamicMediaInformation(4, 17, ""), // O, bool
@@ -368,11 +368,11 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(5, 2, "7"), // O, list (6-8)
                 new DynamicMediaInformation(5, 5, "21"), // O, list (21-25)
                 new DynamicMediaInformation(5, 7, "444"), // O, int
-                //new DynamicMediaInformation(5, 9, ""), // O, int
-                //new DynamicMediaInformation(5, 11, ""), // O, str
-                //new DynamicMediaInformation(5, 13, ""), // O, str
-                //new DynamicMediaInformation(5, 15, ""), // O, bool
-                //new DynamicMediaInformation(5, 17, ""), // O, bool
+                new DynamicMediaInformation(5, 9, "50"), // O, int
+                new DynamicMediaInformation(5, 11, "are you human or are you dancer?"), // O, str
+                new DynamicMediaInformation(5, 13, "nothing is true, everything is permitted"), // O, str
+                new DynamicMediaInformation(5, 15, "0"), // O, bool
+                new DynamicMediaInformation(5, 17, "1"), // O, bool
             };
 
 

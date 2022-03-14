@@ -98,7 +98,7 @@ namespace ef_json_query_testing
             else
             {
                 return new List<Media_Json>();
-            }            
+            }
         }
 
 
@@ -140,6 +140,7 @@ namespace ef_json_query_testing
 
             var fieldList = _context.DynamicFields.AsNoTracking().ToList();
             var query = _context.Media_Json.AsNoTracking().AsQueryable();
+            var hasSearchField = false;
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
@@ -147,6 +148,7 @@ namespace ef_json_query_testing
                 {
                     continue;
                 }
+                hasSearchField = true;
 
                 var jsonPath = $"$.\"{field.JsonName}\"";
                 if (field.DataType == DataTypes.StringValue)
@@ -159,7 +161,14 @@ namespace ef_json_query_testing
                 }
             }
 
-            return query.ToList();
+            if (hasSearchField)
+            {
+                return query.ToList();
+            }
+            else
+            {
+                return new List<Media_Json>();
+            }
         }
 
         #endregion
@@ -246,6 +255,7 @@ namespace ef_json_query_testing
 
             var fieldList = _context.DynamicFields.AsNoTracking().ToList();
             var query = _context.Media_Dynamic.AsNoTracking().Include(d => d.DynamicMediaInformation).AsQueryable();
+            var hasSearchField = false;
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
@@ -253,6 +263,8 @@ namespace ef_json_query_testing
                 {
                     continue;
                 }
+                hasSearchField = true;
+
                 var jsonPath = $"$.\"{field.JsonName}\"";
                 if (field.DataType == DataTypes.StringValue)
                 {
@@ -264,7 +276,14 @@ namespace ef_json_query_testing
                 }
             }
 
-            return query.ToList();
+            if (hasSearchField)
+            {
+                return query.ToList();
+            }
+            else
+            {
+                return new List<Media_Dynamic>();
+            }
         }
 
         #endregion

@@ -67,6 +67,12 @@ namespace ef_json_query_testing.Benchmarks
         public void Media_both() => Search.TableSearch_Media(stringSearchFields_both);
 
 
+
+
+
+
+
+
         public Dictionary<int, string> stringSearchFields_required { get; set; }
 
         public Dictionary<int, string> BenchmarkData_List_Strings_required()
@@ -114,6 +120,10 @@ namespace ef_json_query_testing.Benchmarks
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "req", "media")]
         public void Media_req() => Search.TableSearch_Media(stringSearchFields_required);
+
+
+
+
 
 
 

@@ -9,6 +9,8 @@ namespace ef_json_query_testing
     {
         private readonly EfTestDbContext _context;
 
+        private const int Take_Count = 100;
+
         public SearchService(EfTestDbContext context)
         {
             _context = context;
@@ -27,12 +29,15 @@ namespace ef_json_query_testing
             // FromSqlInterpolated allows for use of string interpolation but it is handled in a way to avoid sql injection.
             var jsonPath = $"$.\"{field.DynamicFieldId}\"";
 
+            var query = new List<Media_Json>();
             if (field.DataType == DataTypes.StringValue)
             {
                 var containsString = "%" + value + "%";
                 return _context.Media_Json
                     .FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) LIKE {containsString}")
                     .AsNoTracking()
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count)
                     .ToList();
             }
             else
@@ -40,6 +45,8 @@ namespace ef_json_query_testing
                 return _context.Media_Json
                     .FromSqlInterpolated($"SELECT * FROM [dbo].[Media_Json] WHERE JSON_VALUE([Details], {jsonPath}) = {value}")
                     .AsNoTracking()
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count)
                     .ToList();
             }
         }
@@ -93,6 +100,8 @@ namespace ef_json_query_testing
                 return _context.Media_Json
                 .FromSqlRaw(sqlStatement, parameters.ToArray())
                 .AsNoTracking()
+                .OrderBy(m => m.Media_JsonId)
+                .Take(Take_Count)
                 .ToList();
             }
             else
@@ -120,6 +129,8 @@ namespace ef_json_query_testing
                 return _context.Media_Json
                     .AsNoTracking()
                     .Where(m => EF.Functions.JsonValue(m.Details, jsonPath).Contains(value))
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count)
                     .ToList();
             }
             else
@@ -127,6 +138,8 @@ namespace ef_json_query_testing
                 return _context.Media_Json
                     .AsNoTracking()
                     .Where(m => EF.Functions.JsonValue(m.Details, jsonPath) == value)
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count)
                     .ToList();
             }
         }
@@ -163,7 +176,10 @@ namespace ef_json_query_testing
 
             if (hasSearchField)
             {
-                return query.ToList();
+                return query
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count)
+                    .ToList();
             }
             else
             {
@@ -212,6 +228,8 @@ namespace ef_json_query_testing
                 .AsNoTracking()
                 .Include(m => m.DynamicMediaInformation)
                 .Where(m => ids.Contains(m.Media_DynamicId))
+                .OrderBy(m => m.Media_DynamicId)
+                .Take(Take_Count)
                 .ToList();
         }
 
@@ -232,6 +250,8 @@ namespace ef_json_query_testing
                     .AsNoTracking()
                     .Include(d => d.DynamicMediaInformation)
                     .Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Contains(value)) != null)
+                    .OrderBy(m => m.Media_DynamicId)
+                    .Take(Take_Count)
                     .ToList();
             }
             else
@@ -241,6 +261,8 @@ namespace ef_json_query_testing
                     .AsNoTracking()
                     .Include(d => d.DynamicMediaInformation)
                     .Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Equals(value)) != null)
+                    .OrderBy(m => m.Media_DynamicId)
+                    .Take(Take_Count)
                     .ToList();
             }
         }
@@ -278,7 +300,7 @@ namespace ef_json_query_testing
 
             if (hasSearchField)
             {
-                return query.ToList();
+                return query.OrderBy(q => q.Media_DynamicId).Take(Take_Count).ToList();
             }
             else
             {

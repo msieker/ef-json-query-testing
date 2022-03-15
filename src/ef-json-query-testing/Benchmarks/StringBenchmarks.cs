@@ -21,21 +21,21 @@ namespace ef_json_query_testing.Benchmarks
         [Benchmark]
         [BenchmarkCategory("json", "string", "raw")]
         [ArgumentsSource(nameof(BenchmarkData_StringFind))]
-        public void JSON_Raw(int i, string str) => Search.JsonSearch_Raw(i, str);
+        public void Raw(int i, string str) => Search.JsonSearch_Raw(i, str);
 
         [Benchmark]
         [BenchmarkCategory("json", "string", "magic")]
         [ArgumentsSource(nameof(BenchmarkData_StringFind))]
-        public void JSON_Magic(int i, string str) => Search.JsonSearch_EfMagic(i, str);
+        public void Magic(int i, string str) => Search.JsonSearch_EfMagic(i, str);
 
         [Benchmark]
         [BenchmarkCategory("table", "string", "info")]
         [ArgumentsSource(nameof(BenchmarkData_StringFind))]
-        public void Table_Info(int i, string str) => Search.TableSearch_Info(i, str);
+        public void Info(int i, string str) => Search.TableSearch_Info(i, str);
 
         [Benchmark]
         [BenchmarkCategory("table", "string", "media")]
         [ArgumentsSource(nameof(BenchmarkData_StringFind))]
-        public void Table_Media(int i, string str) => Search.TableSearch_Media(i, str);
+        public void Media(int i, string str) => Search.TableSearch_Media(i, str);
     }
 }

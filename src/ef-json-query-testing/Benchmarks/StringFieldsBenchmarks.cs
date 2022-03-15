@@ -56,15 +56,15 @@ namespace ef_json_query_testing.Benchmarks
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "both", "raw")]
-        public void JSON_Raw_both() => Search.JsonSearch_Raw(stringSearchFields_both);
+        public void Raw_both() => Search.JsonSearch_Raw(stringSearchFields_both);
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "both", "magic")]
-        public void JSON_Magic_both() => Search.JsonSearch_EfMagic(stringSearchFields_both);
+        public void Magic_both() => Search.JsonSearch_EfMagic(stringSearchFields_both);
 
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "both", "media")]
-        public void Table_Media_both() => Search.TableSearch_Media(stringSearchFields_both);
+        public void Media_both() => Search.TableSearch_Media(stringSearchFields_both);
 
 
         public Dictionary<int, string> stringSearchFields_required { get; set; }
@@ -105,15 +105,15 @@ namespace ef_json_query_testing.Benchmarks
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "req", "raw")]
-        public void JSON_Raw_req() => Search.JsonSearch_Raw(stringSearchFields_required);
+        public void Raw_req() => Search.JsonSearch_Raw(stringSearchFields_required);
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "req", "magic")]
-        public void JSON_Magic_req() => Search.JsonSearch_EfMagic(stringSearchFields_required);
+        public void Magic_req() => Search.JsonSearch_EfMagic(stringSearchFields_required);
 
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "req", "media")]
-        public void Table_Media_req() => Search.TableSearch_Media(stringSearchFields_required);
+        public void Media_req() => Search.TableSearch_Media(stringSearchFields_required);
 
 
 
@@ -156,15 +156,15 @@ namespace ef_json_query_testing.Benchmarks
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "op", "raw")]
-        public void JSON_Raw_op() => Search.JsonSearch_Raw(stringSearchFields_optional);
+        public void Raw_op() => Search.JsonSearch_Raw(stringSearchFields_optional);
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "op", "magic")]
-        public void JSON_Magic_op() => Search.JsonSearch_EfMagic(stringSearchFields_optional);
+        public void Magic_op() => Search.JsonSearch_EfMagic(stringSearchFields_optional);
 
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "op", "media")]
-        public void Table_Media_op() => Search.TableSearch_Media(stringSearchFields_optional);
+        public void Media_op() => Search.TableSearch_Media(stringSearchFields_optional);
 
 
 
@@ -222,14 +222,14 @@ namespace ef_json_query_testing.Benchmarks
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "req2", "raw")]
-        public void JSON_Raw_req2() => Search.JsonSearch_Raw(stringSearchFields_required2);
+        public void Raw_req2() => Search.JsonSearch_Raw(stringSearchFields_required2);
 
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "req2", "magic")]
-        public void JSON_Magic_req2() => Search.JsonSearch_EfMagic(stringSearchFields_required2);
+        public void Magic_req2() => Search.JsonSearch_EfMagic(stringSearchFields_required2);
 
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "req2", "media")]
-        public void Table_Media_req2() => Search.TableSearch_Media(stringSearchFields_required2);
+        public void Media_req2() => Search.TableSearch_Media(stringSearchFields_required2);
     }
 }

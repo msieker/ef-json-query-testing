@@ -8,13 +8,12 @@ BEGIN TRANSACTION
 
 
 
-DECLARE @columnPrefix NVARCHAR(10) = '_v'
+DECLARE @columnPrefix NVARCHAR(10) = '_vColumn_'
 DECLARE @indexPrefix NVARCHAR(100) = 'IX_Media_Json_v_'
 
 DECLARE @columnName NVARCHAR(200) = @columnPrefix + @alias
 DECLARE @indexName NVARCHAR(200) = @indexPrefix + @alias
 
-SELECT @columnName, @indexName
 
 IF EXISTS(SELECT NAME FROM SYS.INDEXES WHERE NAME = @indexName AND OBJECT_ID = OBJECT_ID('dbo.Media_Json'))
 	IF @recreate = 0
@@ -34,7 +33,7 @@ IF EXISTS(SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 
 			EXEC sp_executesql @dropColumn
 		END
 
-DECLARE @createColumn NVARCHAR(MAX) = 'ALTER TABLE [Media_Json] ADD [' + @columnName + '] AS CONVERT(JSON_VALUE(Details, ''$."' + @keyName + '"'') , ' + @keyType + ')'
+DECLARE @createColumn NVARCHAR(MAX) = 'ALTER TABLE [Media_Json] ADD [' + @columnName + '] AS CONVERT(' + @keyType + ', JSON_VALUE(Details, ''$."' + @keyName + '"''))'
 DECLARE @createIndex NVARCHAR(MAX) = 'CREATE INDEX [' + @indexName + '] ON [Media_Json] ([' + @columnName + '])'
 
 EXEC sp_executesql @createColumn

@@ -16,7 +16,7 @@ public class EfTestDbContext : DbContext
 
     static EfTestDbContext()
     {
-        var connStr = Environment.GetEnvironmentVariable("BENCHMARK_SQL_CONN") ?? "Server=localhost;Initial Catalog=ef_testing;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=5;";
+        var connStr = Environment.GetEnvironmentVariable("BENCHMARK_SQL_CONN") ?? "Server=localhost;Initial Catalog=ef_testing_index;Persist Security Info=False;Integrated Security=SSPI;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=5;";
         OptionsBuilder = new DbContextOptionsBuilder<EfTestDbContext>();
 
         OptionsBuilder.UseSqlServer(connStr);

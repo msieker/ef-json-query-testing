@@ -30,6 +30,8 @@ namespace ef_json_query_testing.Seeders
         private const int FakerSeed = 42;
         public static void LoadAllData(EfTestDbContext context, int fieldsCount = 30, int mediaItemsCount = 500, int listTypeCount = 5)
         {
+            context.Database.EnsureCreated();
+
             Randomizer.Seed = new Random(FakerSeed);
             LoadSharedData(context, fieldsCount, listTypeCount);
 
@@ -40,9 +42,14 @@ namespace ef_json_query_testing.Seeders
         {
             LoadDynamicListTypes(context, listTypeCount);
 
-
-            context.DynamicFields.AddRange(FakerDynamicField.Generate(fieldsCount));
+            var randomFields = FakerDynamicField.Generate(fieldsCount);
+            context.DynamicFields.AddRange(randomFields);
             context.SaveChanges();
+
+            foreach (var field in randomFields)
+            {
+                AddJsonIndex(context, field.DynamicFieldId.ToString(), field.DataType.GetSqlType());
+            }
         }
 
         public static void LoadMediaData(EfTestDbContext context, int mediaItemsCount = 1000)
@@ -108,6 +115,11 @@ namespace ef_json_query_testing.Seeders
 
             context.DynamicFields.AddRange(dynamicFields);
             context.SaveChanges();
+
+            foreach (var field in dynamicFields)
+            {
+                AddJsonIndex(context, field.DynamicFieldId.ToString(), field.DataType.GetSqlType());
+            }
         }
 
         private static void LoadDynamicListItems(EfTestDbContext context)
@@ -292,5 +304,14 @@ namespace ef_json_query_testing.Seeders
             DataTypes.DecimalValue => faker.Random.Decimal(decimal.MaxValue).ToString(),
             _ => string.Empty
         };
+
+        private static void AddJsonIndex(EfTestDbContext context, string keyName, string keyType, bool recreate = true)
+        {
+            //@keyName NVARCHAR(200), --json prop name
+            //@keyType NVARCHAR(200), --sql type
+            //@alias NVARCHAR(200), --what will be used to name the new index and column
+            //@recreate BIT -- if pre-existing index/columns should be deleted and remade
+            context.Database.ExecuteSqlRaw("stp_Add_Json_Index {0}, {1}, {2}, {3}", keyName, keyType, keyName, recreate);
+        }
     }
 }

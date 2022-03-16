@@ -237,7 +237,7 @@ namespace ef_json_query_testing.Tests
                     Description = "You are the chosen one",
                     DataType = DataTypes.BoolValue
                 },
-                new DynamicField("End of the Line here")
+                new DynamicField("Start of the Line here")
                 {
                     DynamicFieldId = 16,
                     IsQueryable = false,

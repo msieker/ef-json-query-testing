@@ -23,8 +23,7 @@ namespace ef_json_query_testing.Tests
 
         [Theory]
         [InlineData(0, "asd")] // DynamicFields doesnt exist
-        [InlineData(1, "asd")] // DynamicFields exsits, but no match
-        [InlineData(2, "asd")] // DynamicFields exists, but no media has the field.
+        [InlineData(1, "0")] // DynamicFields exsits, but no match
         [InlineData(6, "22")] // DynamicFields exists, value exists but doesnt match exactly
         public void Raw_Single_NoMatch(int FieldId, string searchValue)
         {

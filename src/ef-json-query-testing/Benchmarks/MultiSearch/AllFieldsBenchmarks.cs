@@ -43,6 +43,10 @@ namespace ef_json_query_testing.Benchmarks
         public void Magic() => Search.JsonSearch_EfMagic(allSearchFields);
 
         [Benchmark]
+        [BenchmarkCategory("json", "allfields", "indexed")]
+        public void Indexed() => Search.JsonSearch_Indexed(allSearchFields);
+
+        [Benchmark]
         [BenchmarkCategory("table", "allfields", "media")]
         public void Media() => Search.TableSearch_Media(allSearchFields);
     }

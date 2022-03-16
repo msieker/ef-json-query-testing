@@ -1,11 +1,11 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Filters;
 using BenchmarkDotNet.Running;
-
-
+using ef_json_query_testing.Seeders;
 
 public class Program
 {
@@ -42,15 +42,19 @@ public class Program
         *           strategy used: "json", "table"
         *           test type values:
         *              single fields: "nomatch", "int", "listInt", "bool", "string"
-        *              multi fields: "fewfields", "allfields", "stringfields"
-        *           method used: "raw", "magic", "info", "media"
+        *              multi fields: "fewfields", "allfields", "stringfields", "lessrand"
+        *                   stringfields: "req2", "op", "req", "both"
+        *                   lessrand: "first", "last", "set1", "set2"
+        *           method used: "raw", "magic", "info", "media", "indexed"
         */
 
         BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
             .Run(args, DefaultConfig.Instance
-                .AddFilter(new AllCategoriesFilter(new string[] { "json"}))
+                .AddFilter(new AnyCategoriesFilter(new string[] { "raw", "media" }))
+                .AddFilter(new AllCategoriesFilter(new string[] { "set2" }))
                 .AddExporter(RPlotExporter.Default)
-                .AddColumn(CategoriesColumn.Default));
-
+                .AddColumn(CategoriesColumn.Default)
+                //.AddDiagnoser(MemoryDiagnoser.Default)
+                );
     }
 }

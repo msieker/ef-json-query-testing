@@ -63,6 +63,10 @@ namespace ef_json_query_testing.Benchmarks
         public void Magic_both() => Search.JsonSearch_EfMagic(stringSearchFields_both);
 
         [Benchmark]
+        [BenchmarkCategory("json", "stringfields", "both", "indexed")]
+        public void Indexed_both() => Search.JsonSearch_Indexed(stringSearchFields_both);
+
+        [Benchmark]
         [BenchmarkCategory("table", "stringfields", "both", "media")]
         public void Media_both() => Search.TableSearch_Media(stringSearchFields_both);
 
@@ -116,6 +120,10 @@ namespace ef_json_query_testing.Benchmarks
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "req", "magic")]
         public void Magic_req() => Search.JsonSearch_EfMagic(stringSearchFields_required);
+
+        [Benchmark]
+        [BenchmarkCategory("json", "stringfields", "req", "indexed")]
+        public void Indexed_req() => Search.JsonSearch_Indexed(stringSearchFields_required);
 
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "req", "media")]
@@ -173,6 +181,10 @@ namespace ef_json_query_testing.Benchmarks
         public void Magic_op() => Search.JsonSearch_EfMagic(stringSearchFields_optional);
 
         [Benchmark]
+        [BenchmarkCategory("json", "stringfields", "op", "indexed")]
+        public void Indexed_op() => Search.JsonSearch_Indexed(stringSearchFields_optional);
+
+        [Benchmark]
         [BenchmarkCategory("table", "stringfields", "op", "media")]
         public void Media_op() => Search.TableSearch_Media(stringSearchFields_optional);
 
@@ -223,8 +235,8 @@ namespace ef_json_query_testing.Benchmarks
                 else
                 {
                     list.Add(field.FieldId, field.Value);
-                }               
-            }            
+                }
+            }
 
             return list;
         }
@@ -237,6 +249,10 @@ namespace ef_json_query_testing.Benchmarks
         [Benchmark]
         [BenchmarkCategory("json", "stringfields", "req2", "magic")]
         public void Magic_req2() => Search.JsonSearch_EfMagic(stringSearchFields_required2);
+
+        [Benchmark]
+        [BenchmarkCategory("json", "stringfields", "req2", "indexed")]
+        public void Indexed_req2() => Search.JsonSearch_Indexed(stringSearchFields_required2);
 
         [Benchmark]
         [BenchmarkCategory("table", "stringfields", "req2", "media")]

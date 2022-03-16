@@ -81,12 +81,17 @@ namespace ef_json_query_testing.Benchmarks
         }
 
         [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic")]
+        [BenchmarkCategory("json", "lessrand", "magic", "first")]
         [ArgumentsSource(nameof(BenchmarkData_List_LessRand_FirstItem))]
         public void Magic_first(Dictionary<int, string> dict) => Search.JsonSearch_EfMagic(dict);
-        
+
         [Benchmark]
-        [BenchmarkCategory("table", "lessrand", "media")]
+        [BenchmarkCategory("json", "lessrand", "indexed", "first")]
+        [ArgumentsSource(nameof(BenchmarkData_List_LessRand_FirstItem))]
+        public void Indexed_first(Dictionary<int, string> dict) => Search.JsonSearch_Indexed(dict);
+
+        [Benchmark]
+        [BenchmarkCategory("table", "lessrand", "media", "first")]
         [ArgumentsSource(nameof(BenchmarkData_List_LessRand_FirstItem))]
         public void Media_first(Dictionary<int, string> dict) => Search.TableSearch_Media(dict);
 
@@ -152,12 +157,17 @@ namespace ef_json_query_testing.Benchmarks
         }
 
         [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic")]
+        [BenchmarkCategory("json", "lessrand", "magic", "last")]
         [ArgumentsSource(nameof(BenchmarkData_List_LessRand_LastItem))]
         public void Magic_last(Dictionary<int, string> dict) => Search.JsonSearch_EfMagic(dict);
-        
+
         [Benchmark]
-        [BenchmarkCategory("table", "lessrand", "media")]
+        [BenchmarkCategory("json", "lessrand", "indexed", "last")]
+        [ArgumentsSource(nameof(BenchmarkData_List_LessRand_LastItem))]
+        public void Indexed_Last(Dictionary<int, string> dict) => Search.JsonSearch_Indexed(dict);
+
+        [Benchmark]
+        [BenchmarkCategory("table", "lessrand", "media", "last")]
         [ArgumentsSource(nameof(BenchmarkData_List_LessRand_LastItem))]
         public void Media_last(Dictionary<int, string> dict) => Search.TableSearch_Media(dict);
 
@@ -221,12 +231,17 @@ namespace ef_json_query_testing.Benchmarks
         }
 
         [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic")]
+        [BenchmarkCategory("json", "lessrand", "magic", "set1")]
         [ArgumentsSource(nameof(BenchmarkData_List_LessRand_Set1))]
         public void Magic_set1(Dictionary<int, string> dict) => Search.JsonSearch_EfMagic(dict);
 
         [Benchmark]
-        [BenchmarkCategory("table", "lessrand", "media")]
+        [BenchmarkCategory("json", "lessrand", "indexed", "set1")]
+        [ArgumentsSource(nameof(BenchmarkData_List_LessRand_Set1))]
+        public void Indexed_set1(Dictionary<int, string> dict) => Search.JsonSearch_Indexed(dict);
+
+        [Benchmark]
+        [BenchmarkCategory("table", "lessrand", "media", "set1")]
         [ArgumentsSource(nameof(BenchmarkData_List_LessRand_Set1))]
         public void Media_set1(Dictionary<int, string> dict) => Search.TableSearch_Media(dict);
 
@@ -286,12 +301,17 @@ namespace ef_json_query_testing.Benchmarks
         }
 
         [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic")]
+        [BenchmarkCategory("json", "lessrand", "magic", "set2")]
         [ArgumentsSource(nameof(BenchmarkData_List_LessRand_Set2))]
         public void Magic_set2(Dictionary<int, string> dict) => Search.JsonSearch_EfMagic(dict);
 
         [Benchmark]
-        [BenchmarkCategory("table", "lessrand", "media")]
+        [BenchmarkCategory("json", "lessrand", "indexed", "set2")]
+        [ArgumentsSource(nameof(BenchmarkData_List_LessRand_Set2))]
+        public void Indexed_set2(Dictionary<int, string> dict) => Search.JsonSearch_Indexed(dict);
+
+        [Benchmark]
+        [BenchmarkCategory("table", "lessrand", "media", "set2")]
         [ArgumentsSource(nameof(BenchmarkData_List_LessRand_Set2))]
         public void Media_set2(Dictionary<int, string> dict) => Search.TableSearch_Media(dict);
 

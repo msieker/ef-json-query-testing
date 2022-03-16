@@ -187,6 +187,12 @@ namespace ef_json_query_testing
             }
         }
 
+
+        public List<Media_Json> JsonSearch_Indexed(Dictionary<int, string> searchFields)
+        {
+            return new List<Media_Json>();
+        }
+
         #endregion
 
 
@@ -319,6 +325,7 @@ namespace ef_json_query_testing
         List<Media_Json> JsonSearch_EfMagic(int DynamicFieldId, string value);
         List<Media_Json> JsonSearch_EfMagic(Dictionary<int, string> searchFields);
 
+        List<Media_Json> JsonSearch_Indexed(Dictionary<int, string> searchFields);
 
         List<Media_Dynamic> TableSearch_Info(int DynamicFieldId, string value);
 

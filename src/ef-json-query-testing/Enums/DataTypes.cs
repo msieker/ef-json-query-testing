@@ -19,7 +19,7 @@
                 case DataTypes.IntValue: return "INT";
                 case DataTypes.StringValue: return $"VARCHAR({maxStringLength})";
                 case DataTypes.BoolValue: return "BIT";
-                case DataTypes.DateTimeValue: return "datetime2";
+                case DataTypes.DateTimeValue: return "DATETIME2";
                 case DataTypes.DecimalValue: return "DECIMAL(14, 4)";
                 default: throw new ArgumentOutOfRangeException("dataType");
             }

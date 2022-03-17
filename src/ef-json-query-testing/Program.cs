@@ -14,7 +14,7 @@ public class Program
     public static async Task Main(string[] args)
     {
         //for running with a debugger:
-        //BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig().AddFilter(new AnyCategoriesFilter(new string[] { "indexed" })));
 
 
         //await using var context = EfTestDbContext.Create(true);
@@ -48,13 +48,13 @@ public class Program
         *           method used: "raw", "magic", "info", "media", "indexed"
         */
 
-        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
-            .Run(args, DefaultConfig.Instance
-                .AddFilter(new AnyCategoriesFilter(new string[] { "raw", "media" }))
-                .AddFilter(new AllCategoriesFilter(new string[] { "set2" }))
-                .AddExporter(RPlotExporter.Default)
-                .AddColumn(CategoriesColumn.Default)
-                //.AddDiagnoser(MemoryDiagnoser.Default)
-                );
+        //BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
+        //    .Run(args, DefaultConfig.Instance
+        //        //.AddFilter(new AnyCategoriesFilter(new string[] { "magic", "indexed", "media" }))
+        //        //.AddFilter(new AllCategoriesFilter(new string[] { "set2" }))
+        //        .AddExporter(RPlotExporter.Default)
+        //        .AddColumn(CategoriesColumn.Default)
+        //        //.AddDiagnoser(MemoryDiagnoser.Default)
+        //        );
     }
 }

@@ -25,4 +25,16 @@
     <PackageReference Include="NaughtyStrings.Bogus" Version="2.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Sql\Create_stp_Add_Json_Index.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\Create_stp_Search_Json.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sql\Create_udt_SearchFields.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -1,20 +1,19 @@
 CREATE PROCEDURE [dbo].[stp_Search_Json] 
-@searchFields udt_SearchFields READONLY
+@searchFields udt_SearchFields READONLY,
+@queryStatement VARCHAR(MAX) OUTPUT
 AS
 BEGIN TRANSACTION 
 
-DECLARE @statement NVARCHAR(MAX) = 'SELECT * FROM [dbo].[Media_Json] WHERE 1=1 '
+SET @queryStatement = 'SELECT * FROM [dbo].[Media_Json] WHERE 1=1 '
 
 
-SELECT @statement = @statement 
+SELECT @queryStatement = @queryStatement 
 + ' AND CONVERT(' + valueType + ', JSON_VALUE([DETAILS], ''$."' + CONVERT(VARCHAR, fieldId) + '"''))' 
 + (CASE WHEN valueType LIKE '%VARCHAR%' 
-	THEN ' LIKE ''%' + searchValue + '%'' ' 
-	ELSE ' = ' + searchValue END )
-FROM @searchFields 
+	THEN ' LIKE {' + CONVERT(VARCHAR, 0) + '} ' 
+	ELSE ' = {' + CONVERT(VARCHAR, 0) + '}' END )
 
-EXEC sp_executesql @statement
- 
+FROM @searchFields 
 
 COMMIT TRANSACTION
 GO

@@ -229,12 +229,18 @@ namespace ef_json_query_testing
             {
                 var proc = new SearchJsonProcedure()
                 {
-                    SearchFields = tableSearchFields
+                    searchFields = tableSearchFields
                 };
 
                 _context.Database.ExecuteStoredProcedure(proc);
 
-                return new List<Media_Json>();
+                var q = _context.Media_Json
+                    //.FromSqlRaw(proc.queryStatement)
+                    .AsNoTracking()
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count);
+
+                return q.ToList();
             }
             else
             {

@@ -2,7 +2,7 @@
 
 namespace ef_json_query_testing.Indexing
 {
-    [UserDefinedTableType("udt_SearchFields")]
+    [UserDefinedTableType("[dbo].[udt_SearchFields]")]
     public class SearchFields
     {
         [UserDefinedTableTypeColumn(1)]

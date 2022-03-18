@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 
 namespace ef_json_query_testing.Indexing
 {
-    [StoredProcedure("stp_Search_Json")]
+    [StoredProcedure("[dbo].[stp_Search_Json]")]
     public class SearchJsonProcedure
     {
-        [StoredProcedureParameter(SqlDbType.Udt, ParameterName = "searchFields")]
-        public List<SearchFields> SearchFields { get; set; }
+        [StoredProcedureParameter(SqlDbType.Udt)]
+        public List<SearchFields>? searchFields { get; set; }
+
+        //[StoredProcedureParameter(SqlDbType.VarChar, Direction = ParameterDirection.Output)]
+        //public string queryStatement { get; set; }
     }
 }

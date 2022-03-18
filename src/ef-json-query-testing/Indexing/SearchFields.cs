@@ -2,16 +2,16 @@
 
 namespace ef_json_query_testing.Indexing
 {
-    [UserDefinedTableType("SearchFields")]
+    [UserDefinedTableType("udt_SearchFields")]
     public class SearchFields
     {
         [UserDefinedTableTypeColumn(1)]
-        public int FieldId { get; set; }
+        public int fieldId { get; set; }
 
         [UserDefinedTableTypeColumn(2)]
-        public string SearchValue { get; set; } = "";
+        public string searchValue { get; set; }
 
         [UserDefinedTableTypeColumn(3)]
-        public string ValueType { get; set; } = "";
+        public string valueType { get; set; }
     }
 }

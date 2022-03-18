@@ -322,7 +322,7 @@ namespace ef_json_query_testing.Tests
         [MemberData(nameof(Indexed_Multi_Exact_TestCases))]
         public void Indexed_Multi_Exact(Dictionary<int, string> searchFields, int[] expectedIds)
         {
-            List<Media_Json>? media = _fixture.SearchService.JsonSearch_Raw(searchFields);
+            List<Media_Json>? media = _fixture.SearchService.JsonSearch_Indexed(searchFields);
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());

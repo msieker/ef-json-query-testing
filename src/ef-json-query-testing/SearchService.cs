@@ -1,6 +1,8 @@
 ﻿using ef_json_query_testing.Enums;
+using ef_json_query_testing.Indexing;
 using ef_json_query_testing.Models;
 using ef_json_query_testing.Translators;
+using EntityFrameworkExtras.EFCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.SqlClient.Server;
 using Microsoft.EntityFrameworkCore;
@@ -199,10 +201,7 @@ namespace ef_json_query_testing
                 return new List<Media_Json>();
             }
 
-            DataTable table = new DataTable();
-            table.Columns.Add("fieldId", typeof(int));
-            table.Columns.Add("value", typeof(string));
-            table.Columns.Add("valueType", typeof(string));
+            var tableSearchFields = new List<SearchFields>();
 
             var fieldList = _context.DynamicFields.AsNoTracking().ToList();
             var hasSearchField = false;
@@ -216,44 +215,31 @@ namespace ef_json_query_testing
 
                 hasSearchField = true;
 
-                var record = table.NewRow();
-                record["fieldId"] = field.DynamicFieldId;
-                record["value"] = searchField.Value;
-                record["valueType"] = field.DataType.GetSqlType(500);
+                var record = new SearchFields()
+                {
+                    FieldId = searchField.Key,
+                    SearchValue = searchField.Value,
+                    ValueType = field.DataType.GetSqlType(Max_String_Length)
+                };
 
-                table.Rows.Add(record);
+                tableSearchFields.Add(record);
             }
 
             if (hasSearchField)
             {
-                SqlParameter[] parameters =
+                var proc = new SearchJsonProcedure()
                 {
-                    new SqlParameter
-                    {
-                        SqlDbType = SqlDbType.Structured,
-                        ParameterName = "searchFields",
-                        TypeName = "dbo.SearchFields",
-                        Value = table
-                    }
+                    SearchFields = tableSearchFields
                 };
 
-                var q = SearchJson(parameters)
-                .AsNoTracking()
-                .OrderBy(m => m.Media_JsonId)
-                .Take(Take_Count);
-                return q.ToList();
+                _context.Database.ExecuteStoredProcedure(proc);
+
+                return new List<Media_Json>();
             }
             else
             {
                 return new List<Media_Json>();
             }
-        }
-
-        private IQueryable<Media_Json> SearchJson(SqlParameter[] parameters)
-        {
-            var a = _context.Database.ExecuteSqlRaw("exec stp_Json_Search {0}", parameters);
-
-            return new List<Media_Json>().AsQueryable();
         }
 
         #endregion

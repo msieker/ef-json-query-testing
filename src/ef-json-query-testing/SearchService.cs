@@ -235,7 +235,7 @@ namespace ef_json_query_testing
                 _context.Database.ExecuteStoredProcedure(proc);
 
                 var q = _context.Media_Json
-                    //.FromSqlRaw(proc.queryStatement)
+                    .FromSqlRaw(proc.queryStatement, proc.searchFields.Select(s => s.searchValue).ToArray())
                     .AsNoTracking()
                     .OrderBy(m => m.Media_JsonId)
                     .Take(Take_Count);

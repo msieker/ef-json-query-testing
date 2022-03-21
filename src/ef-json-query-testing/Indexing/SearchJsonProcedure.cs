@@ -15,7 +15,7 @@ namespace ef_json_query_testing.Indexing
         [StoredProcedureParameter(SqlDbType.Udt)]
         public List<SearchFields>? searchFields { get; set; }
 
-        //[StoredProcedureParameter(SqlDbType.VarChar, Direction = ParameterDirection.Output)]
-        //public string queryStatement { get; set; }
+        [StoredProcedureParameter(SqlDbType.VarChar, Direction = ParameterDirection.Output)]
+        public string queryStatement { get; set; }
     }
 }

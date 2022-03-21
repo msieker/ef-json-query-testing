@@ -218,7 +218,7 @@ namespace ef_json_query_testing
                 var record = new SearchFields()
                 {
                     fieldId = searchField.Key,
-                    searchValue = searchField.Value,
+                    searchValue = field.DataType == DataTypes.StringValue ? "%" + searchField.Value + "%" : searchField.Value,
                     valueType = field.DataType.GetSqlType(Max_String_Length)
                 };
 

@@ -205,6 +205,56 @@ namespace ef_json_query_testing
 
             var fieldList = _context.DynamicFields.AsNoTracking().ToList();
             var hasSearchField = false;
+            var searchValues = new List<string>();
+            var sqlStatement = "SELECT * FROM [dbo].[Media_Json] WHERE 1=1 ";
+            var count = 0;
+            foreach (var searchField in searchFields)
+            {
+                var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
+                if (field == null)
+                {
+                    continue;
+                }
+                hasSearchField = true;
+
+                searchValues.Add(field.DataType == DataTypes.StringValue ? "%" + searchField.Value + "%" : searchField.Value);
+
+                var valueType = field.DataType.GetSqlType(Max_String_Length);
+                var thing = $"$.\"{searchField.Key}\"";
+                sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'))";
+                sqlStatement += field.DataType == DataTypes.StringValue ? " LIKE " : " = ";
+                sqlStatement += "{" + count + "}";
+
+                count++;
+            }
+
+            if (hasSearchField)
+            {
+                var q = _context.Media_Json
+                    .FromSqlRaw(sqlStatement, searchValues.ToArray())
+                    .AsNoTracking()
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count);
+
+                return q.ToList();
+            }
+            else
+            {
+                return new List<Media_Json>();
+            }
+        }
+
+        public List<Media_Json> JsonSearch_Indexed_STP(Dictionary<int, string> searchFields)
+        {
+            if (searchFields == null || !searchFields.Any())
+            {
+                return new List<Media_Json>();
+            }
+
+            var tableSearchFields = new List<SearchFields>();
+
+            var fieldList = _context.DynamicFields.AsNoTracking().ToList();
+            var hasSearchField = false;
             foreach (var searchField in searchFields)
             {
                 var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);

@@ -194,7 +194,7 @@ namespace ef_json_query_testing
         }
 
 
-        public List<Media_Json> JsonSearch_Indexed(Dictionary<int, string> searchFields)
+        public List<Media_Json> JsonSearch_Indexed(Dictionary<int, string> searchFields, bool throwOnNoResults = true)
         {
             if (searchFields == null || !searchFields.Any())
             {
@@ -228,6 +228,7 @@ namespace ef_json_query_testing
                 count++;
             }
 
+            List<Media_Json> list;
             if (hasSearchField)
             {
                 var q = _context.Media_Json
@@ -236,12 +237,19 @@ namespace ef_json_query_testing
                     .OrderBy(m => m.Media_JsonId)
                     .Take(Take_Count);
 
-                return q.ToList();
+                list = q.ToList();
             }
             else
             {
-                return new List<Media_Json>();
+                list = new List<Media_Json>();
             }
+
+            if (!list.Any() && throwOnNoResults)
+            {
+                throw new Exception("No items found");
+            }
+
+            return list;
         }
 
         public List<Media_Json> JsonSearch_Indexed_STP(Dictionary<int, string> searchFields)
@@ -379,7 +387,7 @@ namespace ef_json_query_testing
         }
 
 
-        public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields)
+        public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true)
         {
             if (searchFields == null || !searchFields.Any())
             {
@@ -398,7 +406,6 @@ namespace ef_json_query_testing
                 }
                 hasSearchField = true;
 
-                var jsonPath = $"$.\"{field.DynamicFieldId}\"";
                 if (field.DataType == DataTypes.StringValue)
                 {
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value.Contains(searchField.Value)));
@@ -409,14 +416,22 @@ namespace ef_json_query_testing
                 }
             }
 
+            List<Media_Dynamic> list;
             if (hasSearchField)
             {
-                return query.OrderBy(q => q.Media_DynamicId).Take(Take_Count).ToList();
+                list = query.OrderBy(q => q.Media_DynamicId).Take(Take_Count).ToList();
             }
             else
             {
-                return new List<Media_Dynamic>();
+                list = new List<Media_Dynamic>();
             }
+
+            if (!list.Any() && throwOnNoResults)
+            {
+                throw new Exception("No items found");
+            }
+
+            return list;
         }
 
         #endregion
@@ -430,11 +445,11 @@ namespace ef_json_query_testing
         List<Media_Json> JsonSearch_EfMagic(int DynamicFieldId, string value);
         List<Media_Json> JsonSearch_EfMagic(Dictionary<int, string> searchFields);
 
-        List<Media_Json> JsonSearch_Indexed(Dictionary<int, string> searchFields);
+        List<Media_Json> JsonSearch_Indexed(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
 
         List<Media_Dynamic> TableSearch_Info(int DynamicFieldId, string value);
 
         List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value);
-        List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields);
+        List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
     }
 }

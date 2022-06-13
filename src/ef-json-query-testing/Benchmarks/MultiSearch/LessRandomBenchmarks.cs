@@ -18,307 +18,100 @@ namespace ef_json_query_testing.Benchmarks
 
         // longest json.
 
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "first")]
-        public void Magic_first_both_bool_int() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 1 , "4" }, //optional
-                { 4 , "0" }, //optional
-                { 5 , "5" }, //optional
-                { 10 , "3" },
-                { 26 , "False" },
-                { 48 , "True" }, //optional
-            });
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "first")]
-        public void Indexed_first_both_bool_int() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 1 , "4" }, //optional
-                { 4 , "0" }, //optional
-                { 5 , "5" }, //optional
-                { 10 , "3" },
-                { 26 , "False" },
-                { 48 , "True" }, //optional
-            });
+        public void Indexed_first_both_bool_int() => Search.JsonSearch_Indexed(TestValueConstants.first_both_bool_int);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "first")]
-        public void Media_first_both_bool_int() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 1 , "4" }, //optional
-                { 4 , "0" }, //optional
-                { 5 , "5" }, //optional
-                { 10 , "3" },
-                { 26 , "False" },
-                { 48 , "True" }, //optional
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "first")]
-        public void Magic_first_req_bool_int() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 2 , "1" },
-                { 7 , "1" },
-                { 8 , "2" },
-                { 9 , "8" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 46 , "False" },
-            });
+        public void Media_first_both_bool_int() => Search.TableSearch_Media(TestValueConstants.first_both_bool_int);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "first")]
-        public void Indexed_first_req_bool_int() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 2 , "1" },
-                { 7 , "1" },
-                { 8 , "2" },
-                { 9 , "8" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 46 , "False" },
-            });
+        public void Indexed_first_req_bool_int() => Search.JsonSearch_Indexed(TestValueConstants.first_req_bool_int);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "first")]
-        public void Media_first_req_bool_int() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 2 , "1" },
-                { 7 , "1" },
-                { 8 , "2" },
-                { 9 , "8" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 46 , "False" },
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "first")]
-        public void Magic_first_op_int() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 1 , "4" },
-                { 3 , "8" },
-                { 4 , "0" },
-                { 5 , "5" },
-            });
+        public void Media_first_req_bool_int() => Search.TableSearch_Media(TestValueConstants.first_req_bool_int);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "first")]
-        public void Indexed_first_op_int() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 1 , "4" },
-                { 3 , "8" },
-                { 4 , "0" },
-                { 5 , "5" },
-            });
+        public void Indexed_first_op_int() => Search.JsonSearch_Indexed(TestValueConstants.first_op_int);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "first")]
-        public void Media_first_op_int() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 1 , "4" },
-                { 3 , "8" },
-                { 4 , "0" },
-                { 5 , "5" },
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "first")]
-        public void Magic_first_req_string() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 13 , "laboriosam" },
-                { 29 , "voluptatibus" },
-                { 30 , "commodi" },
-                { 32 , "mollitia" },
-            });
+        public void Media_first_op_int() => Search.TableSearch_Media(TestValueConstants.first_op_int);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "first")]
-        public void Indexed_first_req_string() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 13 , "laboriosam" },
-                { 29 , "voluptatibus" },
-                { 30 , "commodi" },
-                { 32 , "mollitia" },
-            });
+        public void Indexed_first_req_string() => Search.JsonSearch_Indexed(TestValueConstants.first_req_string);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "first")]
-        public void Media_first_req_string() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 13 , "laboriosam" },
-                { 29 , "voluptatibus" },
-                { 30 , "commodi" },
-                { 32 , "mollitia" },
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "first")]
-        public void Magic_first_op_string() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 47 , "nihil tempora" },
-                { 33 , "False" },
-                { 48 , "True" },
-            });
+        public void Media_first_req_string() => Search.TableSearch_Media(TestValueConstants.first_req_string);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "first")]
-        public void Indexed_first_op_string() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 47 , "nihil tempora" },
-                { 33 , "False" },
-                { 48 , "True" },
-            });
+        public void Indexed_first_op_string() => Search.JsonSearch_Indexed(TestValueConstants.first_op_string);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "first")]
-        public void Media_first_op_string() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 47 , "nihil tempora" },
-                { 33 , "False" },
-                { 48 , "True" },
-            });
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "first")]
-        public void Magic_first_op_string_single() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 47 , "nihil tempora nemo" },
-            });
+        public void Media_first_op_string() => Search.TableSearch_Media(TestValueConstants.first_op_string);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "first")]
-        public void Indexed_first_op_string_single() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 47 , "nihil tempora nemo" },
-            });
+        public void Indexed_first_op_string_single() => Search.JsonSearch_Indexed(TestValueConstants.first_op_string_single);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "first")]
-        public void Media_first_op_string_single() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 47 , "nihil tempora nemo" },
-            });
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "first")]
-        public void Magic_first_req_string_single() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 13 , "exercitationem laboriosam aspernatur" },
-            });
+        public void Media_first_op_string_single() => Search.TableSearch_Media(TestValueConstants.first_op_string_single);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "first")]
-        public void Indexed_first_req_string_single() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 13 , "exercitationem laboriosam aspernatur" },
-            });
+        public void Indexed_first_req_string_single() => Search.JsonSearch_Indexed(TestValueConstants.first_req_string_single);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "first")]
-        public void Media_first_req_string_single() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 13 , "exercitationem laboriosam aspernatur" },
-            });
+        public void Media_first_req_string_single() => Search.TableSearch_Media(TestValueConstants.first_req_string_single);
 
 
 
 
-
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "last")]
-        public void Magic_last_both_int_bool() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 4 , "13" }, //optional
-                { 6 , "7" }, //optional
-                { 7 , "18" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 33 , "True" }, //optional
-                { 48 , "True" }, //optional
-            });
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "last")]
-        public void Indexed_Last_both_int_bool() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 4 , "13" }, //optional
-                { 6 , "7" }, //optional
-                { 7 , "18" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 33 , "True" }, //optional
-                { 48 , "True" }, //optional
-            });
+        public void Indexed_Last_both_int_bool() => Search.JsonSearch_Indexed(TestValueConstants.Last_both_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "last")]
-        public void Media_last_both_int_bool() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 4 , "13" }, //optional
-                { 6 , "7" }, //optional
-                { 7 , "18" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 33 , "True" }, //optional
-                { 48 , "True" }, //optional
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "last")]
-        public void Magic_last_req_int_bool() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 2 , "0" },
-                { 7 , "18" },
-                { 8 , "3" },
-                { 9 , "11" },
-                { 10 , "5" },
-                { 26 , "True" },
-            });
+        public void Media_last_both_int_bool() => Search.TableSearch_Media(TestValueConstants.Last_both_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "last")]
-        public void Indexed_Last_req_int_bool() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 2 , "0" },
-                { 7 , "18" },
-                { 8 , "3" },
-                { 9 , "11" },
-                { 10 , "5" },
-                { 26 , "True" },
-            });
+        public void Indexed_Last_req_int_bool() => Search.JsonSearch_Indexed(TestValueConstants.Last_req_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "last")]
-        public void Media_last_req_int_bool() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 2 , "0" },
-                { 7 , "18" },
-                { 8 , "3" },
-                { 9 , "11" },
-                { 10 , "5" },
-                { 26 , "True" },
-            });
+        public void Media_last_req_int_bool() => Search.TableSearch_Media(TestValueConstants.Last_req_int_bool);
 
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "last")]
-        public void Magic_last_req_string() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 13 , "quisquam" },
-                { 29 , "Laboriosam" },
-                { 30 , "accusamus" },
-                { 32 , "autem" },
-            });
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "last")]
-        public void Indexed_Last_req_string() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 13 , "quisquam" },
-                { 29 , "Laboriosam" },
-                { 30 , "accusamus" },
-                { 32 , "autem" },
-            });
+        public void Indexed_Last_req_string() => Search.JsonSearch_Indexed(TestValueConstants.Last_req_string);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "last")]
-        public void Media_last_req_string() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 13 , "quisquam" },
-                { 29 , "Laboriosam" },
-                { 30 , "accusamus" },
-                { 32 , "autem" },
-            });
+        public void Media_last_req_string() => Search.TableSearch_Media(TestValueConstants.Last_req_string);
 
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "last")]
-        public void Magic_last_req_string_single() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 13 , "quo vero porro est" },
-            });
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "last")]
-        public void Indexed_Last_req_string_single() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 13 , "quo vero porro est" },
-            });
+        public void Indexed_Last_req_string_single() => Search.JsonSearch_Indexed(TestValueConstants.Last_req_string_single);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "last")]
-        public void Media_last_req_string_single() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 13 , "quo vero porro est" },
-            });
+        public void Media_last_req_string_single() => Search.TableSearch_Media(TestValueConstants.Last_req_string_single);
 
 
 
@@ -327,249 +120,98 @@ namespace ef_json_query_testing.Benchmarks
 
 
 
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set1")]
-        public void Magic_set1_both_int_bool() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 1 , "4" }, //optional
-                { 4 , "0" }, //optional
-                { 10 , "3" },
-                { 26 , "False" },
-            });
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set1")]
-        public void Indexed_set1_both_int_bool() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 1 , "4" }, //optional
-                { 4 , "0" }, //optional
-                { 10 , "3" },
-                { 26 , "False" },
-            });
+        public void Indexed_set1_both_int_bool() => Search.JsonSearch_Indexed(TestValueConstants.set1_both_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set1")]
-        public void Media_set1_both_int_bool() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 1 , "4" }, //optional
-                { 4 , "0" }, //optional
-                { 10 , "3" },
-                { 26 , "False" },
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set1")]
-        public void Magic_set1_req_int_bool() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 2 , "1" },
-                { 7 , "1" },
-                { 8 , "2" },
-                { 26 , "False" },
-                { 46 , "False" },
-            });
+        public void Media_set1_both_int_bool() => Search.TableSearch_Media(TestValueConstants.set1_both_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set1")]
-        public void Indexed_set1_req_int_bool() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 2 , "1" },
-                { 7 , "1" },
-                { 8 , "2" },
-                { 26 , "False" },
-                { 46 , "False" },
-            });
+        public void Indexed_set1_req_int_bool() => Search.JsonSearch_Indexed(TestValueConstants.set1_req_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set1")]
-        public void Media_set1_req_int_bool() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 2 , "1" },
-                { 7 , "1" },
-                { 8 , "2" },
-                { 26 , "False" },
-                { 46 , "False" },
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set1")]
-        public void Magic_set1_op_int() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 1 , "4" },
-                { 3 , "8" },
-                { 4 , "0" },
-            });
+        public void Media_set1_req_int_bool() => Search.TableSearch_Media(TestValueConstants.set1_req_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set1")]
-        public void Indexed_set1_op_int() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 1 , "4" },
-                { 3 , "8" },
-                { 4 , "0" },
-            });
+        public void Indexed_set1_op_int() => Search.JsonSearch_Indexed(TestValueConstants.set1_op_int);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set1")]
-        public void Media_set1_op_int() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 1 , "4" },
-                { 3 , "8" },
-                { 4 , "0" },
-            });
+        public void Media_set1_op_int() => Search.TableSearch_Media(TestValueConstants.set1_op_int);
 
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set1")]
-        public void Magic_set1_req_string() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 13 , "laboriosam" },
-                { 29 , "voluptatibus" },
-            });
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set1")]
-        public void Indexed_set1_req_string() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 13 , "laboriosam" },
-                { 29 , "voluptatibus" },
-            });
+        public void Indexed_set1_req_string() => Search.JsonSearch_Indexed(TestValueConstants.set1_req_string);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set1")]
-        public void Media_set1_req_string() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 13 , "laboriosam" },
-                { 29 , "voluptatibus" },
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set1")]
-        public void Magic_set1_op_sring_single() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 47 , "nihil tempora" }
-            });
+        public void Media_set1_req_string() => Search.TableSearch_Media(TestValueConstants.set1_req_string);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set1")]
-        public void Indexed_set1_op_sring_single() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 47 , "nihil tempora" }
-            });
+        public void Indexed_set1_op_string_single() => Search.JsonSearch_Indexed(TestValueConstants.set1_op_string_single);
 
 
         //THIS ONE
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set1", "miss")]
-        public void Media_set1_op_sring_single() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 47 , "nihil tempora" }
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set1")]
-        public void Magic_set1_req_string_single() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 13 , "exercitationem laboriosam" },
-            });
+        public void Media_set1_op_string_single() => Search.TableSearch_Media(TestValueConstants.set1_op_string_single);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set1")]
-        public void Indexed_set1_req_string_single() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 13 , "exercitationem laboriosam" },
-            });
+        public void Indexed_set1_req_string_single() => Search.JsonSearch_Indexed(TestValueConstants.set1_req_string_single);
 
         //THIS ONE
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set1", "miss")]
-        public void Media_set1_req_string_single() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 13 , "exercitationem laboriosam" },
-            });
-
-
-         
+        public void Media_set1_req_string_single() => Search.TableSearch_Media(TestValueConstants.set1_req_string_single);
 
 
 
 
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set2")]
-        public void Magic_set2_both_int_bool() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 4 , "13" }, //optional
-                { 7 , "18" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 48 , "True" }, //optional
-            });
+
+
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set2")]
-        public void Indexed_set2_both_int_bool() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 4 , "13" }, //optional
-                { 7 , "18" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 48 , "True" }, //optional
-            });
+        public void Indexed_set2_both_int_bool() => Search.JsonSearch_Indexed(TestValueConstants.set2_both_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set2")]
-        public void Media_set2_both_int_bool() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 4 , "13" }, //optional
-                { 7 , "18" },
-                { 10 , "3" },
-                { 26 , "False" },
-                { 48 , "True" }, //optional
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set2")]
-        public void Magic_set2_req_int() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 2 , "0" },
-                { 7 , "18" },
-                { 8 , "3" },
-                { 9 , "11" },
-            });
+        public void Media_set2_both_int_bool() => Search.TableSearch_Media(TestValueConstants.set2_both_int_bool);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set2")]
-        public void Indexed_set2_req_int() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 2 , "0" },
-                { 7 , "18" },
-                { 8 , "3" },
-                { 9 , "11" },
-            });
+        public void Indexed_set2_req_int() => Search.JsonSearch_Indexed(TestValueConstants.set2_req_int);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set2")]
-        public void Media_set2_req_int() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 2 , "0" },
-                { 7 , "18" },
-                { 8 , "3" },
-                { 9 , "11" },
-            });
-
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set2")]
-        public void Magic_set2_req_string() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 13 , "quisquam" },
-                { 29 , "Laboriosam" },
-            });
+        public void Media_set2_req_int() => Search.TableSearch_Media(TestValueConstants.set2_req_int);
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set2")]
-        public void Indexed_set2_req_string() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 13 , "quisquam" },
-                { 29 , "Laboriosam" },
-            });
+        public void Indexed_set2_req_string() => Search.JsonSearch_Indexed(TestValueConstants.set2_req_string);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set2")]
-        public void Media_set2_req_string() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 13 , "quisquam" },
-                { 29 , "Laboriosam" },
-            });
+        public void Media_set2_req_string() => Search.TableSearch_Media(TestValueConstants.set2_req_string);
 
-        [Benchmark]
-        [BenchmarkCategory("json", "lessrand", "magic", "set2")]
-        public void Magic_set2_req_string_single() => Search.JsonSearch_EfMagic(new Dictionary<int, string>() {
-                { 13 , "quo vero porro" },
-            });
 
         [Benchmark]
         [BenchmarkCategory("json", "lessrand", "indexed", "set2")]
-        public void Indexed_set2_req_string_single() => Search.JsonSearch_Indexed(new Dictionary<int, string>() {
-                { 13 , "quo vero porro" },
-            });
+        public void Indexed_set2_req_string_single() => Search.JsonSearch_Indexed(TestValueConstants.set2_req_string_single);
 
         [Benchmark]
         [BenchmarkCategory("table", "lessrand", "media", "set2")]
-        public void Media_set2_req_string_single() => Search.TableSearch_Media(new Dictionary<int, string>() {
-                { 13 , "quo vero porro" },
-            });
+        public void Media_set2_req_string_single() => Search.TableSearch_Media(TestValueConstants.set2_req_string_single);
 
     }
+
 }

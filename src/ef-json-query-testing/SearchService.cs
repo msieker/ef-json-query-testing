@@ -394,6 +394,7 @@ namespace ef_json_query_testing
                 return new List<Media_Dynamic>();
             }
 
+            _context.Database.SetCommandTimeout(500);
             var fieldList = _context.DynamicFields.AsNoTracking().ToList();
             var query = _context.Media_Dynamic.AsNoTracking().Include(d => d.DynamicMediaInformation).AsQueryable();
             var hasSearchField = false;
@@ -409,6 +410,11 @@ namespace ef_json_query_testing
                 if (field.DataType == DataTypes.StringValue)
                 {
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value.Contains(searchField.Value)));
+                }
+                else if (field.DataType == DataTypes.BoolValue)
+                {
+                    var val = bool.Parse(searchField.Value) ? "1" : "0";
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
                 }
                 else
                 {

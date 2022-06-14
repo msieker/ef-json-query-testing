@@ -297,7 +297,7 @@ namespace ef_json_query_testing.Tests
         [MemberData(nameof(Indexed_Multi_NoMatch_TestCases))]
         public void Indexed_Multi_NoMatch(Dictionary<int, string> searchFields)
         {
-            List<Media_Json>? media = _fixture.SearchService.JsonSearch_Indexed(searchFields);
+            List<Media_Json>? media = _fixture.SearchService.JsonSearch_Indexed(searchFields, false);
 
             Assert.Empty(media);
         }
@@ -845,7 +845,7 @@ namespace ef_json_query_testing.Tests
         [MemberData(nameof(Media_Multi_NoMatch_TestCases))]
         public void Media_Multi_NoMatch(Dictionary<int, string> searchFields)
         {
-            var media = _fixture.SearchService.TableSearch_Media(searchFields);
+            var media = _fixture.SearchService.TableSearch_Media(searchFields, false);
 
             Assert.Empty(media);
         }

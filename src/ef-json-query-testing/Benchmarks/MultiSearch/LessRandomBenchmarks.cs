@@ -213,5 +213,4 @@ namespace ef_json_query_testing.Benchmarks
         public void Media_set2_req_string_single() => Search.TableSearch_Media(TestValueConstants.set2_req_string_single);
 
     }
-
 }

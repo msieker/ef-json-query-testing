@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using Xunit;
 using Xunit.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ef_json_query_testing.Tests
 {
@@ -8,14 +10,17 @@ namespace ef_json_query_testing.Tests
     {
         public DatabaseFixture()
         {
+
             Environment.SetEnvironmentVariable("BENCHMARK_SQL_CONN", "Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ef_testing_xunit;Integrated Security=SSPI;Connection Timeout=5;");
 
             Context = EfTestDbContext.Create(true);
             SearchService = new SearchService(Context);
 
+            Context.Database.EnsureDeleted();
+            Context.Database.Migrate();
 
-            Context.Database.EnsureCreated();
             TestDataSeed.LoadAll(Context);
+
         }
 
         public void Dispose()

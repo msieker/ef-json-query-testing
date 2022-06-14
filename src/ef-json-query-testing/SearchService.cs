@@ -1,7 +1,12 @@
 ﻿using ef_json_query_testing.Enums;
+using ef_json_query_testing.Indexing;
 using ef_json_query_testing.Models;
 using ef_json_query_testing.Translators;
+using EntityFrameworkExtras.EFCore;
+using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient.Server;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace ef_json_query_testing
 {
@@ -10,6 +15,7 @@ namespace ef_json_query_testing
         private readonly EfTestDbContext _context;
 
         private const int Take_Count = 100;
+        private const int Max_String_Length = 500;
 
         public SearchService(EfTestDbContext context)
         {
@@ -187,6 +193,119 @@ namespace ef_json_query_testing
             }
         }
 
+
+        public List<Media_Json> JsonSearch_Indexed(Dictionary<int, string> searchFields, bool throwOnNoResults = true)
+        {
+            if (searchFields == null || !searchFields.Any())
+            {
+                return new List<Media_Json>();
+            }
+
+            var tableSearchFields = new List<SearchFields>();
+
+            var fieldList = _context.DynamicFields.AsNoTracking().ToList();
+            var hasSearchField = false;
+            var searchValues = new List<string>();
+            var sqlStatement = "SELECT * FROM [dbo].[Media_Json] WHERE 1=1 ";
+            var count = 0;
+            foreach (var searchField in searchFields)
+            {
+                var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
+                if (field == null)
+                {
+                    continue;
+                }
+                hasSearchField = true;
+
+                searchValues.Add(field.DataType == DataTypes.StringValue ? "%" + searchField.Value + "%" : searchField.Value);
+
+                var valueType = field.DataType.GetSqlType(Max_String_Length);
+                var thing = $"$.\"{searchField.Key}\"";
+                sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'))";
+                sqlStatement += field.DataType == DataTypes.StringValue ? " LIKE " : " = ";
+                sqlStatement += "{" + count + "}";
+
+                count++;
+            }
+
+            List<Media_Json> list;
+            if (hasSearchField)
+            {
+                var q = _context.Media_Json
+                    .FromSqlRaw(sqlStatement, searchValues.ToArray())
+                    .AsNoTracking()
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count);
+
+                list = q.ToList();
+            }
+            else
+            {
+                list = new List<Media_Json>();
+            }
+
+            if (!list.Any() && throwOnNoResults)
+            {
+                throw new Exception("No items found");
+            }
+
+            return list;
+        }
+
+        public List<Media_Json> JsonSearch_Indexed_STP(Dictionary<int, string> searchFields)
+        {
+            if (searchFields == null || !searchFields.Any())
+            {
+                return new List<Media_Json>();
+            }
+
+            var tableSearchFields = new List<SearchFields>();
+
+            var fieldList = _context.DynamicFields.AsNoTracking().ToList();
+            var hasSearchField = false;
+            foreach (var searchField in searchFields)
+            {
+                var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
+                if (field == null)
+                {
+                    continue;
+                }
+
+                hasSearchField = true;
+
+                var record = new SearchFields()
+                {
+                    fieldId = searchField.Key,
+                    searchValue = field.DataType == DataTypes.StringValue ? "%" + searchField.Value + "%" : searchField.Value,
+                    valueType = field.DataType.GetSqlType(Max_String_Length)
+                };
+
+                tableSearchFields.Add(record);
+            }
+
+            if (hasSearchField)
+            {
+                var proc = new SearchJsonProcedure()
+                {
+                    searchFields = tableSearchFields
+                };
+
+                _context.Database.ExecuteStoredProcedure(proc);
+
+                var q = _context.Media_Json
+                    .FromSqlRaw(proc.queryStatement, proc.searchFields.Select(s => s.searchValue).ToArray())
+                    .AsNoTracking()
+                    .OrderBy(m => m.Media_JsonId)
+                    .Take(Take_Count);
+
+                return q.ToList();
+            }
+            else
+            {
+                return new List<Media_Json>();
+            }
+        }
+
         #endregion
 
 
@@ -268,13 +387,14 @@ namespace ef_json_query_testing
         }
 
 
-        public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields)
+        public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true)
         {
             if (searchFields == null || !searchFields.Any())
             {
                 return new List<Media_Dynamic>();
             }
 
+            _context.Database.SetCommandTimeout(500);
             var fieldList = _context.DynamicFields.AsNoTracking().ToList();
             var query = _context.Media_Dynamic.AsNoTracking().Include(d => d.DynamicMediaInformation).AsQueryable();
             var hasSearchField = false;
@@ -287,10 +407,14 @@ namespace ef_json_query_testing
                 }
                 hasSearchField = true;
 
-                var jsonPath = $"$.\"{field.DynamicFieldId}\"";
                 if (field.DataType == DataTypes.StringValue)
                 {
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value.Contains(searchField.Value)));
+                }
+                else if (field.DataType == DataTypes.BoolValue)
+                {
+                    var val = bool.Parse(searchField.Value) ? "1" : "0";
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
                 }
                 else
                 {
@@ -298,14 +422,22 @@ namespace ef_json_query_testing
                 }
             }
 
+            List<Media_Dynamic> list;
             if (hasSearchField)
             {
-                return query.OrderBy(q => q.Media_DynamicId).Take(Take_Count).ToList();
+                list = query.OrderBy(q => q.Media_DynamicId).Take(Take_Count).ToList();
             }
             else
             {
-                return new List<Media_Dynamic>();
+                list = new List<Media_Dynamic>();
             }
+
+            if (!list.Any() && throwOnNoResults)
+            {
+                throw new Exception("No items found");
+            }
+
+            return list;
         }
 
         #endregion
@@ -319,10 +451,11 @@ namespace ef_json_query_testing
         List<Media_Json> JsonSearch_EfMagic(int DynamicFieldId, string value);
         List<Media_Json> JsonSearch_EfMagic(Dictionary<int, string> searchFields);
 
+        List<Media_Json> JsonSearch_Indexed(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
 
         List<Media_Dynamic> TableSearch_Info(int DynamicFieldId, string value);
 
         List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value);
-        List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields);
+        List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
     }
 }

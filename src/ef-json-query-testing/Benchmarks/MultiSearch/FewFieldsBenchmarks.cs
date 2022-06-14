@@ -77,6 +77,10 @@ namespace ef_json_query_testing.Benchmarks
         public void Magic() => Search.JsonSearch_EfMagic(fewSearchFields);
 
         [Benchmark]
+        [BenchmarkCategory("json", "fewfields", "indexed")]
+        public void Indexed() => Search.JsonSearch_Indexed(fewSearchFields);
+
+        [Benchmark]
         [BenchmarkCategory("table", "fewfields", "media")]
         public void Media() => Search.TableSearch_Media(fewSearchFields);
     }

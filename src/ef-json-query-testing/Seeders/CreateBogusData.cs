@@ -27,6 +27,8 @@ namespace ef_json_query_testing.Seeders
         private const int _Media_Dynamic_FileHeight_Min = 256;
         private const int _Media_Dynamic_FileHeight_Max = 4096;
 
+        private const int _MaxStringLength = 500;
+
         private const int FakerSeed = 42;
         public static void LoadAllData(EfTestDbContext context, int fieldsCount = 30, int mediaItemsCount = 500, int listTypeCount = 5)
         {
@@ -40,9 +42,14 @@ namespace ef_json_query_testing.Seeders
         {
             LoadDynamicListTypes(context, listTypeCount);
 
-
-            context.DynamicFields.AddRange(FakerDynamicField.Generate(fieldsCount));
+            var randomFields = FakerDynamicField.Generate(fieldsCount);
+            context.DynamicFields.AddRange(randomFields);
             context.SaveChanges();
+
+            foreach (var field in randomFields)
+            {
+                AddJsonIndex(context, field.DynamicFieldId.ToString(), field.DataType);
+            }
         }
 
         public static void LoadMediaData(EfTestDbContext context, int mediaItemsCount = 1000)
@@ -108,6 +115,11 @@ namespace ef_json_query_testing.Seeders
 
             context.DynamicFields.AddRange(dynamicFields);
             context.SaveChanges();
+
+            foreach (var field in dynamicFields)
+            {
+                AddJsonIndex(context, field.DynamicFieldId.ToString(), field.DataType);
+            }
         }
 
         private static void LoadDynamicListItems(EfTestDbContext context)
@@ -286,11 +298,36 @@ namespace ef_json_query_testing.Seeders
         private static string GenerateFieldValue(DataTypes dataType, Faker faker) => dataType switch
         {
             DataTypes.IntValue => faker.Random.Number(int.MaxValue).ToString(),
-            DataTypes.StringValue => faker.Lorem.Text(),
-            DataTypes.BoolValue => faker.Random.Bool().ToString(),
+            DataTypes.StringValue => faker.Lorem.Text().Truncate(_MaxStringLength),
+            DataTypes.BoolValue => faker.Random.Bool() ? "1" : "0",
             DataTypes.DateTimeValue => faker.Date.Between(DateTime.MinValue, DateTime.MaxValue).ToString(),
-            DataTypes.DecimalValue => faker.Random.Decimal(decimal.MaxValue).ToString(),
+            DataTypes.DecimalValue => faker.Random.Decimal(0.0m, 9999999999.9999m).ToString(),
             _ => string.Empty
         };
+
+        private static void AddJsonIndex(EfTestDbContext context, string keyName, DataTypes keyType, bool recreate = true)
+        {
+            // datetime2 cant be indexed because it is non-deterministic.
+            if (keyType == DataTypes.DateTimeValue)
+            {
+                return;
+            }
+
+            //@keyName NVARCHAR(200), --json prop name
+            //@keyType NVARCHAR(200), --sql type
+            //@alias NVARCHAR(200), --what will be used to name the new index and column
+            //@recreate BIT -- if pre-existing index/columns should be deleted and remade
+            context.Database.ExecuteSqlRaw("stp_Add_Json_Index {0}, {1}, {2}, {3}", keyName, keyType.GetSqlType(_MaxStringLength), keyName, recreate);
+        }
+    }
+
+    public static class StringExt
+    {
+        public static string Truncate(this string value, int maxLength)
+        {
+            return value.Length > maxLength
+                ? value.Substring(0, maxLength)
+                : value;
+        }
     }
 }

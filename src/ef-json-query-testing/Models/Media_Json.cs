@@ -28,8 +28,10 @@ namespace ef_json_query_testing.Models
         {
             public void Configure(EntityTypeBuilder<Media_Json> builder)
             {
-                // This Converter will perform the conversion to and from Json to the desired type
+                //TODO:  bad option for optimizing json?
+                //builder.IsMemoryOptimized();
 
+                // This Converter will perform the conversion to and from Json to the desired type
                 builder.Property(e => e.Details)
                     .HasConversion(
                     v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),

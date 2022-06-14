@@ -9,4 +9,20 @@
         DecimalValue = 4, //??
         //ListSingleValue = 5, // exact
     }
+
+    static class DataTypesExtensions
+    {
+        public static string GetSqlType(this DataTypes dataType, int maxStringLength)
+        {
+            switch (dataType)
+            {
+                case DataTypes.IntValue: return "INT";
+                case DataTypes.StringValue: return $"VARCHAR({maxStringLength})";
+                case DataTypes.BoolValue: return "BIT";
+                case DataTypes.DateTimeValue: return "DATETIME2";
+                case DataTypes.DecimalValue: return "DECIMAL(14, 4)";
+                default: throw new ArgumentOutOfRangeException("dataType");
+            }
+        }
+    }
 }

@@ -413,7 +413,7 @@ namespace ef_json_query_testing
                 }
                 else if (field.DataType == DataTypes.BoolValue)
                 {
-                    var val = bool.Parse(searchField.Value) ? "1" : "0";
+                    var val = ConvertBoolean(searchField.Value);
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
                 }
                 else
@@ -438,6 +438,16 @@ namespace ef_json_query_testing
             }
 
             return list;
+        }
+
+        string ConvertBoolean(string value)
+        {
+            if (bool.TryParse(value, out var parsed))
+            {
+                return parsed ? "1" : "0";
+            }
+
+            return value;
         }
 
         #endregion

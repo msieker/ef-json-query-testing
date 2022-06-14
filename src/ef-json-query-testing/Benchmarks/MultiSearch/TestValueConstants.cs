@@ -53,10 +53,9 @@
                 { 4 , "13" }, //optional
                 { 6 , "7" }, //optional
                 { 7 , "18" },
-                { 10 , "3" },
-                { 26 , "False" },
+                { 10 , "5" },
+                { 26 , "True" },
                 { 33 , "True" }, //optional
-                { 48 , "True" }, //optional
             };
         public static Dictionary<int, string> Last_req_int_bool = new Dictionary<int, string>() {
                 { 2 , "0" },

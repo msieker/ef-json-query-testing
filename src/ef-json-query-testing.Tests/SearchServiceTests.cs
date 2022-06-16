@@ -1,5 +1,8 @@
 using ef_json_query_testing.Models;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using NaughtyStrings.Bogus;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -994,5 +997,81 @@ namespace ef_json_query_testing.Tests
 
         #endregion
 
+        #region bad data
+
+        [Fact]
+        public void SearchJsonWithBadData()
+        {
+            foreach (var naughtyString in TheNaughtyStrings.SQLInjection)
+            {
+                var expectedCount = _fixture.Context.Media_Json.Count();
+                var badSearch = new Dictionary<int, string>() { { 10, naughtyString } };
+
+                _fixture.SearchService.JsonSearch_Indexed(badSearch, false);
+
+                Assert.Equal(expectedCount, _fixture.Context.Media_Json.Count());
+            }
+        }
+
+
+        [Fact]
+        public void SearchMediaWithBadData()
+        {
+            foreach (var naughtyString in TheNaughtyStrings.SQLInjection)
+            {
+                var expectedCount = _fixture.Context.Media_Dynamic.Count();
+                var badSearch = new Dictionary<int, string>() { { 10, naughtyString } };
+
+                _fixture.SearchService.TableSearch_Media(badSearch, false);
+
+                Assert.Equal(expectedCount, _fixture.Context.Media_Dynamic.Count());
+            }
+        }
+
+        [Fact]
+        public void SearchJsonWithCustomBadData()
+        {
+            foreach (var naughtyString in SQLInjectionJson)
+            {
+                var expectedCount = _fixture.Context.Media_Json.Count();
+                var badSearch = new Dictionary<int, string>() { { 10, naughtyString } };
+
+                _fixture.SearchService.JsonSearch_Indexed(badSearch, false);
+
+                Assert.Equal(expectedCount, _fixture.Context.Media_Json.Count());
+            }
+        }
+
+
+        [Fact]
+        public void SearchMediaWithCustomBadData()
+        {
+            foreach (var naughtyString in SQLInjectionMedia)
+            {
+                var expectedCount = _fixture.Context.Media_Dynamic.Count();
+                var badSearch = new Dictionary<int, string>() { { 10, naughtyString } };
+
+                _fixture.SearchService.TableSearch_Media(badSearch, false);
+
+                Assert.Equal(expectedCount, _fixture.Context.Media_Dynamic.Count());
+            }
+        }
+
+        public static IReadOnlyList<string> SQLInjectionJson = new List<string>
+        {
+            "1;DROP TABLE Media_Json",
+            "1\'; DROP TABLE Media_Json-- 1",
+            "\'; EXEC sp_MSForEachTable \'DROP TABLE ?\'; --",
+        };
+
+        public static IReadOnlyList<string> SQLInjectionMedia = new List<string>
+        {
+            "1;DROP TABLE Media_Dynamic",
+            "1\'; DROP TABLE Media_Dynamic-- 1",
+            "\'; EXEC sp_MSForEachTable \'DROP TABLE ?\'; --",
+        };
+        #endregion
+
     }
+
 }

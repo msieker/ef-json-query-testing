@@ -345,7 +345,7 @@ namespace ef_json_query_testing
 
             return _context.Media_Dynamic
                 .AsNoTracking()
-                .Include(m => m.DynamicMediaInformation)
+                //.Include(m => m.DynamicMediaInformation)
                 .Where(m => ids.Contains(m.Media_DynamicId))
                 .OrderBy(m => m.Media_DynamicId)
                 .Take(Take_Count)
@@ -367,7 +367,7 @@ namespace ef_json_query_testing
                 // contains search
                 return _context.Media_Dynamic
                     .AsNoTracking()
-                    .Include(d => d.DynamicMediaInformation)
+                    //.Include(d => d.DynamicMediaInformation)
                     .Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Contains(value)) != null)
                     .OrderBy(m => m.Media_DynamicId)
                     .Take(Take_Count)
@@ -378,7 +378,7 @@ namespace ef_json_query_testing
                 // exact match search
                 return _context.Media_Dynamic
                     .AsNoTracking()
-                    .Include(d => d.DynamicMediaInformation)
+                    //.Include(d => d.DynamicMediaInformation)
                     .Where(d => d.DynamicMediaInformation.FirstOrDefault(i => i.FieldId == DynamicFieldId && i.Value.Equals(value)) != null)
                     .OrderBy(m => m.Media_DynamicId)
                     .Take(Take_Count)
@@ -396,7 +396,7 @@ namespace ef_json_query_testing
 
             _context.Database.SetCommandTimeout(500);
             var fieldList = _context.DynamicFields.AsNoTracking().ToList();
-            var query = _context.Media_Dynamic.AsNoTracking().Include(d => d.DynamicMediaInformation).AsQueryable();
+            var query = _context.Media_Dynamic.AsNoTracking();//.Include(d => d.DynamicMediaInformation).AsQueryable();
             var hasSearchField = false;
             foreach (var searchField in searchFields)
             {
@@ -413,7 +413,7 @@ namespace ef_json_query_testing
                 }
                 else if (field.DataType == DataTypes.BoolValue)
                 {
-                    var val = bool.Parse(searchField.Value) ? "1" : "0";
+                    var val = ConvertBoolean(searchField.Value);
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
                 }
                 else
@@ -438,6 +438,16 @@ namespace ef_json_query_testing
             }
 
             return list;
+        }
+
+        string ConvertBoolean(string value)
+        {
+            if (bool.TryParse(value, out var parsed))
+            {
+                return parsed ? "1" : "0";
+            }
+
+            return value;
         }
 
         #endregion

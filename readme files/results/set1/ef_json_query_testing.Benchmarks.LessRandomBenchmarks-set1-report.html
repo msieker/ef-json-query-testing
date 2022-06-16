@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>ef_json_query_testing.Benchmarks.LessRandomBenchmarks-20220616-114949</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.19043.1766 (21H1/May2021Update)
+AMD Ryzen 7 1700, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=6.0.300
+  [Host]     : .NET 6.0.5 (6.0.522.21309), X64 RyuJIT
+  DefaultJob : .NET 6.0.5 (6.0.522.21309), X64 RyuJIT
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>                  Method</th><th>              Categories</th><th>  Mean</th><th>Error</th><th>StdDev</th>
+</tr>
+</thead><tbody><tr><td>Indexed_set1_both_int_bool</td><td>json,lessrand,indexed,set1</td><td>12.407 ms</td><td>0.2388 ms</td><td>0.3348 ms</td>
+</tr><tr><td>Media_set1_both_int_bool</td><td>table,lessrand,media,set1</td><td>137.246 ms</td><td>1.3075 ms</td><td>1.2230 ms</td>
+</tr><tr><td>Indexed_set1_req_int_bool</td><td>json,lessrand,indexed,set1</td><td>17.118 ms</td><td>0.3411 ms</td><td>0.8106 ms</td>
+</tr><tr><td>Media_set1_req_int_bool</td><td>table,lessrand,media,set1</td><td>272.267 ms</td><td>1.5866 ms</td><td>1.4065 ms</td>
+</tr><tr><td>Indexed_set1_op_int</td><td>json,lessrand,indexed,set1</td><td>7.484 ms</td><td>0.1443 ms</td><td>0.1604 ms</td>
+</tr><tr><td>Media_set1_op_int</td><td>table,lessrand,media,set1</td><td>68.615 ms</td><td>1.3577 ms</td><td>2.1924 ms</td>
+</tr><tr><td>Indexed_set1_req_string</td><td>json,lessrand,indexed,set1</td><td>414.619 ms</td><td>2.1831 ms</td><td>1.7044 ms</td>
+</tr><tr><td>Media_set1_req_string</td><td>table,lessrand,media,set1</td><td>1,550.519 ms</td><td>30.6661 ms</td><td>30.1182 ms</td>
+</tr><tr><td>Indexed_set1_op_string_single</td><td>json,lessrand,indexed,set1</td><td>2,527.856 ms</td><td>45.7465 ms</td><td>42.7913 ms</td>
+</tr><tr><td>Media_set1_op_string_single</td><td>table,lessrand,media,set1,miss</td><td>424.815 ms</td><td>0.9755 ms</td><td>0.7616 ms</td>
+</tr><tr><td>Indexed_set1_req_string_single</td><td>json,lessrand,indexed,set1</td><td>1,406.252 ms</td><td>24.1559 ms</td><td>22.5955 ms</td>
+</tr><tr><td>Media_set1_req_string_single</td><td>table,lessrand,media,set1,miss</td><td>851.747 ms</td><td>7.7749 ms</td><td>6.4924 ms</td>
+</tr></tbody></table>
+</body>
+</html>

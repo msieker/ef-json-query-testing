@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>ef_json_query_testing.Benchmarks.LessRandomBenchmarks-20220616-111910</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.19043.1766 (21H1/May2021Update)
+AMD Ryzen 7 1700, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=6.0.300
+  [Host]     : .NET 6.0.5 (6.0.522.21309), X64 RyuJIT
+  DefaultJob : .NET 6.0.5 (6.0.522.21309), X64 RyuJIT
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>                   Method</th><th>           Categories</th><th>  Mean</th><th>Error</th><th>StdDev</th>
+</tr>
+</thead><tbody><tr><td>Indexed_first_both_bool_int</td><td>json,lessrand,indexed,first</td><td>7.008 ms</td><td>0.1370 ms</td><td>0.3773 ms</td>
+</tr><tr><td>Media_first_both_bool_int</td><td>table,lessrand,media,first</td><td>138.727 ms</td><td>2.2613 ms</td><td>1.7655 ms</td>
+</tr><tr><td>Indexed_first_req_bool_int</td><td>json,lessrand,indexed,first</td><td>27.680 ms</td><td>0.4322 ms</td><td>0.4625 ms</td>
+</tr><tr><td>Media_first_req_bool_int</td><td>table,lessrand,media,first</td><td>267.641 ms</td><td>3.9830 ms</td><td>3.3260 ms</td>
+</tr><tr><td>Indexed_first_op_int</td><td>json,lessrand,indexed,first</td><td>5.210 ms</td><td>0.1038 ms</td><td>0.2097 ms</td>
+</tr><tr><td>Media_first_op_int</td><td>table,lessrand,media,first</td><td>90.174 ms</td><td>1.2907 ms</td><td>1.0778 ms</td>
+</tr><tr><td>Indexed_first_req_string</td><td>json,lessrand,indexed,first</td><td>1,470.281 ms</td><td>22.9791 ms</td><td>21.4946 ms</td>
+</tr><tr><td>Media_first_req_string</td><td>table,lessrand,media,first</td><td>3,155.082 ms</td><td>26.4490 ms</td><td>22.0861 ms</td>
+</tr><tr><td>Indexed_first_op_string</td><td>json,lessrand,indexed,first</td><td>2,498.910 ms</td><td>20.6448 ms</td><td>18.3011 ms</td>
+</tr><tr><td>Media_first_op_string</td><td>table,lessrand,media,first</td><td>492.755 ms</td><td>7.3617 ms</td><td>6.8861 ms</td>
+</tr><tr><td>Indexed_first_op_string_single</td><td>json,lessrand,indexed,first</td><td>2,478.082 ms</td><td>14.1720 ms</td><td>13.2565 ms</td>
+</tr><tr><td>Media_first_op_string_single</td><td>table,lessrand,media,first</td><td>402.723 ms</td><td>1.2851 ms</td><td>1.0033 ms</td>
+</tr><tr><td>Indexed_first_req_string_single</td><td>json,lessrand,indexed,first</td><td>1,387.691 ms</td><td>13.4742 ms</td><td>11.9446 ms</td>
+</tr><tr><td>Media_first_req_string_single</td><td>table,lessrand,media,first</td><td>824.639 ms</td><td>6.2622 ms</td><td>5.2292 ms</td>
+</tr></tbody></table>
+</body>
+</html>

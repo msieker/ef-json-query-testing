@@ -30,6 +30,7 @@ namespace ef_json_query_testing.Seeders
         private const int _MaxStringLength = 500;
 
         private const int FakerSeed = 42;
+        
         public static void LoadAllData(EfTestDbContext context, int fieldsCount = 30, int mediaItemsCount = 500, int listTypeCount = 5)
         {
             Randomizer.Seed = new Random(FakerSeed);

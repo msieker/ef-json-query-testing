@@ -46,6 +46,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
         [Theory]
@@ -62,6 +66,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
         [Theory]
@@ -74,6 +82,7 @@ namespace ef_json_query_testing.Tests
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
+            Assert.NotNull(media?.Details);
             Assert.All(media?.Details, l => expectedInfo.Contains(l));
         }
 
@@ -145,6 +154,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -185,6 +198,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -236,6 +253,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -258,6 +279,7 @@ namespace ef_json_query_testing.Tests
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
+            Assert.NotEmpty(media?.Details);
             Assert.All(media?.Details, l => expectedInfo.Contains(l));
         }
 
@@ -329,6 +351,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -369,6 +395,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -420,6 +450,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -442,6 +476,7 @@ namespace ef_json_query_testing.Tests
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
+            Assert.NotEmpty(media?.Details);
             Assert.All(media?.Details, l => expectedInfo.Contains(l));
         }
 
@@ -473,6 +508,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
         [Theory]
@@ -489,6 +528,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
         [Theory]
@@ -501,6 +544,7 @@ namespace ef_json_query_testing.Tests
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
+            Assert.NotEmpty(media?.Details);
             Assert.All(media?.Details, l => expectedInfo.Contains(l));
         }
 
@@ -572,6 +616,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -612,6 +660,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -663,6 +715,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_JsonId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.Details);
+            }
         }
 
 
@@ -685,6 +741,7 @@ namespace ef_json_query_testing.Tests
 
 
             Assert.Equal(expectedId, media?.Media_JsonId);
+            Assert.NotEmpty(media?.Details);
             Assert.All(media?.Details, l => expectedInfo.Contains(l));
         }
 
@@ -720,6 +777,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+            }
         }
 
         [Theory]
@@ -736,6 +797,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+            }
         }
 
         [Theory]
@@ -748,6 +813,7 @@ namespace ef_json_query_testing.Tests
 
 
             Assert.Equal(expectedId, media?.Media_DynamicId);
+            Assert.NotEmpty(media?.DynamicMediaInformation);
             Assert.All(media?.DynamicMediaInformation, l => expectedInfo.Contains(l));
         }
 
@@ -779,6 +845,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+            }
         }
 
         [Theory]
@@ -795,6 +865,10 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+            }
         }
 
         [Theory]
@@ -807,6 +881,7 @@ namespace ef_json_query_testing.Tests
 
 
             Assert.Equal(expectedId, media?.Media_DynamicId);
+            Assert.NotEmpty(media.DynamicMediaInformation);
             Assert.All(media?.DynamicMediaInformation, l => expectedInfo.Contains(l));
         }
         #endregion
@@ -877,6 +952,14 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
         }
 
 
@@ -917,6 +1000,14 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
         }
 
 
@@ -968,6 +1059,14 @@ namespace ef_json_query_testing.Tests
 
             Assert.Equal(expectedIds.Count(), media.Count());
             Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
         }
 
 
@@ -988,9 +1087,187 @@ namespace ef_json_query_testing.Tests
             var media = _fixture.SearchService.TableSearch_Media(searchFields).FirstOrDefault();
             var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToList();
 
+            Assert.Equal(expectedId, media?.Media_DynamicId);
+            Assert.NotEmpty(media?.DynamicMediaInformation);
+            Assert.All(media?.DynamicMediaInformation, l => expectedInfo.Contains(l));
+            foreach (var info in media.DynamicMediaInformation)
+            {
+                Assert.NotEmpty(info.Value);
+            }
+        }
+
+        #endregion
+
+        #region Media Dictionary split queries
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_NoMatch_TestCases))]
+        public void MediaSplit_Multi_NoMatch(Dictionary<int, string> searchFields)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_SplitQuery(searchFields, false);
+
+            Assert.Empty(media);
+        }
+
+
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_Exact_TestCases))]
+        public void MediaSplit_Multi_Exact(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_SplitQuery(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
+        }
+
+
+        [Theory]
+        [MemberData(nameof(Raw_Multi_Contains_TestCases))]
+        public void MediaSplit_Multi_Contains(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_SplitQuery(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_Any_TestCases))]
+        public void MediaSplit_Multi_Any(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_SplitQuery(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
+        }
+
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_HasDynamicInformation_TestCases))]
+        public void MediaSplit_Multi_HasDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_SplitQuery(searchFields).FirstOrDefault();
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToList();
 
             Assert.Equal(expectedId, media?.Media_DynamicId);
+            Assert.NotEmpty(media?.DynamicMediaInformation);
             Assert.All(media?.DynamicMediaInformation, l => expectedInfo.Contains(l));
+            foreach (var info in media.DynamicMediaInformation)
+            {
+                Assert.NotEmpty(info.Value);
+            }
+        }
+
+        #endregion
+
+        #region Media Dictionary two queries
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_NoMatch_TestCases))]
+        public void Media2_Multi_NoMatch(Dictionary<int, string> searchFields)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_TwoQueries(searchFields, false);
+
+            Assert.Empty(media);
+        }
+
+
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_Exact_TestCases))]
+        public void Media2_Multi_Exact(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_TwoQueries(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
+        }
+
+
+        [Theory]
+        [MemberData(nameof(Raw_Multi_Contains_TestCases))]
+        public void Media2_Multi_Contains(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_TwoQueries(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_Any_TestCases))]
+        public void Media2_Multi_Any(Dictionary<int, string> searchFields, int[] expectedIds)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_TwoQueries(searchFields);
+
+            Assert.Equal(expectedIds.Count(), media.Count());
+            Assert.Equal(expectedIds, media.Select(m => m.Media_DynamicId).ToArray());
+            foreach (var item in media)
+            {
+                Assert.NotEmpty(item.DynamicMediaInformation);
+                foreach (var info in item.DynamicMediaInformation)
+                {
+                    Assert.NotEmpty(info.Value);
+                }
+            }
+        }
+
+
+        [Theory]
+        [MemberData(nameof(Media_Multi_HasDynamicInformation_TestCases))]
+        public void Media2_Multi_HasDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
+        {
+            var media = _fixture.SearchService.TableSearch_Media_TwoQueries(searchFields).FirstOrDefault();
+            var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToList();
+
+            Assert.Equal(expectedId, media?.Media_DynamicId);
+            Assert.NotEmpty(media?.DynamicMediaInformation);
+            Assert.All(media?.DynamicMediaInformation, l => expectedInfo.Contains(l));
+            foreach (var info in media.DynamicMediaInformation)
+            {
+                Assert.NotEmpty(info.Value);
+            }
         }
 
         #endregion

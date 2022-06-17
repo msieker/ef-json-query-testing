@@ -39,7 +39,7 @@
 
             foreach (var info in DynamicMediaInformation)
             {
-                jsonModel.Details.Add(info.Field.DynamicFieldId.ToString(), info.Value);
+                jsonModel.Details.Add(info.FieldId.ToString(), info.Value);
             }
 
             return jsonModel;

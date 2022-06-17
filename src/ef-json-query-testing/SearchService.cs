@@ -580,6 +580,7 @@ namespace ef_json_query_testing
 
         List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value);
         List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
+        List<Media_Dynamic> TableSearch_Media_SplitQuery(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
         List<Media_Dynamic> TableSearch_Media_TwoQueries(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
     }
 }

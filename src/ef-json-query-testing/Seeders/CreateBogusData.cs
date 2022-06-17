@@ -66,7 +66,6 @@ namespace ef_json_query_testing.Seeders
 
         public static Faker<DynamicField> FakerDynamicField => new Faker<DynamicField>()
             .RuleFor(d => d.DisplayName, f => string.Join(" ", f.Lorem.Words()))
-            .RuleFor(d => d.JsonName, (f, d) => d.MakeJsonName())
             .RuleFor(d => d.IsQueryable, f => f.Random.Bool())
             .RuleFor(d => d.IsRequired, f => f.Random.Bool())
             .RuleFor(d => d.Description, f => f.Lorem.Paragraph())

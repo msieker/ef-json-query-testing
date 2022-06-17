@@ -69,10 +69,9 @@
 
             for (int i = 0; i < jsonResults.Count; i++)
             {
-                var jsonId = jsonResults[i].Media_JsonId;
-                var mediaResultId = mediaResults[i].Media_DynamicId;
+                var convertedMedia = mediaResults[i].GetMediaJsonCopy(true);
 
-                if (jsonId != mediaResultId)
+                if (!jsonResults[i].Equals(convertedMedia))
                 {
                     throw new Exception();
                 }

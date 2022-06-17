@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace ef_json_query_testing.Models
 {
-    public class Media_Json
+    public class Media_Json : IEquatable<Media_Json?>
     {
         public int Media_JsonId { get; set; }
 
@@ -22,6 +22,45 @@ namespace ef_json_query_testing.Models
 
 
         public Dictionary<string, object> Details { get; set; } = new();
+
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as Media_Json);
+        }
+
+        public bool Equals(Media_Json? other)
+        {
+            return other != null &&
+                   Media_JsonId == other.Media_JsonId &&
+                   UploadDate == other.UploadDate &&
+                   OriginalFileName == other.OriginalFileName &&
+                   FilePath == other.FilePath &&
+                   CreatedDate == other.CreatedDate &&
+                   FileSize == other.FileSize &&
+                   FileWidth == other.FileWidth &&
+                   FileHeight == other.FileHeight &&
+                   Description == other.Description &&
+                   Hold == other.Hold &&
+                   EqualityComparer<Dictionary<string, object>>.Default.Equals(Details, other.Details);
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hash = new HashCode();
+            hash.Add(Media_JsonId);
+            hash.Add(UploadDate);
+            hash.Add(OriginalFileName);
+            hash.Add(FilePath);
+            hash.Add(CreatedDate);
+            hash.Add(FileSize);
+            hash.Add(FileWidth);
+            hash.Add(FileHeight);
+            hash.Add(Description);
+            hash.Add(Hold);
+            hash.Add(Details);
+            return hash.ToHashCode();
+        }
 
 
         public class Media_JsonConfiguration : IEntityTypeConfiguration<Media_Json>

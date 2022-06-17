@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace ef_json_query_testing.Models
 {
-    public class Media_Json : IEquatable<Media_Json?>
+    public class Media_Json
     {
         public int Media_JsonId { get; set; }
 
@@ -24,44 +24,43 @@ namespace ef_json_query_testing.Models
         public Dictionary<string, object> Details { get; set; } = new();
 
 
-        public override bool Equals(object? obj)
+        public bool CheckMatch(Media_Dynamic media)
         {
-            return Equals(obj as Media_Json);
-        }
+            if (!(media.UploadDate == UploadDate &&
+            media.OriginalFileName == OriginalFileName &&
+            media.FilePath == FilePath &&
+            media.CreatedDate == CreatedDate &&
+            media.FileSize == FileSize &&
+            media.FileWidth == FileWidth &&
+            media.FileHeight == FileHeight &&
+            media.Description == Description &&
+            media.Hold == Hold &&
+            media.Media_DynamicId == Media_JsonId))
+            {
+                return false;
+            }
 
-        public bool Equals(Media_Json? other)
-        {
-            return other != null &&
-                   Media_JsonId == other.Media_JsonId &&
-                   UploadDate == other.UploadDate &&
-                   OriginalFileName == other.OriginalFileName &&
-                   FilePath == other.FilePath &&
-                   CreatedDate == other.CreatedDate &&
-                   FileSize == other.FileSize &&
-                   FileWidth == other.FileWidth &&
-                   FileHeight == other.FileHeight &&
-                   Description == other.Description &&
-                   Hold == other.Hold &&
-                   EqualityComparer<Dictionary<string, object>>.Default.Equals(Details, other.Details);
-        }
+            if (media.DynamicMediaInformation.Count != Details.Count)
+            {
+                return false;
+            }
 
-        public override int GetHashCode()
-        {
-            HashCode hash = new HashCode();
-            hash.Add(Media_JsonId);
-            hash.Add(UploadDate);
-            hash.Add(OriginalFileName);
-            hash.Add(FilePath);
-            hash.Add(CreatedDate);
-            hash.Add(FileSize);
-            hash.Add(FileWidth);
-            hash.Add(FileHeight);
-            hash.Add(Description);
-            hash.Add(Hold);
-            hash.Add(Details);
-            return hash.ToHashCode();
-        }
+            foreach (var detail in Details)
+            {
+                var mediaDetail = media.DynamicMediaInformation.FirstOrDefault(m => m.FieldId.ToString() == detail.Key);
+                if (mediaDetail == null || string.IsNullOrEmpty(mediaDetail.Value))
+                {
+                    return false;
+                }
 
+                if (!mediaDetail.Value.ToString().Equals(detail.Value.ToString()))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         public class Media_JsonConfiguration : IEntityTypeConfiguration<Media_Json>
         {
@@ -74,8 +73,7 @@ namespace ef_json_query_testing.Models
                 builder.Property(e => e.Details)
                     .HasConversion(
                     v => JsonSerializer.Serialize(v, new JsonSerializerOptions()),
-                    v =>
-                        JsonSerializer.Deserialize<Dictionary<string, object>>(v, new JsonSerializerOptions(JsonSerializerDefaults.General))
+                    v => JsonSerializer.Deserialize<Dictionary<string, object>>(v, new JsonSerializerOptions(JsonSerializerDefaults.General))
                         ?? new Dictionary<string, object>(),
                     new ValueComparer<Dictionary<string, object>>(
                         (d1, d2) => d2 != null && d1 != null && d1.OrderBy(kv => kv.Key).SequenceEqual(d2.OrderBy(kv => kv.Key)),

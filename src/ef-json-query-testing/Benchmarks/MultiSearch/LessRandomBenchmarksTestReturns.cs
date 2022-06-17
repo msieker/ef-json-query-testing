@@ -1,61 +1,73 @@
-﻿namespace ef_json_query_testing.Benchmarks
+﻿using ef_json_query_testing.Models;
+
+namespace ef_json_query_testing.Benchmarks
 {
     public class LessRandomBenchmarksTestReturns : BaseBenchmark
     {
         public void TestSearch()
         {
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.first_both_bool_int), Search.TableSearch_Media(TestValueConstants.first_both_bool_int));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.first_req_bool_int), Search.TableSearch_Media(TestValueConstants.first_req_bool_int));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.first_op_int), Search.TableSearch_Media(TestValueConstants.first_op_int));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.first_req_string), Search.TableSearch_Media(TestValueConstants.first_req_string));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.first_op_string), Search.TableSearch_Media(TestValueConstants.first_op_string));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.first_op_string_single), Search.TableSearch_Media(TestValueConstants.first_op_string_single));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.first_req_string_single), Search.TableSearch_Media(TestValueConstants.first_req_string_single));
+            TestSearch((a) => Search.JsonSearch_Indexed(a), (b) => Search.TableSearch_Media(b));
+            TestSearch((a) => Search.JsonSearch_Indexed(a), (b) => Search.TableSearch_Media_SplitQuery(b));
+            TestSearch((a) => Search.JsonSearch_Indexed(a), (b) => Search.TableSearch_Media_TwoQueries(b));
+            int it = 0;
+        }
 
 
+        public void TestSearch(Func<Dictionary<int, string>, List<Media_Json>> jsonSearch, Func<Dictionary<int, string>, List<Media_Dynamic>> dynamicSearch)
+        {
+            Compare(jsonSearch(TestValueConstants.first_both_bool_int), dynamicSearch(TestValueConstants.first_both_bool_int));
 
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.Last_both_int_bool), Search.TableSearch_Media(TestValueConstants.Last_both_int_bool));
+            Compare(jsonSearch(TestValueConstants.first_req_bool_int), dynamicSearch(TestValueConstants.first_req_bool_int));
 
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.Last_req_int_bool), Search.TableSearch_Media(TestValueConstants.Last_req_int_bool));
+            Compare(jsonSearch(TestValueConstants.first_op_int), dynamicSearch(TestValueConstants.first_op_int));
 
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.Last_req_string), Search.TableSearch_Media(TestValueConstants.Last_req_string));
+            Compare(jsonSearch(TestValueConstants.first_req_string), dynamicSearch(TestValueConstants.first_req_string));
 
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.Last_req_string_single), Search.TableSearch_Media(TestValueConstants.Last_req_string_single));
+            Compare(jsonSearch(TestValueConstants.first_op_string), dynamicSearch(TestValueConstants.first_op_string));
 
+            Compare(jsonSearch(TestValueConstants.first_op_string_single), dynamicSearch(TestValueConstants.first_op_string_single));
 
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set1_both_int_bool), Search.TableSearch_Media(TestValueConstants.set1_both_int_bool));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set1_req_int_bool), Search.TableSearch_Media(TestValueConstants.set1_req_int_bool));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set1_op_int), Search.TableSearch_Media(TestValueConstants.set1_op_int));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set1_req_string), Search.TableSearch_Media(TestValueConstants.set1_req_string));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set1_op_string_single), Search.TableSearch_Media(TestValueConstants.set1_op_string_single));
-
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set1_req_string_single), Search.TableSearch_Media(TestValueConstants.set1_req_string_single));
+            Compare(jsonSearch(TestValueConstants.first_req_string_single), dynamicSearch(TestValueConstants.first_req_string_single));
 
 
 
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set2_both_int_bool), Search.TableSearch_Media(TestValueConstants.set2_both_int_bool));
+            Compare(jsonSearch(TestValueConstants.Last_both_int_bool), dynamicSearch(TestValueConstants.Last_both_int_bool));
 
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set2_req_int), Search.TableSearch_Media(TestValueConstants.set2_req_int));
+            Compare(jsonSearch(TestValueConstants.Last_req_int_bool), dynamicSearch(TestValueConstants.Last_req_int_bool));
 
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set2_req_string), Search.TableSearch_Media(TestValueConstants.set2_req_string));
+            Compare(jsonSearch(TestValueConstants.Last_req_string), dynamicSearch(TestValueConstants.Last_req_string));
 
-            Compare(Search.JsonSearch_Indexed(TestValueConstants.set2_req_string_single), Search.TableSearch_Media(TestValueConstants.set2_req_string_single));
+            Compare(jsonSearch(TestValueConstants.Last_req_string_single), dynamicSearch(TestValueConstants.Last_req_string_single));
+
+
+
+            Compare(jsonSearch(TestValueConstants.set1_both_int_bool), dynamicSearch(TestValueConstants.set1_both_int_bool));
+
+            Compare(jsonSearch(TestValueConstants.set1_req_int_bool), dynamicSearch(TestValueConstants.set1_req_int_bool));
+
+            Compare(jsonSearch(TestValueConstants.set1_op_int), dynamicSearch(TestValueConstants.set1_op_int));
+
+            Compare(jsonSearch(TestValueConstants.set1_req_string), dynamicSearch(TestValueConstants.set1_req_string));
+
+            Compare(jsonSearch(TestValueConstants.set1_op_string_single), dynamicSearch(TestValueConstants.set1_op_string_single));
+
+            Compare(jsonSearch(TestValueConstants.set1_req_string_single), dynamicSearch(TestValueConstants.set1_req_string_single));
+
+
+
+            Compare(jsonSearch(TestValueConstants.set2_both_int_bool), dynamicSearch(TestValueConstants.set2_both_int_bool));
+
+            Compare(jsonSearch(TestValueConstants.set2_req_int), dynamicSearch(TestValueConstants.set2_req_int));
+
+            Compare(jsonSearch(TestValueConstants.set2_req_string), dynamicSearch(TestValueConstants.set2_req_string));
+
+            Compare(jsonSearch(TestValueConstants.set2_req_string_single), dynamicSearch(TestValueConstants.set2_req_string_single));
 
 
         }
 
-        void Compare(List<Models.Media_Json>? jsonResults, List<Models.Media_Dynamic>? mediaResults)
+
+        void Compare(List<Media_Json>? jsonResults, List<Media_Dynamic>? mediaResults)
         {
             if (jsonResults == null || mediaResults == null || !jsonResults.Any() || !mediaResults.Any())
             {
@@ -69,9 +81,7 @@
 
             for (int i = 0; i < jsonResults.Count; i++)
             {
-                var convertedMedia = mediaResults[i].GetMediaJsonCopy(true);
-
-                if (!jsonResults[i].Equals(convertedMedia))
+                if (!jsonResults[i].CheckMatch(mediaResults[i]))
                 {
                     throw new Exception();
                 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>ef_json_query_testing.Benchmarks.LessRandomBenchmarks-20220617-143902</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.19043.1766 (21H1/May2021Update)
+AMD Ryzen 7 1700, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=6.0.300
+  [Host]     : .NET 6.0.5 (6.0.522.21309), X64 RyuJIT
+  DefaultJob : .NET 6.0.5 (6.0.522.21309), X64 RyuJIT
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>                     Method</th><th>                   Categories</th><th>  Mean</th><th>Error</th><th>StdDev</th>
+</tr>
+</thead><tbody><tr><td>Media_set1_both_int_bool</td><td>table,lessrand,media,set1</td><td>142.64 ms</td><td>1.492 ms</td><td>1.395 ms</td>
+</tr><tr><td>Media2_set1_both_int_bool</td><td>table,lessrand,media2,set1</td><td>138.20 ms</td><td>2.140 ms</td><td>2.002 ms</td>
+</tr><tr><td>MediaSplit_set1_both_int_bool</td><td>table,lessrand,mediasplit,set1</td><td>269.63 ms</td><td>2.591 ms</td><td>2.023 ms</td>
+</tr><tr><td>Media_set1_req_int_bool</td><td>table,lessrand,media,set1</td><td>271.14 ms</td><td>2.829 ms</td><td>2.508 ms</td>
+</tr><tr><td>Media2_set1_req_int_bool</td><td>table,lessrand,media2,set1</td><td>252.33 ms</td><td>4.128 ms</td><td>3.447 ms</td>
+</tr><tr><td>MediaSplit_set1_req_int_bool</td><td>table,lessrand,mediasplit,set1</td><td>514.98 ms</td><td>7.650 ms</td><td>6.388 ms</td>
+</tr><tr><td>Media_set1_op_int</td><td>table,lessrand,media,set1</td><td>72.03 ms</td><td>1.428 ms</td><td>1.466 ms</td>
+</tr><tr><td>Media2_set1_op_int</td><td>table,lessrand,media2,set1</td><td>71.51 ms</td><td>1.417 ms</td><td>2.519 ms</td>
+</tr><tr><td>MediaSplit_set1_op_int</td><td>table,lessrand,mediasplit,set1</td><td>133.33 ms</td><td>1.058 ms</td><td>0.938 ms</td>
+</tr><tr><td>Media_set1_req_string</td><td>table,lessrand,media,set1</td><td>165.93 ms</td><td>3.305 ms</td><td>6.288 ms</td>
+</tr><tr><td>Media2_set1_req_string</td><td>table,lessrand,media2,set1</td><td>273.95 ms</td><td>5.425 ms</td><td>11.792 ms</td>
+</tr><tr><td>MediaSplit_set1_req_string</td><td>table,lessrand,mediasplit,set1</td><td>1,706.35 ms</td><td>25.114 ms</td><td>23.492 ms</td>
+</tr><tr><td>Media_set1_op_string_single</td><td>table,lessrand,media,set1,miss</td><td>20,429.51 ms</td><td>614.136 ms</td><td>1,771.924 ms</td>
+</tr><tr><td>Media2_set1_op_string_single</td><td>table,lessrand,media2,set1,miss</td><td>77.70 ms</td><td>1.695 ms</td><td>4.837 ms</td>
+</tr><tr><td>MediaSplit_set1_op_string_single</td><td>table,lessrand,mediasplit,set1,miss</td><td>506.94 ms</td><td>7.110 ms</td><td>6.650 ms</td>
+</tr><tr><td>Media_set1_req_string_single</td><td>table,lessrand,media,set1,miss</td><td>29,390.85 ms</td><td>580.884 ms</td><td>1,346.287 ms</td>
+</tr><tr><td>Media2_set1_req_string_single</td><td>table,lessrand,media2,set1,miss</td><td>141.08 ms</td><td>2.803 ms</td><td>6.441 ms</td>
+</tr><tr><td>MediaSplit_set1_req_string_single</td><td>table,lessrand,mediasplit,set1,miss</td><td>984.41 ms</td><td>4.539 ms</td><td>4.024 ms</td>
+</tr></tbody></table>
+</body>
+</html>

@@ -387,6 +387,84 @@ namespace ef_json_query_testing
         }
 
 
+        public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true, List<int>? columnInclude = null)
+        {
+            if (searchFields == null || !searchFields.Any())
+            {
+                return new List<Media_Dynamic>();
+            }
+
+            _context.Database.SetCommandTimeout(500);
+            var fieldList = _context.DynamicFields.AsNoTracking().ToList();
+            var query = _context.Media_Dynamic.AsNoTracking().AsQueryable();
+            var hasSearchField = false;
+            foreach (var searchField in searchFields)
+            {
+                var field = fieldList.FirstOrDefault(f => f.DynamicFieldId == searchField.Key);
+                if (field == null)
+                {
+                    continue;
+                }
+                hasSearchField = true;
+
+                if (field.DataType == DataTypes.StringValue)
+                {
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value.Contains(searchField.Value)));
+                }
+                else if (field.DataType == DataTypes.BoolValue)
+                {
+                    var val = ConvertBoolean(searchField.Value);
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
+                }
+                else
+                {
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == searchField.Value));
+                }
+            }
+
+            List<Media_Dynamic> list;
+            if (hasSearchField)
+            {
+                list = query
+                    .Select(q =>
+                        new Media_Dynamic
+                        {
+                            Media_DynamicId = q.Media_DynamicId,
+                            UploadDate = q.UploadDate,
+                            OriginalFileName = q.OriginalFileName,
+                            FilePath = q.FilePath,
+                            CreatedDate = q.CreatedDate,
+                            FileSize = q.FileSize,
+                            FileWidth = q.FileWidth,
+                            FileHeight = q.FileHeight,
+                            Description = q.Description,
+                            Hold = q.Hold,
+                            DynamicMediaInformation = q.DynamicMediaInformation
+                            .Where(q => columnInclude == null || columnInclude.Contains(q.FieldId))
+                            .Select(q => new DynamicMediaInformation()
+                            {
+                                DynamicMediaInformationId = q.DynamicMediaInformationId,
+                                Value = q.Value,
+                                MediaId = q.MediaId,
+                                FieldId = q.FieldId
+                            }).ToList()
+                        }
+                    )
+                    .OrderBy(q => q.Media_DynamicId).Take(Take_Count).ToList();
+            }
+            else
+            {
+                list = new List<Media_Dynamic>();
+            }
+
+            if (!list.Any() && throwOnNoResults)
+            {
+                throw new Exception("No items found");
+            }
+
+            return list;
+        }
+
         public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true)
         {
             if (searchFields == null || !searchFields.Any())
@@ -580,6 +658,7 @@ namespace ef_json_query_testing
 
         List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value);
         List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
+        List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true, List<int>? columnInclude = null);
         List<Media_Dynamic> TableSearch_Media_SplitQuery(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
         List<Media_Dynamic> TableSearch_Media_TwoQueries(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
     }

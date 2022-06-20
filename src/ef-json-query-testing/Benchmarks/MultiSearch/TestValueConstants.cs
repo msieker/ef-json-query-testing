@@ -80,26 +80,26 @@
                 { 4 , "0" }, //optional
                 { 10 , "3" },
                 { 26 , "False" },
-            }; 
+            };
         public static Dictionary<int, string> set1_req_int_bool = new Dictionary<int, string>() {
                 { 2 , "1" },
                 { 7 , "1" },
                 { 8 , "2" },
                 { 26 , "False" },
                 { 46 , "False" },
-            }; 
+            };
         public static Dictionary<int, string> set1_op_int = new Dictionary<int, string>() {
                 { 1 , "4" },
                 { 3 , "8" },
                 { 4 , "0" },
-            }; 
+            };
         public static Dictionary<int, string> set1_req_string = new Dictionary<int, string>() {
                 { 13 , "laboriosam" },
                 { 29 , "voluptatibus" },
-            }; 
+            };
         public static Dictionary<int, string> set1_op_string_single = new Dictionary<int, string>() {
                 { 47 , "nihil tempora" }
-            }; 
+            };
         public static Dictionary<int, string> set1_req_string_single = new Dictionary<int, string>() {
                 { 13 , "exercitationem laboriosam" },
             };
@@ -124,5 +124,12 @@
         public static Dictionary<int, string> set2_req_string_single = new Dictionary<int, string>() {
                 { 13 , "quo vero porro" },
             };
+
+
+        public static List<int>? ColumnCount_10 = new List<int>() { 3, 47, 48, 21, 39, 28, 13, 26, 37, 40 };
+        public static List<int>? ColumnCount_25 = new List<int>() { 3, 47, 48, 21, 39, 28, 13, 26, 37, 40,
+                                                                    4, 33, 38, 42, 31, 12, 19, 46, 16, 49,
+                                                                    8, 18, 14, 36, 2 };
+        public static List<int>? ColumnCount_All = null;
     }
 }

@@ -387,7 +387,7 @@ namespace ef_json_query_testing
         }
 
 
-        public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true, List<int>? columnInclude = null)
+        public List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, List<int>? columnInclude)
         {
             if (searchFields == null || !searchFields.Any())
             {
@@ -457,7 +457,7 @@ namespace ef_json_query_testing
                 list = new List<Media_Dynamic>();
             }
 
-            if (!list.Any() && throwOnNoResults)
+            if (!list.Any())
             {
                 throw new Exception("No items found");
             }
@@ -658,7 +658,7 @@ namespace ef_json_query_testing
 
         List<Media_Dynamic> TableSearch_Media(int DynamicFieldId, string value);
         List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
-        List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, bool throwOnNoResults = true, List<int>? columnInclude = null);
+        List<Media_Dynamic> TableSearch_Media(Dictionary<int, string> searchFields, List<int>? columnInclude);
         List<Media_Dynamic> TableSearch_Media_SplitQuery(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
         List<Media_Dynamic> TableSearch_Media_TwoQueries(Dictionary<int, string> searchFields, bool throwOnNoResults = true);
     }

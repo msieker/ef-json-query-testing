@@ -48,7 +48,15 @@ namespace ef_json_query_testing
 
                 var valueType = field.DataType.GetSqlType(Max_String_Length);
                 var thing = $"$.\"{searchField.Key}\"";
-                sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'))";
+                if (field.DataType == DataTypes.DateTimeValue)
+                {
+                    sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'), 127)";
+                }
+                else
+                {
+                    sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'))";
+                }
+
                 sqlStatement += field.DataType == DataTypes.StringValue ? " LIKE " : " = ";
                 sqlStatement += "{" + count + "}";
 
@@ -107,7 +115,16 @@ namespace ef_json_query_testing
 
                 var valueType = field.DataType.GetSqlType(Max_String_Length);
                 var thing = $"$.\"{searchField.Key}\"";
-                sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'))";
+                if (field.DataType == DataTypes.DateTimeValue)
+                {
+                    sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'), 127)";
+                }
+                else
+                {
+                    sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'))";
+                }
+
+
                 sqlStatement += field.DataType == DataTypes.StringValue ? " LIKE " : " = ";
                 sqlStatement += "{" + count + "}";
 

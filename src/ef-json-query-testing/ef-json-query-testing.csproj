@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Sql\Alter_v1_stp_add_json_index.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Sql\Create_stp_Add_Json_Index.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

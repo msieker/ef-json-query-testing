@@ -2,6 +2,7 @@
 using ef_json_query_testing.Enums;
 using ef_json_query_testing.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 // DynamicListTypes - types of list dropdowns 
 // DynamicListItems - the items available for each list type
@@ -30,7 +31,7 @@ namespace ef_json_query_testing.Seeders
         private const int _MaxStringLength = 500;
 
         private const int FakerSeed = 42;
-        
+
         public static void LoadAllData(EfTestDbContext context, int fieldsCount = 30, int mediaItemsCount = 500, int listTypeCount = 5)
         {
             Randomizer.Seed = new Random(FakerSeed);
@@ -295,29 +296,53 @@ namespace ef_json_query_testing.Seeders
             return infoItems;
         }
 
-        private static string GenerateFieldValue(DataTypes dataType, Faker faker) => dataType switch
+        public static string GenerateFieldValue(DataTypes dataType, Faker faker) => dataType switch
         {
             DataTypes.IntValue => faker.Random.Number(int.MaxValue).ToString(),
             DataTypes.StringValue => faker.Lorem.Text().Truncate(_MaxStringLength),
             DataTypes.BoolValue => faker.Random.Bool() ? "1" : "0",
-            DataTypes.DateTimeValue => faker.Date.Between(DateTime.MinValue, DateTime.MaxValue).ToString(),
+            DataTypes.DateTimeValue => faker.Date.Between(DateTime.MinValue, DateTime.MaxValue).ToString("o", CultureInfo.InvariantCulture),
             DataTypes.DecimalValue => faker.Random.Decimal(0.0m, 9999999999.9999m).ToString(),
             _ => string.Empty
         };
 
-        private static void AddJsonIndex(EfTestDbContext context, string keyName, DataTypes keyType, bool recreate = true)
+        public static void AddJsonIndex(EfTestDbContext context, string keyName, DataTypes keyType, bool recreate = true)
         {
-            // datetime2 cant be indexed because it is non-deterministic.
-            if (keyType == DataTypes.DateTimeValue)
-            {
-                return;
-            }
-
             //@keyName NVARCHAR(200), --json prop name
             //@keyType NVARCHAR(200), --sql type
             //@alias NVARCHAR(200), --what will be used to name the new index and column
             //@recreate BIT -- if pre-existing index/columns should be deleted and remade
             context.Database.ExecuteSqlRaw("stp_Add_Json_Index {0}, {1}, {2}, {3}", keyName, keyType.GetSqlType(_MaxStringLength), keyName, recreate);
+        }
+
+        public static void ReGenerateDateColumns(EfTestDbContext context)
+        {
+            var dateColumns = context.DynamicFields.Where(df => df.DataType == DataTypes.DateTimeValue).Select(df => df.DynamicFieldId).ToList();
+
+            foreach (var item in context.Media_Dynamic.Include(m => m.DynamicMediaInformation).ToList())
+            {
+                foreach (var date in item.DynamicMediaInformation.Where(dm => dateColumns.Contains(dm.FieldId)).ToList())
+                {
+                    var parsedDate = DateTime.Parse(date.Value);
+                    date.Value = parsedDate.ToString("o", CultureInfo.InvariantCulture);
+                }
+            }
+            context.SaveChanges();
+
+            foreach (var item in context.Media_Json)
+            {
+                foreach (var key in dateColumns)
+                {
+                    if (item.Details.ContainsKey(key.ToString()))
+                    {
+                        var parsedDate = DateTime.Parse(item.Details[key.ToString()].ToString());
+                        item.Details[key.ToString()] = parsedDate.ToString("o", CultureInfo.InvariantCulture);
+                    }
+                }
+
+                context.Entry(item).State = EntityState.Modified;
+            }
+            context.SaveChanges();
         }
     }
 

@@ -51,6 +51,44 @@ namespace ef_json_query_testing.Tests
                 { 4, "1" },
                 { 8, "11" }
             } };
+
+            // DynamicFields exists, value exists but dont match exactly
+            yield return new object[] { new Dictionary<int, string>() {
+                { 18, "9148-05-20T18:30:49.0000000" },
+                { 20, "8057-02-14T20:43:14.0000000" }
+            } };
+        }
+        
+        public static IEnumerable<object[]> NoMatch_NoDates_TestCases()
+        {
+            // no fields given
+            yield return new object[] { new Dictionary<int, string>() };
+
+            // DynamicFields doesnt exist
+            yield return new object[] { new Dictionary<int, string>() {
+                { 500, "d" },
+                { 0, "d" }
+            } };
+
+            // DynamicFields exsits, but no match
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "0" },
+                { 2, "0" }
+            } };
+
+            // DynamicFields exists, but no media has the field.
+            yield return new object[] { new Dictionary<int, string>() {
+                { 11, "asd" },
+                { 13, "0" },
+                { 17, "0" }
+            } };
+
+            // DynamicFields exists, value exists but dont match exactly
+            yield return new object[] { new Dictionary<int, string>() {
+                { 4, "1" },
+                { 8, "11" }
+            } };
+
         }
 
 
@@ -101,6 +139,53 @@ namespace ef_json_query_testing.Tests
 
 
         public static IEnumerable<object[]> Any_TestCases()
+        {
+            // exact and contains matches
+            yield return new object[] { new Dictionary<int, string>() {
+                { 7, "444" },
+                { 12, "ten" }
+            }, new int[] { 4 } };
+
+            // exact and contains matches
+            yield return new object[] { new Dictionary<int, string>() {
+                { 12, "the" },
+                { 18, "0130-05-09T07:18:21.0000000" }
+            }, new int[] { 5 } };
+
+            // lots of fields
+            yield return new object[] { new Dictionary<int, string>() {
+                { 3, "11" },
+                { 6, "123" },
+                { 10, "b" },
+                { 14, "0" },
+                { 2, "6" },
+                { 11, "alone" },
+            }, new int[] { 3 } };
+
+            // all
+            yield return new object[] { new Dictionary<int, string>() {
+                { 1, "5" },
+                { 3, "13" },
+                { 4, "20" },
+                { 6, "999" },
+                { 8, "333" },
+                { 10, "pew" },
+                { 12, "leaf" },
+                { 14, "0" },
+                { 16, "1" },
+                { 2, "7" },
+                { 5, "21" },
+                { 7, "444" },
+                { 9, "50" },
+                { 11, "are" },
+                { 13, "true" },
+                { 15, "0" },
+                { 17, "1" },
+            }, new int[] { 5 } };
+        }
+
+
+        public static IEnumerable<object[]> Any_NoDates_TestCases()
         {
             // exact and contains matches
             yield return new object[] { new Dictionary<int, string>() {
@@ -240,8 +325,9 @@ namespace ef_json_query_testing.Tests
         #region Raw Dictionary
 
 
+        // FAILS ON DATES
         [Theory]
-        [MemberData(nameof(NoMatch_TestCases))]
+        [MemberData(nameof(NoMatch_NoDates_TestCases))]
         public void Raw_Multi_NoMatch(Dictionary<int, string> searchFields)
         {
             List<Media_Json>? media = _fixture.SearchService.JsonSearch_Raw(searchFields);
@@ -281,9 +367,9 @@ namespace ef_json_query_testing.Tests
         }
 
 
-
+        // FAILS ON DATES
         [Theory]
-        [MemberData(nameof(Any_TestCases))]
+        [MemberData(nameof(Any_NoDates_TestCases))]
         public void Raw_Multi_Any(Dictionary<int, string> searchFields, int[] expectedIds)
         {
             List<Media_Json>? media = _fixture.SearchService.JsonSearch_Raw(searchFields);
@@ -441,7 +527,7 @@ namespace ef_json_query_testing.Tests
 
         [Theory]
         [MemberData(nameof(HasDynamicInformation_TestCases))]
-        public void Indexed_NoColumns_HasDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
+        public void Indexed_NoColumns_HasNoDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
         {
             var media = _fixture.SearchService.JsonSearch_Indexed_NoColumns(searchFields).FirstOrDefault();
             var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToDictionary(i => i.Field.DynamicFieldId.ToString(), i => (object)i.Value);
@@ -523,8 +609,10 @@ namespace ef_json_query_testing.Tests
 
         #region Magic Dictionary
 
+
+        // FAILS ON DATES
         [Theory]
-        [MemberData(nameof(NoMatch_TestCases))]
+        [MemberData(nameof(NoMatch_NoDates_TestCases))]
         public void Magic_Multi_NoMatch(Dictionary<int, string> searchFields)
         {
             List<Media_Json>? media = _fixture.SearchService.JsonSearch_EfMagic(searchFields);
@@ -561,9 +649,9 @@ namespace ef_json_query_testing.Tests
             }
         }
 
-
+        // FAILS ON DATES
         [Theory]
-        [MemberData(nameof(Any_TestCases))]
+        [MemberData(nameof(Any_NoDates_TestCases))]
         public void Magic_Multi_Any(Dictionary<int, string> searchFields, int[] expectedIds)
         {
             List<Media_Json>? media = _fixture.SearchService.JsonSearch_EfMagic(searchFields);
@@ -877,7 +965,7 @@ namespace ef_json_query_testing.Tests
 
         [Theory]
         [MemberData(nameof(HasDynamicInformation_TestCases))]
-        public void Media_NoColumns_HasDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
+        public void Media_NoColumns_HasNoDynamicInformation(Dictionary<int, string> searchFields, int expectedId)
         {
             var media = _fixture.SearchService.TableSearch_Media_NoColumns(searchFields).FirstOrDefault();
             var expectedInfo = _fixture.Context.DynamicMediaInformation.Where(i => i.MediaId == expectedId).ToList();

@@ -1,6 +1,7 @@
 ﻿using ef_json_query_testing.Enums;
 using ef_json_query_testing.Indexing;
 using ef_json_query_testing.Models;
+using ef_json_query_testing.Translators;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -57,7 +58,7 @@ namespace ef_json_query_testing
                     sqlStatement += " AND CONVERT(" + valueType + ", JSON_VALUE([Details], '" + thing + "'))";
                 }
 
-                sqlStatement += field.DataType == DataTypes.StringValue ? " LIKE " : " = ";
+                sqlStatement += field.DataType == DataTypes.StringValue ? " LIKE " : field.DataType == DataTypes.DateTimeValue ? " >= " : " = ";
                 sqlStatement += "{" + count + "}";
 
                 count++;
@@ -125,7 +126,7 @@ namespace ef_json_query_testing
                 }
 
 
-                sqlStatement += field.DataType == DataTypes.StringValue ? " LIKE " : " = ";
+                sqlStatement += field.DataType == DataTypes.StringValue ? " LIKE " : field.DataType == DataTypes.DateTimeValue ? " > " : " = ";
                 sqlStatement += "{" + count + "}";
 
                 count++;
@@ -203,6 +204,12 @@ namespace ef_json_query_testing
                     var val = ConvertBoolean(searchField.Value);
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
                 }
+                else if (field.DataType == DataTypes.DateTimeValue)
+                {
+
+                    var val = DateTime.Parse(searchField.Value);
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && EF.Functions.DateConvert(i.Value) == val));
+                }
                 else
                 {
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == searchField.Value));
@@ -255,6 +262,11 @@ namespace ef_json_query_testing
                 {
                     var val = ConvertBoolean(searchField.Value);
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
+                }
+                else if (field.DataType == DataTypes.DateTimeValue)
+                {
+                    var dateSearch = DateTime.Parse(searchField.Value);
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && EF.Functions.DateConvert(i.Value) >= dateSearch));
                 }
                 else
                 {

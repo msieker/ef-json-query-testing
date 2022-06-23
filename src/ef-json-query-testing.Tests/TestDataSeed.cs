@@ -252,6 +252,40 @@ namespace ef_json_query_testing.Tests
                     IsRequired = false,
                     Description = "Let Me go!",
                     DataType = DataTypes.BoolValue
+                },
+
+
+                new DynamicField("Start date")
+                {
+                    DynamicFieldId = 18,
+                    IsQueryable = true,
+                    IsRequired = true,
+                    Description = "Lets get this started!",
+                    DataType = DataTypes.DateTimeValue
+                },
+                new DynamicField("End date")
+                {
+                    DynamicFieldId = 19,
+                    IsQueryable = true,
+                    IsRequired = false,
+                    Description = "ending time oh no.",
+                    DataType = DataTypes.DateTimeValue
+                },
+                new DynamicField("hot date")
+                {
+                    DynamicFieldId = 20,
+                    IsQueryable = false,
+                    IsRequired = true,
+                    Description = "Time to turn the ac on",
+                    DataType = DataTypes.DateTimeValue
+                },
+                new DynamicField("cold date")
+                {
+                    DynamicFieldId = 21,
+                    IsQueryable = false,
+                    IsRequired = false,
+                    Description = "Get the blankets. it is cold out.",
+                    DataType = DataTypes.DateTimeValue
                 }
             };
 
@@ -284,6 +318,8 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(1, 12, "I swear by my pretty floral bonnet, I will end you."), // R. str
                 new DynamicMediaInformation(1, 14, "1"), // R, bool
                 new DynamicMediaInformation(1, 16, "1"), // R, bool
+                new DynamicMediaInformation(1, 18, "0946-05-28T02:17:27.0000000"), // R, Datetime
+                new DynamicMediaInformation(1, 20, "1082-09-23T20:01:08.0000000"), // R, Datetime
 
                 //new DynamicMediaInformation(1, 2, ""), // O, list (6-8)
                 //new DynamicMediaInformation(1, 5, ""), // O, list (21-25)
@@ -293,6 +329,8 @@ namespace ef_json_query_testing.Tests
                 //new DynamicMediaInformation(1, 13, ""), // O, str
                 //new DynamicMediaInformation(1, 15, ""), // O, bool
                 //new DynamicMediaInformation(1, 17, ""), // O, bool
+                //new DynamicMediaInformation(1, 19, ""), // O, Datetime
+                //new DynamicMediaInformation(1, 21, ""), // O, Datetime
 
 
                 new DynamicMediaInformation(2, 1, "2"), // R, list (1-5)
@@ -304,6 +342,8 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(2, 12, "D'ya know what the chain of command is? It’s the chain I go get and beat you with ’til you understand who’s in ruttin’ command here."), // R. str
                 new DynamicMediaInformation(2, 14, "1"), // R, bool
                 new DynamicMediaInformation(2, 16, "0"), // R, bool
+                new DynamicMediaInformation(2, 18, "0124-05-09T07:18:21.0000000"), // R, Datetime
+                new DynamicMediaInformation(2, 20, "0531-06-11T18:19:02.0000000"), // R, Datetime
 
                 //new DynamicMediaInformation(2, 2, ""), // O, list (6-8)
                 //new DynamicMediaInformation(2, 5, ""), // O, list (21-25)
@@ -313,6 +353,8 @@ namespace ef_json_query_testing.Tests
                 //new DynamicMediaInformation(2, 13, ""), // O, str
                 //new DynamicMediaInformation(2, 15, ""), // O, bool
                 //new DynamicMediaInformation(2, 17, ""), // O, bool
+                //new DynamicMediaInformation(2, 19, ""), // O, Datetime
+                //new DynamicMediaInformation(2, 21, ""), // O, Datetime
 
 
                 new DynamicMediaInformation(3, 1, "3"), // R, list (1-5)
@@ -324,6 +366,8 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(3, 12, "Curse Your Sudden But Inevitable Betrayal!"), // R. str
                 new DynamicMediaInformation(3, 14, "0"), // R, bool
                 new DynamicMediaInformation(3, 16, "1"), // R, bool
+                new DynamicMediaInformation(3, 18, "1414-05-18T21:27:23.0000000"), // R, Datetime
+                new DynamicMediaInformation(3, 20, "0545-02-23T06:55:47.0000000"), // R, Datetime
 
                 new DynamicMediaInformation(3, 2, "6"), // O, list (6-8)
                 //new DynamicMediaInformation(3, 5, ""), // O, list (21-25)
@@ -333,6 +377,8 @@ namespace ef_json_query_testing.Tests
                 //new DynamicMediaInformation(3, 13, ""), // O, str
                 //new DynamicMediaInformation(3, 15, ""), // O, bool
                 //new DynamicMediaInformation(3, 17, ""), // O, bool
+                //new DynamicMediaInformation(3, 19, ""), // O, Datetime
+                //new DynamicMediaInformation(3, 21, ""), // O, Datetime
 
 
                 new DynamicMediaInformation(4, 1, "4"), // R, list (1-5)
@@ -344,6 +390,8 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(4, 12, "Ten percent of nothin' is... Let me do the math here... Nothin', and then nothin', Carry the nothing..."), // R. str
                 new DynamicMediaInformation(4, 14, "0"), // R, bool
                 new DynamicMediaInformation(4, 16, "0"), // R, bool
+                new DynamicMediaInformation(4, 18, "0034-06-15T20:43:51.0000000"), // R, Datetime
+                new DynamicMediaInformation(4, 20, "1144-10-18T05:44:21.0000000"), // R, Datetime
 
                 new DynamicMediaInformation(4, 2, "6"), // O, list (6-8)
                 new DynamicMediaInformation(4, 5, "21"), // O, list (21-25)
@@ -353,6 +401,8 @@ namespace ef_json_query_testing.Tests
                 //new DynamicMediaInformation(4, 13, ""), // O, str
                 //new DynamicMediaInformation(4, 15, ""), // O, bool
                 //new DynamicMediaInformation(4, 17, ""), // O, bool
+                //new DynamicMediaInformation(4, 19, ""), // O, Datetime
+                //new DynamicMediaInformation(4, 21, ""), // O, Datetime
 
 
                 new DynamicMediaInformation(5, 1, "5"), // R, list (1-5)
@@ -364,6 +414,8 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(5, 12, "I am a leaf on the wind; watch how I soar"), // R. str
                 new DynamicMediaInformation(5, 14, "0"), // R, bool
                 new DynamicMediaInformation(5, 16, "1"), // R, bool
+                new DynamicMediaInformation(5, 18, "0259-09-22T16:12:58.0000000"), // R, Datetime
+                new DynamicMediaInformation(5, 20, "0204-07-04T17:23:42.0000000"), // R, Datetime
 
                 new DynamicMediaInformation(5, 2, "7"), // O, list (6-8)
                 new DynamicMediaInformation(5, 5, "21"), // O, list (21-25)
@@ -373,6 +425,8 @@ namespace ef_json_query_testing.Tests
                 new DynamicMediaInformation(5, 13, "nothing is true, everything is permitted"), // O, str
                 new DynamicMediaInformation(5, 15, "0"), // O, bool
                 new DynamicMediaInformation(5, 17, "1"), // O, bool
+                new DynamicMediaInformation(5, 19, "0883-01-23T06:57:00.0000000"), // O, Datetime
+                new DynamicMediaInformation(5, 21, "0502-08-15T14:02:37.0000000"), // O, Datetime
             };
 
 

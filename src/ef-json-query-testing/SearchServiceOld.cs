@@ -5,6 +5,7 @@ using ef_json_query_testing.Translators;
 using EntityFrameworkExtras.EFCore;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Globalization;
 
 namespace ef_json_query_testing
 {
@@ -81,6 +82,10 @@ namespace ef_json_query_testing
                     var containsString = "%" + searchField.Value + "%";
                     parameters.Add(containsString);
                     sqlStatement += $" LIKE {{{count}}}";
+                }
+                else if (field.DataType == DataTypes.DateTimeValue)
+                {
+
                 }
                 else
                 {
@@ -164,6 +169,11 @@ namespace ef_json_query_testing
                 if (field.DataType == DataTypes.StringValue)
                 {
                     query = query.Where(q => EF.Functions.JsonValue(q.Details, jsonPath).Contains(searchField.Value));
+                }
+                else if (field.DataType == DataTypes.DateTimeValue)
+                {
+                    var dateSearch = DateTime.Parse(searchField.Value);
+                    query = query.Where(q => EF.Functions.DateConvert(EF.Functions.JsonValue(q.Details, jsonPath)) >= dateSearch);
                 }
                 else
                 {
@@ -430,6 +440,12 @@ namespace ef_json_query_testing
                     var val = ConvertBoolean(searchField.Value);
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
                 }
+                else if (field.DataType == DataTypes.DateTimeValue)
+                {
+
+                    var dateSearch = DateTime.Parse(searchField.Value);
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && EF.Functions.DateConvert(i.Value) >= dateSearch));
+                }
                 else
                 {
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == searchField.Value));
@@ -482,6 +498,12 @@ namespace ef_json_query_testing
                 {
                     var val = ConvertBoolean(searchField.Value);
                     query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && i.Value == val));
+                }
+                else if (field.DataType == DataTypes.DateTimeValue)
+                {
+
+                    var dateSearch = DateTime.Parse(searchField.Value);
+                    query = query.Where(m => m.DynamicMediaInformation.Any(i => i.FieldId == field.DynamicFieldId && EF.Functions.DateConvert(i.Value) >= dateSearch));
                 }
                 else
                 {

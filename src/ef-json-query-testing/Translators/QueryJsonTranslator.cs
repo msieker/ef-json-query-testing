@@ -72,10 +72,10 @@ namespace ef_json_query_testing.Translators
             else if (method == _dateConvertMethod)
             {
                 //CONVERT(dataType, valueToConvert, ConvertStyle)
-
-                var sqlType = _expressionFactory.Constant(DbType.DateTime2);
+                
+                var sqlType = _expressionFactory.Fragment("datetime2");
                 var sqlConvertStyle = _expressionFactory.Constant(127);
-
+                
                 var functionArguments = new List<SqlExpression> { sqlType, arguments[1], sqlConvertStyle };
 
                 var thing =  _expressionFactory.Function("CONVERT",

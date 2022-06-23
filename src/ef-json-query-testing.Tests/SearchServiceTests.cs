@@ -5,18 +5,34 @@ using NaughtyStrings.Bogus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ef_json_query_testing.Tests
 {
     [Collection("Database collection")]
-    public class SearchServiceTests
+    public class SearchServiceTests : IAsyncLifetime
     {
         private DatabaseFixture _fixture;
+        private ITestOutputHelper _outputHelper;
 
-        public SearchServiceTests(DatabaseFixture fixture)
+        public SearchServiceTests(DatabaseFixture fixture, ITestOutputHelper outputHelper)
         {
             _fixture = fixture;
+            _outputHelper = outputHelper;
+        }
+
+        public Task InitializeAsync()
+        {
+            _fixture.SetOutputHelper(_outputHelper);
+            return Task.CompletedTask;
+        }
+
+        public Task DisposeAsync()
+        {
+            _fixture.ClearOutputHelper();
+            return Task.CompletedTask;
         }
 
         #region Test cases

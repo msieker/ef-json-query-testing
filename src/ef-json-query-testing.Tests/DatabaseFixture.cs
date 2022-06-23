@@ -13,7 +13,7 @@ namespace ef_json_query_testing.Tests
 
             Environment.SetEnvironmentVariable("BENCHMARK_SQL_CONN", "Server=(LocalDb)\\MSSQLLocalDB;Initial Catalog=ef_testing_xunit;Integrated Security=SSPI;Connection Timeout=5;");
 
-            Context = EfTestDbContext.Create(true);
+            Context = EfTestDbContext.Create(true, LogFunc);
             SearchService = new SearchService(Context);
 
             Context.Database.EnsureDeleted();
@@ -21,6 +21,23 @@ namespace ef_json_query_testing.Tests
 
             TestDataSeed.LoadAll(Context);
 
+        }
+
+        private ITestOutputHelper? _helper;
+
+        public void SetOutputHelper(ITestOutputHelper helper)
+        {
+            _helper = helper;
+        }
+
+        public void ClearOutputHelper()
+        {
+            _helper = null;
+        }
+
+        private void LogFunc(string obj)
+        {
+            _helper?.WriteLine("[EF] " + obj);
         }
 
         public void Dispose()
